@@ -2,12 +2,12 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 import { Logo } from "@/components/ui/logo";
+import { RelativeTime } from "@/components/ui/relative-time";
 import { ArchiveStrip } from "@/components/patchwork/archive-strip";
 import { Feedback, Panel, StatusPill } from "@/components/workspace/ui";
 import {
   DEVICE_CATEGORY_LABELS,
   formatDate,
-  formatRelative,
   TICKET_STATUS_META,
 } from "@/lib/repair/format";
 import { getTrackedTicket } from "@/lib/repair/queries";
@@ -142,7 +142,8 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
 
               <p className="mt-2 font-sans text-[14px] text-ink-secondary">
                 {DEVICE_CATEGORY_LABELS[ticket.device.category] ?? ticket.device.category} · opened{" "}
-                {formatDate(ticket.created_at)} · updated {formatRelative(ticket.updated_at)}
+                {formatDate(ticket.created_at)} · updated{" "}
+                <RelativeTime value={ticket.updated_at} />
               </p>
 
               <div className="mt-6">
@@ -208,9 +209,10 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
                       <div className="min-w-0">
                         <div className="flex flex-wrap items-center gap-2">
                           {event.status ? <StatusPill status={event.status} /> : null}
-                          <span className="font-sans text-[13px] text-ink-secondary">
-                            {formatRelative(event.created_at)}
-                          </span>
+                          <RelativeTime
+                            value={event.created_at}
+                            className="font-sans text-[13px] text-ink-secondary"
+                          />
                         </div>
                         {event.body ? (
                           <p className="mt-1 font-sans text-[14px] leading-6 text-ink-secondary">

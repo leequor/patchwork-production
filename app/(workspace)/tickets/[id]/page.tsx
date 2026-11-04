@@ -10,6 +10,7 @@ import {
   updateTicketStatusAction,
 } from "@/app/actions/repair";
 import { FormField } from "@/components/ui/form-field";
+import { RelativeTime } from "@/components/ui/relative-time";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { CopyButton } from "@/components/workspace/copy-button";
 import { SelectField, TextAreaField } from "@/components/workspace/form-controls";
@@ -26,7 +27,6 @@ import {
   DEVICE_CATEGORY_LABELS,
   formatDate,
   formatMoney,
-  formatRelative,
   PRIORITY_META,
   TICKET_STATUS_META,
 } from "@/lib/repair/format";
@@ -96,7 +96,9 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
         <dl className="flex gap-6 text-[13px] text-ink-secondary">
           <div>
             <dt>Opened</dt>
-            <dd className="mt-0.5 text-ink">{formatRelative(ticket.created_at)}</dd>
+            <dd className="mt-0.5 text-ink">
+              <RelativeTime value={ticket.created_at} />
+            </dd>
           </div>
           <div>
             <dt>Tracking</dt>
@@ -251,7 +253,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
                         <span className="text-[13px] text-ink">{event.actor?.full_name || "System"}</span>
                         {event.status ? <StatusPill status={event.status} /> : null}
-                        <span className="text-ink-secondary">{formatRelative(event.created_at)}</span>
+                        <RelativeTime value={event.created_at} className="text-ink-secondary" />
                         {event.is_customer_visible ? (
                           <span className="text-ink-secondary/70">· customer visible</span>
                         ) : null}

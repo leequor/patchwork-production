@@ -5,12 +5,12 @@ import { ArrowUpRight, Boxes, Receipt, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { RelativeTime } from "@/components/ui/relative-time";
 import {
   PRIORITY_META,
   TICKET_STATUS_META,
   formatCompactMoney,
   formatMoney,
-  formatRelative,
 } from "@/lib/repair/format";
 import type { TicketRow } from "@/lib/repair/types";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
@@ -98,9 +98,10 @@ function QueueRow({
           <span className="truncate text-[13px] font-semibold text-ink">
             {ticket.customer.full_name}
           </span>
-          <span className="shrink-0 font-mono text-[10px] text-ink-faint">
-            {formatRelative(ticket.created_at)}
-          </span>
+          <RelativeTime
+            value={ticket.created_at}
+            className="shrink-0 font-mono text-[10px] text-ink-faint"
+          />
         </span>
 
         <span className="mt-0.5 flex items-baseline gap-1.5">

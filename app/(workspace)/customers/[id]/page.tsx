@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 
 import { addDeviceAction } from "@/app/actions/repair";
 import { FormField } from "@/components/ui/form-field";
+import { RelativeTime } from "@/components/ui/relative-time";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { SelectField } from "@/components/workspace/form-controls";
 import {
@@ -13,7 +14,7 @@ import {
   PrimaryLink,
   StatusPill,
 } from "@/components/workspace/ui";
-import { DEVICE_CATEGORY_LABELS, formatDate, formatRelative } from "@/lib/repair/format";
+import { DEVICE_CATEGORY_LABELS, formatDate } from "@/lib/repair/format";
 import { getCustomerDetail } from "@/lib/repair/queries";
 import { DEVICE_CATEGORIES } from "@/lib/repair/types";
 import { initials } from "@/lib/utils";
@@ -104,9 +105,10 @@ export default async function CustomerDetailPage({
                         </span>
                       </span>
                       <StatusPill status={ticket.status} />
-                      <span className="figure text-[13px] text-ink-secondary sm:text-right">
-                        {formatRelative(ticket.created_at)}
-                      </span>
+                      <RelativeTime
+                        value={ticket.created_at}
+                        className="figure text-[13px] text-ink-secondary sm:text-right"
+                      />
                     </Link>
                   </li>
                 ))}

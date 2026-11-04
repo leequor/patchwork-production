@@ -11,7 +11,8 @@ import {
   PriorityPill,
   StatusPill,
 } from "@/components/workspace/ui";
-import { formatRelative, PRIORITY_META, TICKET_STATUS_META } from "@/lib/repair/format";
+import { RelativeTime } from "@/components/ui/relative-time";
+import { PRIORITY_META, TICKET_STATUS_META } from "@/lib/repair/format";
 import { getStaffProfiles, getTickets } from "@/lib/repair/queries";
 import { TICKET_PRIORITIES, TICKET_STATUSES } from "@/lib/repair/types";
 
@@ -203,9 +204,10 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right align-top">
-                    <span className="figure text-[13px] text-ink-secondary">
-                      {formatRelative(ticket.updated_at)}
-                    </span>
+                    <RelativeTime
+                      value={ticket.updated_at}
+                      className="figure text-[13px] text-ink-secondary"
+                    />
                   </td>
                 </MotionRow>
               ))}

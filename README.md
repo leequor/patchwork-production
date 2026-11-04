@@ -13,9 +13,9 @@ Patchwork is a workshop management system for repair businesses. It covers the f
 
 ## Live Demo
 
-<!-- LIVE_DEMO_PLACEHOLDER -->
+**https://patchwork-production.vercel.app**
 
-The production URL is added here after the Vercel deployment completes.
+Production runs on Vercel with Supabase Auth and Postgres. Sign-in and the public repair tracker are reachable without a local setup; the workspace requires a staff account.
 
 ## Highlights
 

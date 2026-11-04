@@ -21,7 +21,8 @@ export default async function LoginPage({
   return (
     <AuthCard
       title="Sign in"
-      description="Staff access to the repair desk. The session is held in a secure cookie."
+      description="Your staff email and password open the desk. The session is held in a secure cookie."
+      footer={<p>Invited by an owner or manager? Use the temporary password they gave you, then set your own.</p>}
     >
       <LoginForm notice={readParam(params.message)} errorNotice={readParam(params.error)} />
     </AuthCard>

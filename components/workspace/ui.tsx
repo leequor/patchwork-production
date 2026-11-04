@@ -5,19 +5,25 @@ import { INVOICE_STATUS_META, PRIORITY_META, TICKET_STATUS_META } from "@/lib/re
 import type { InvoiceStatus, TicketPriority, TicketStatus } from "@/lib/repair/types";
 import { cn } from "@/lib/utils";
 
-function Dot({ className }: { className: string }) {
-  return <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", className)} aria-hidden="true" />;
+function Mark({ className }: { className: string }) {
+  return <span className={cn("h-2 w-2 shrink-0", className)} aria-hidden="true" />;
 }
 
 /**
- * Status is a dot and a word. The word carries the meaning; the dot is a
- * second, quiet signal. No fills, no pills — a bench board is scanned, not read.
+ * Status is a printed mark and a word. The word carries the meaning; the square
+ * is the second, quieter signal. A bench board is scanned, not read.
  */
 export function StatusPill({ status, className }: { status: TicketStatus; className?: string }) {
   const meta = TICKET_STATUS_META[status];
   return (
-    <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-[13px]", meta.tone, className)}>
-      <Dot className={meta.dot} />
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center gap-2 font-sans text-[13px] font-medium",
+        meta.tone,
+        className,
+      )}
+    >
+      <Mark className={meta.dot} />
       {meta.label}
     </span>
   );
@@ -26,8 +32,14 @@ export function StatusPill({ status, className }: { status: TicketStatus; classN
 export function PriorityPill({ priority, className }: { priority: TicketPriority; className?: string }) {
   const meta = PRIORITY_META[priority];
   return (
-    <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-[12.5px]", meta.tone, className)}>
-      <Dot className={meta.dot} />
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center gap-2 font-sans text-[13px]",
+        meta.tone,
+        className,
+      )}
+    >
+      <Mark className={meta.dot} />
       {meta.label}
     </span>
   );
@@ -36,8 +48,14 @@ export function PriorityPill({ priority, className }: { priority: TicketPriority
 export function InvoicePill({ status, className }: { status: InvoiceStatus; className?: string }) {
   const meta = INVOICE_STATUS_META[status];
   return (
-    <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-[13px]", meta.tone, className)}>
-      <Dot className={meta.dot} />
+    <span
+      className={cn(
+        "inline-flex shrink-0 items-center gap-2 font-sans text-[13px]",
+        meta.tone,
+        className,
+      )}
+    >
+      <Mark className={meta.dot} />
       {meta.label}
     </span>
   );
@@ -55,11 +73,11 @@ export function PageHeader({
   return (
     <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
       <div className="min-w-0">
-        <h1 className="text-[22px] font-semibold leading-tight tracking-[-0.015em] text-ink">
-          {title}
-        </h1>
+        <h1 className="display text-[30px] text-ink sm:text-[34px]">{title}</h1>
         {description ? (
-          <p className="mt-1 max-w-[74ch] text-[13px] leading-5 text-muted">{description}</p>
+          <p className="mt-1.5 max-w-[62ch] font-serif text-[15px] leading-6 text-muted">
+            {description}
+          </p>
         ) : null}
       </div>
       {actions ? <div className="flex flex-wrap items-center gap-2">{actions}</div> : null}
@@ -72,7 +90,7 @@ export function Feedback({ notice, error }: { notice?: string; error?: string })
   return (
     <div
       className={cn(
-        "mt-4 rounded px-3 py-2.5 text-[13px] leading-5",
+        "mt-4 rounded-sm px-3.5 py-2.5 font-sans text-[13px] leading-5",
         error ? "bg-negative-soft text-negative-ink" : "bg-positive-soft text-positive-ink",
       )}
       role={error ? "alert" : "status"}
@@ -92,16 +110,16 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded bg-paper px-6 py-10">
-      <p className="text-[13.5px] font-medium text-ink">{title}</p>
-      <p className="mt-1.5 max-w-[52ch] text-[13px] leading-5 text-muted">{body}</p>
+    <div className="rounded-sm bg-paper px-6 py-10">
+      <p className="font-sans text-[15px] font-semibold text-ink">{title}</p>
+      <p className="mt-1.5 max-w-[52ch] font-serif text-[14px] leading-6 text-muted">{body}</p>
       {action ? <div className="mt-4">{action}</div> : null}
     </div>
   );
 }
 
 const LINK_BASE =
-  "inline-flex h-8 items-center justify-center rounded px-3 text-[13px] font-medium transition-colors";
+  "inline-flex h-10 items-center justify-center gap-2 rounded-sm px-3.5 font-sans text-[13px] font-semibold transition-[background-color,transform] duration-150 active:scale-[0.98]";
 
 export function SecondaryLink({
   href,
@@ -113,7 +131,7 @@ export function SecondaryLink({
   className?: string;
 }) {
   return (
-    <Link href={href} className={cn(LINK_BASE, "bg-wash text-ink hover:bg-line", className)}>
+    <Link href={href} className={cn(LINK_BASE, "bg-wash text-ink hover:bg-[#D2CDC2]", className)}>
       {children}
     </Link>
   );
@@ -129,18 +147,15 @@ export function PrimaryLink({
   className?: string;
 }) {
   return (
-    <Link
-      href={href}
-      className={cn(LINK_BASE, "bg-accent font-semibold text-paper hover:bg-gold", className)}
-    >
+    <Link href={href} className={cn(LINK_BASE, "bg-accent text-onAccent hover:bg-gold", className)}>
       {children}
     </Link>
   );
 }
 
-/** Panels separate by tone, not by outline. One ground step is enough. */
+/** Panels separate by a step in tone, not by an outline. */
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded bg-surface", className)}>{children}</div>;
+  return <div className={cn("rounded-sm bg-surface", className)}>{children}</div>;
 }
 
 export function PanelHeader({
@@ -155,8 +170,10 @@ export function PanelHeader({
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 px-4 pb-3 pt-4">
       <div className="min-w-0">
-        <h2 className="text-[14px] font-semibold text-ink">{title}</h2>
-        {detail ? <p className="mt-0.5 text-[12.5px] leading-4 text-muted">{detail}</p> : null}
+        <h2 className="font-sans text-[15px] font-semibold text-ink">{title}</h2>
+        {detail ? (
+          <p className="mt-0.5 font-serif text-[13px] leading-5 text-muted">{detail}</p>
+        ) : null}
       </div>
       {action}
     </div>
@@ -174,7 +191,7 @@ export function DataBar({
 }) {
   const width = max <= 0 ? 0 : Math.max(0, Math.min(100, Math.round((value / max) * 100)));
   return (
-    <div className="h-1 w-full overflow-hidden rounded-none bg-wash">
+    <div className="h-1.5 w-full overflow-hidden bg-wash">
       <div className={cn("h-full", tone)} style={{ width: `${width}%` }} />
     </div>
   );

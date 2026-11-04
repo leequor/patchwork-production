@@ -27,7 +27,7 @@ export function SubmitButton({
     >
       {pending ? (
         <>
-          <span className="h-2 w-2 rounded-full bg-current" aria-hidden="true" />
+          <span className="h-2 w-2 bg-current" aria-hidden="true" />
           {pendingText}
         </>
       ) : (

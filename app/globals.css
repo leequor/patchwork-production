@@ -3,26 +3,29 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 html {
-  background: #0d1413;
+  background: #e2e5dd;
 }
 
 body {
   @apply bg-paper text-ink antialiased;
+  font-family: var(--font-text), Georgia, serif;
   min-height: 100dvh;
 }
 
 ::selection {
-  background: #3a2f14;
-  color: #f2ecd9;
+  background: #ce3f1b;
+  color: #fffaf0;
 }
 
 @layer base {
   * {
-    border-color: #26332f;
+    border-color: #c7ccc1;
   }
 
   a,
@@ -34,16 +37,25 @@ body {
   }
 
   :focus-visible {
-    outline: 2px solid #d9a441;
+    outline: 2px solid #ce3f1b;
     outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   }
 
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #e7e8e3;
-    box-shadow: 0 0 0 1000px #141d1b inset; /* taste-skill-ignore shadow */
-    caret-color: #e7e8e3;
+    -webkit-text-fill-color: #131a1d;
+    box-shadow: 0 0 0 1000px #fbfaf6 inset; /* taste-skill-ignore shadow */
+    caret-color: #131a1d;
   }
 
   ::-webkit-scrollbar {
@@ -52,13 +64,13 @@ body {
   }
 
   ::-webkit-scrollbar-track {
-    background: #0d1413;
+    background: #e2e5dd;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #2b3a35;
+    background: #bcc2b8;
     border-radius: 9999px;
-    border: 2px solid #0d1413;
+    border: 2px solid #e2e5dd;
   }
 }
 
@@ -67,8 +79,108 @@ body {
     text-wrap: balance;
   }
 
+  /* Display face settings: one face, one weight, tuned for large sizes. */
+  .display {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+  }
+
+  .display-tight {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
   .figure {
+    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
     font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+  }
+
+  /* The two surfaces in one page: ink field with cream type. */
+  .on-night {
+    color: #f1ebdd;
+  }
+}
+
+/* The poster's one entrance. Everything else is already in place. */
+@media (prefers-reduced-motion: no-preference) {
+  .plate-reveal {
+    animation: plate-reveal 800ms var(--ease-out) both;
+  }
+
+  .plate-reveal-image {
+    animation: plate-settle 1400ms var(--ease-out) both;
+  }
+
+  .rise {
+    animation: rise 520ms var(--ease-out) both;
+  }
+
+  /* Photographs screened back to the poster's two inks, then settled in. */
+  .photo-print {
+    filter: grayscale(1) contrast(1.12);
+    mix-blend-mode: multiply;
+    animation: photo-settle 1600ms var(--ease-out) both;
+    transition: transform 900ms var(--ease-out);
+  }
+
+  .photo-print:hover {
+    transform: scale(1.04);
+  }
+
+  @keyframes photo-settle {
+    from {
+      transform: scale(1.07);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Feedback on every control, not only the pointer. */
+  .press {
+    transition:
+      background-color 160ms var(--ease-out),
+      transform 160ms var(--ease-out);
+  }
+
+  .press:active {
+    transform: scale(0.98);
+  }
+}
+
+@keyframes plate-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes plate-settle {
+  from {
+    transform: scale(1.06);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 

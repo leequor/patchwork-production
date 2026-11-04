@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-import { cn } from "@/lib/utils";
-
 type AppHealth = { status: string; service: string; timestamp: string };
 type SupabaseHealth = {
   status: "connected" | "not_configured" | "unavailable";
@@ -13,11 +11,11 @@ type SupabaseHealth = {
 
 type Tone = "idle" | "ok" | "warn" | "error";
 
-const TONE_DOT: Record<Tone, string> = {
-  idle: "bg-muted/50",
-  ok: "bg-positive",
-  warn: "bg-warn",
-  error: "bg-negative",
+const TONE_MARK: Record<Tone, string> = {
+  idle: "bg-[#F1EBDD]/40",
+  ok: "bg-[#FFFAF0]",
+  warn: "bg-[#FFE0A8]",
+  error: "bg-[#2B0703]",
 };
 
 const TONE_WORD: Record<Tone, string> = {
@@ -27,16 +25,16 @@ const TONE_WORD: Record<Tone, string> = {
   error: "Down",
 };
 
-function Row({ label, tone, value }: { label: string; tone: Tone; value: string }) {
+function Cell({ label, tone, value, detail }: { label: string; tone: Tone; value: string; detail: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-3 px-3 py-2.5">
-      <dt className="text-[13px] text-muted">{label}</dt>
-      <dd className="flex items-baseline gap-3">
-        <span className="flex items-center gap-1.5 text-[13px] text-ink">
-          <span className={cn("h-1.5 w-1.5 shrink-0 rounded-full", TONE_DOT[tone])} aria-hidden="true" />
-          {TONE_WORD[tone]}
-        </span>
-        <span className="figure w-[3.6rem] text-right text-[13px] text-muted">{value}</span>
+    <div>
+      <dt className="font-sans text-[13px] text-onAccent/80">{label}</dt>
+      <dd className="mt-1 flex items-baseline gap-2">
+        <span className={`h-2 w-2 shrink-0 ${TONE_MARK[tone]}`} aria-hidden="true" />
+        <span className="display text-[20px] text-onAccent">{TONE_WORD[tone]}</span>
+      </dd>
+      <dd className="figure mt-0.5 text-[13px] text-onAccent/80">
+        {value} <span className="font-serif">{detail}</span>
       </dd>
     </div>
   );
@@ -44,7 +42,7 @@ function Row({ label, tone, value }: { label: string; tone: Tone; value: string 
 
 /**
  * The counter board: the one live element on this screen, reading the same two
- * health endpoints the /status page uses. Nothing on it is invented.
+ * health endpoints as /status. Nothing on it is invented.
  */
 export function ShiftBoard() {
   const [app, setApp] = useState<AppHealth | null>(null);
@@ -92,36 +90,44 @@ export function ShiftBoard() {
           : "error";
 
   return (
-    <section aria-labelledby="counter-board" className="max-w-[26rem]">
-      <h2 id="counter-board" className="text-[13px] font-medium text-ink">
-        Counter board
-      </h2>
-      <div className="mt-2 rounded-sm bg-surface">
-        <dl>
-          <Row
-            label="Desk app"
-            tone={appTone}
-            value={
-              app
-                ? new Date(app.timestamp).toLocaleTimeString([], {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })
-                : "—"
-            }
-          />
-          <Row
-            label="Records"
-            tone={dbTone}
-            value={database?.latencyMs !== undefined ? `${database.latencyMs} ms` : "—"}
-          />
-        </dl>
+    <section
+      aria-labelledby="counter-board"
+      className="bg-accent px-5 py-5 text-onAccent sm:px-8"
+    >
+      <div className="flex items-baseline justify-between gap-4">
+        <h2 id="counter-board" className="font-sans text-[13px] font-semibold">
+          Counter board
+        </h2>
+        <p className="font-sans text-[13px] text-onAccent/80">Read on load</p>
       </div>
-      <p className="mt-2 text-[12px] leading-5 text-muted">
-        {failed
-          ? "Health endpoints did not answer. Check system status."
-          : "Read from the health endpoints when this page loads."}
-      </p>
+
+      <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4">
+        <Cell
+          label="Desk app"
+          tone={appTone}
+          value={
+            app
+              ? new Date(app.timestamp).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })
+              : "—"
+          }
+          detail={failed ? "no answer" : "response"}
+        />
+        <Cell
+          label="Records"
+          tone={dbTone}
+          value={database?.latencyMs !== undefined ? `${database.latencyMs}` : "—"}
+          detail={database?.latencyMs !== undefined ? "ms round trip" : "no answer"}
+        />
+      </dl>
+
+      {failed ? (
+        <p className="mt-4 font-serif text-[13px] leading-5 text-onAccent/85">
+          The health checks did not answer. Open system status before the first customer.
+        </p>
+      ) : null}
     </section>
   );
 }

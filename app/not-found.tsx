@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 
+import { ArchiveStrip } from "@/components/patchwork/archive-strip";
+import { TeardownPlate } from "@/components/patchwork/teardown-plate";
 import { Logo } from "@/components/ui/logo";
 
 export const metadata: Metadata = {
@@ -9,36 +11,49 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main className="min-h-[100dvh] bg-paper px-5 py-5 sm:px-6">
+    <main className="min-h-[100dvh] bg-night px-4 py-5 sm:px-6">
       <div className="mx-auto flex min-h-[calc(100dvh-2.5rem)] w-full max-w-[1000px] flex-col">
-        <Logo />
+        <Logo tone="night" />
 
-        <div className="flex flex-1 flex-col justify-center py-12">
-          <p className="figure text-[13px] text-accent">404</p>
-          <h1 className="mt-2 max-w-[18ch] text-[32px] font-semibold leading-[1.05] tracking-[-0.03em] text-ink sm:text-[40px]">
-            This page is off the bench.
-          </h1>
-          <p className="mt-3 max-w-[46ch] text-[13.5px] leading-6 text-muted">
-            The link may be old, or the page moved. Head back to the desk and pick up from the
-            queue.
-          </p>
-          <div className="mt-6 flex flex-wrap gap-2">
-            <Link
-              href="/"
-              className="inline-flex h-9 items-center rounded bg-accent px-4 text-[13px] font-semibold text-paper transition-colors hover:bg-gold"
+        <div className="grid flex-1 items-center gap-8 py-12 lg:grid-cols-[1.1fr_0.9fr]">
+          <div>
+            <p className="figure text-[13px] text-accentLit">404</p>
+            <h1 className="rise display mt-3 max-w-[14ch] text-[clamp(38px,5vw,64px)] text-cream">
+              This page is not on the bench.
+            </h1>
+            <p
+              className="rise mt-4 max-w-[46ch] font-serif text-[16px] leading-7 text-creamMuted"
+              style={{ animationDelay: "80ms" }}
             >
-              Back to the desk
-            </Link>
-            <Link
-              href="/track"
-              className="inline-flex h-9 items-center rounded bg-wash px-3.5 text-[13px] text-ink transition-colors hover:bg-line"
-            >
-              Track a repair
-            </Link>
+              The link may be old, or the page moved. Head back to the desk and pick up from the
+              queue.
+            </p>
+            <div className="rise mt-6 flex flex-wrap gap-2" style={{ animationDelay: "150ms" }}>
+              <Link
+                href="/"
+                className="inline-flex h-11 items-center rounded-sm bg-accent px-4 font-sans text-[14px] font-semibold text-onAccent transition-colors hover:bg-gold"
+              >
+                Back to the desk
+              </Link>
+              <Link
+                href="/track"
+                className="inline-flex h-11 items-center rounded-sm bg-nightRaised px-4 font-sans text-[14px] font-semibold text-cream transition-colors hover:bg-nightLine"
+              >
+                Track a repair
+              </Link>
+            </div>
+          </div>
+
+          <div className="rise hidden h-[340px] w-full lg:block" aria-hidden="true">
+            <TeardownPlate />
           </div>
         </div>
 
-        <p className="text-[12.5px] text-muted">Patchwork · Repair operations</p>
+        <ArchiveStrip className="rise mt-8" height="h-[76px] lg:h-[96px]" />
+
+        <p className="rise mt-6 font-sans text-[13px] text-creamMuted">
+          Patchwork · Repair operations
+        </p>
       </div>
     </main>
   );

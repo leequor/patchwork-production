@@ -15,13 +15,14 @@ export function SelectField({
 }) {
   return (
     <div className="space-y-1.5">
-      <label htmlFor={id} className="text-[13px] font-medium text-ink">
+      <label htmlFor={id} className="font-sans text-[13px] font-semibold text-ink">
         {label}
       </label>
       <select
         id={id}
         className={cn(
-          "h-9 w-full rounded border border-line bg-paper px-2.5 text-[13px] text-ink outline-none transition-colors hover:border-muted/40 focus:border-accent",
+          "h-10 w-full rounded-sm border border-line bg-raised px-2.5 font-sans text-[13px] text-ink",
+          "outline-none transition-colors duration-150 hover:border-[#B8B2A6] focus:border-accent",
           className,
         )}
         {...props}
@@ -46,15 +47,16 @@ export function TextAreaField({
   return (
     <div className="space-y-1.5">
       <div className="flex items-baseline justify-between gap-3">
-        <label htmlFor={id} className="text-[13px] font-medium text-ink">
+        <label htmlFor={id} className="font-sans text-[13px] font-semibold text-ink">
           {label}
         </label>
-        {hint ? <span className="text-[12px] text-muted">{hint}</span> : null}
+        {hint ? <span className="font-sans text-[13px] text-muted">{hint}</span> : null}
       </div>
       <textarea
         id={id}
         className={cn(
-          "min-h-[100px] w-full rounded border border-line bg-paper px-2.5 py-2 text-[13px] leading-5 text-ink outline-none transition-colors placeholder:text-muted/55 hover:border-muted/40 focus:border-accent",
+          "min-h-[96px] w-full rounded-sm border border-line bg-raised px-2.5 py-2 font-serif text-[15px] leading-6 text-ink",
+          "outline-none transition-colors duration-150 placeholder:text-muted/60 hover:border-[#B8B2A6] focus:border-accent",
           className,
         )}
         {...props}
@@ -75,17 +77,22 @@ export function CheckboxField({
   defaultChecked?: boolean;
 }) {
   return (
-    <label htmlFor={id} className="flex items-start gap-2.5 rounded bg-paper px-2.5 py-2">
+    <label
+      htmlFor={id}
+      className="flex min-h-11 cursor-pointer items-start gap-2.5 rounded-sm bg-paper px-2.5 py-2.5"
+    >
       <input
         id={id}
         name={id}
         type="checkbox"
         defaultChecked={defaultChecked}
-        className="mt-0.5 h-4 w-4 rounded border-line bg-paper accent-[#D9A441]"
+        className="mt-0.5 h-4 w-4 rounded-none border-line bg-raised accent-[#CE3F1B]"
       />
       <span>
-        <span className="block text-[13px] font-medium text-ink">{label}</span>
-        {description ? <span className="mt-0.5 block text-[12px] leading-4 text-muted">{description}</span> : null}
+        <span className="block font-sans text-[13px] font-semibold text-ink">{label}</span>
+        {description ? (
+          <span className="mt-0.5 block font-serif text-[13px] leading-5 text-muted">{description}</span>
+        ) : null}
       </span>
     </label>
   );

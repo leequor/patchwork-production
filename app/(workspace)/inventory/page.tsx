@@ -49,19 +49,19 @@ export default async function InventoryPage({
 
       <div className="mt-4 grid gap-2 sm:grid-cols-3">
         <Panel className="px-3.5 py-3">
-          <p className="text-[12px] text-muted">Parts tracked</p>
+          <p className="text-[13px] text-muted">Parts tracked</p>
           <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-ink">
             {parts.length}
           </p>
         </Panel>
         <Panel className="px-3.5 py-3">
-          <p className="text-[12px] text-muted">Low stock</p>
+          <p className="text-[13px] text-muted">Low stock</p>
           <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-warn">
             {lowStock.length}
           </p>
         </Panel>
         <Panel className="px-3.5 py-3">
-          <p className="text-[12px] text-muted">Stock value at cost</p>
+          <p className="text-[13px] text-muted">Stock value at cost</p>
           <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-ink">
             {formatMoney(stockValue)}
           </p>
@@ -73,11 +73,11 @@ export default async function InventoryPage({
           <div className="flex items-start justify-between gap-3">
             <div>
               <h2 className="text-[14px] font-semibold text-ink">Add a part</h2>
-              <p className="mt-0.5 text-[12.5px] text-muted">
+              <p className="mt-0.5 text-[13px] text-muted">
                 New inventory is available to tickets immediately.
               </p>
             </div>
-            <Link href="/inventory" className="text-[12.5px] text-muted transition-colors hover:text-ink">
+            <Link href="/inventory" className="text-[13px] text-muted transition-colors hover:text-ink">
               Close
             </Link>
           </div>
@@ -148,7 +148,7 @@ export default async function InventoryPage({
           ) : null}
         </form>
 
-        <div className="hidden grid-cols-[1.7fr_0.8fr_0.7fr_0.8fr_0.9fr] gap-3 px-3 pb-1.5 text-[11.5px] text-muted lg:grid">
+        <div className="hidden grid-cols-[1.7fr_0.8fr_0.7fr_0.8fr_0.9fr] gap-3 px-3 pb-1.5 text-[13px] text-muted lg:grid">
           <span>Part</span>
           <span>On the shelf</span>
           <span>Reorder at</span>
@@ -171,12 +171,12 @@ export default async function InventoryPage({
                     <div className="flex items-center gap-2">
                       <p className="truncate text-[13px] font-medium text-ink">{part.name}</p>
                       {low ? (
-                        <span className="text-[11.5px] text-warn">
+                        <span className="text-[13px] text-warn">
                           {part.stock === 0 ? "Out" : "Low"}
                         </span>
                       ) : null}
                     </div>
-                    <p className="mt-0.5 truncate text-[11.5px] text-muted">
+                    <p className="mt-0.5 truncate text-[13px] text-muted">
                       {part.sku} · {part.category}
                       {part.supplier ? ` · ${part.supplier}` : ""}
                     </p>
@@ -184,7 +184,7 @@ export default async function InventoryPage({
                   <div>
                     <div className="flex items-baseline gap-1.5">
                       <span className="figure text-[13px] text-ink">{part.stock}</span>
-                      <span className="text-[11.5px] text-muted lg:hidden">in stock</span>
+                      <span className="text-[13px] text-muted lg:hidden">in stock</span>
                     </div>
                     <div className="mt-1 max-w-[120px]">
                       <DataBar
@@ -194,10 +194,10 @@ export default async function InventoryPage({
                       />
                     </div>
                   </div>
-                  <p className="figure text-[12.5px] text-muted">{part.reorder_level}</p>
+                  <p className="figure text-[13px] text-muted">{part.reorder_level}</p>
                   <div>
-                    <p className="figure text-[12.5px] text-ink">{formatMoney(part.price_cents)}</p>
-                    <p className="text-[11.5px] text-muted">cost {formatMoney(part.cost_cents)}</p>
+                    <p className="figure text-[13px] text-ink">{formatMoney(part.price_cents)}</p>
+                    <p className="text-[13px] text-muted">cost {formatMoney(part.cost_cents)}</p>
                   </div>
                   <div className="flex gap-1.5 lg:justify-end">
                     {canManage ? (
@@ -227,7 +227,7 @@ export default async function InventoryPage({
                         </form>
                       </>
                     ) : (
-                      <span className="text-[11.5px] text-muted">Manager-managed</span>
+                      <span className="text-[13px] text-muted">Manager-managed</span>
                     )}
                   </div>
                 </li>
@@ -237,7 +237,7 @@ export default async function InventoryPage({
         </ul>
       </Panel>
 
-      <p className="mt-3 text-[12.5px] leading-5 text-muted">
+      <p className="mt-3 text-[13px] leading-5 text-muted">
         Stock moves automatically when a part is attached to a ticket. Manual adjustments are owner-
         and manager-controlled.
       </p>

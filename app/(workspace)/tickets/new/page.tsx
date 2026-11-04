@@ -23,7 +23,7 @@ export default async function NewTicketPage({ searchParams }: { searchParams: Se
         actions={
           <Link
             href="/tickets"
-            className="inline-flex h-9 items-center justify-center rounded-full border border-line bg-wash px-3.5 text-[13px] font-medium text-ink transition-colors hover:border-muted/40"
+            className="inline-flex h-9 items-center justify-center rounded-sm bg-wash px-3.5 text-[13px] font-semibold text-ink transition-colors hover:border-muted/40"
           >
             Back to tickets
           </Link>
@@ -54,7 +54,7 @@ export default async function NewTicketPage({ searchParams }: { searchParams: Se
                 "Give the customer the tracking code from the ticket page.",
               ].map((item, index) => (
                 <li key={item} className="flex gap-3 px-5 py-3">
-                  <span className="figure mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-full border border-line text-[11.5px] text-muted">
+                  <span className="figure mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-sm bg-wash text-[13px] text-ink">
                     {index + 1}
                   </span>
                   <p className="text-[13px] leading-5 text-muted">{item}</p>
@@ -73,7 +73,7 @@ export default async function NewTicketPage({ searchParams }: { searchParams: Se
               and enters the code. No email or phone number is needed.
             </p>
             <div className="mt-4 rounded bg-paper p-3">
-              <p className="text-[11.5px] text-muted">Customer sees</p>
+              <p className="text-[13px] text-muted">Customer sees</p>
               <p className="mt-1 text-[13px] text-ink">Status, device, issue, and visible timeline notes.</p>
             </div>
           </Panel>

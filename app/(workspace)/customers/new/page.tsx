@@ -26,7 +26,7 @@ export default async function NewCustomerPage({
         actions={
           <Link
             href="/customers"
-            className="inline-flex h-9 items-center justify-center rounded-full border border-line bg-wash px-3.5 text-[13px] font-medium text-ink hover:border-muted/40"
+            className="inline-flex h-9 items-center justify-center rounded-sm bg-wash px-3.5 text-[13px] font-semibold text-ink hover:border-muted/40"
           >
             Back to customers
           </Link>

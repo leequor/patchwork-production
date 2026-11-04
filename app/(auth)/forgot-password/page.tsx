@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   title: "Forgot password",
 };
 
-const linkClass = "font-medium text-ink underline underline-offset-4 hover:text-gold";
+const linkClass = "font-sans font-semibold text-ink underline underline-offset-4 hover:text-accent";
 
 export default function ForgotPasswordPage() {
   return (
     <AuthCard
       title="Reset your password"
-      description="Enter your account email. If it matches, Supabase sends a single-use reset link."
+      description="Enter your account email. If it matches, a single-use reset link is sent."
       footer={
         <p>
           Remembered it?{" "}

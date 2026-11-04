@@ -40,7 +40,7 @@ export default async function CustomerDetailPage({
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Link href="/customers" className="inline-flex items-center gap-1.5 text-[12.5px] text-muted transition-colors hover:text-ink">
+        <Link href="/customers" className="inline-flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-ink">
           <span aria-hidden="true">←</span>
           All customers
         </Link>
@@ -57,18 +57,18 @@ export default async function CustomerDetailPage({
             <h1 className="text-[22px] font-semibold leading-tight tracking-[-0.015em] text-ink">
               {customer.full_name}
             </h1>
-            <p className="mt-1 text-[12.5px] text-muted">
+            <p className="mt-1 text-[13px] text-muted">
               {customer.phone}
               {customer.email ? ` · ${customer.email}` : ""}
             </p>
-            <p className="mt-1 text-[11.5px] text-muted">
+            <p className="mt-1 text-[13px] text-muted">
               Customer since {formatDate(customer.created_at)} · {customer.devices.length} device
               {customer.devices.length === 1 ? "" : "s"} · {customer.tickets.length} ticket
               {customer.tickets.length === 1 ? "" : "s"}
             </p>
           </div>
         </div>
-        <div className="text-right text-[11.5px] text-muted">
+        <div className="text-right text-[13px] text-muted">
           <p>{customer.company || "Individual customer"}</p>
           {customer.notes ? <p className="mt-1 max-w-[36ch]">{customer.notes}</p> : null}
         </div>
@@ -94,17 +94,17 @@ export default async function CustomerDetailPage({
                       href={`/tickets/${ticket.id}`}
                       className="grid gap-1 px-3 py-2.5 transition-colors hover:bg-wash/40 sm:grid-cols-[5.5rem_1fr_8rem_5rem] sm:items-center sm:gap-3"
                     >
-                      <span className="figure text-[11.5px] text-ink">{ticket.ticket_number}</span>
+                      <span className="figure text-[13px] text-ink">{ticket.ticket_number}</span>
                       <span className="min-w-0">
-                        <span className="block truncate text-[12.5px] text-ink">
+                        <span className="block truncate text-[13px] text-ink">
                           {ticket.device.brand} {ticket.device.model}
                         </span>
-                        <span className="mt-0.5 block truncate text-[11px] text-muted">
+                        <span className="mt-0.5 block truncate text-[13px] text-muted">
                           {ticket.issue}
                         </span>
                       </span>
                       <StatusPill status={ticket.status} />
-                      <span className="figure text-[11px] text-muted sm:text-right">
+                      <span className="figure text-[13px] text-muted sm:text-right">
                         {formatRelative(ticket.created_at)}
                       </span>
                     </Link>
@@ -117,21 +117,21 @@ export default async function CustomerDetailPage({
           <Panel>
             <PanelHeader title="Devices" detail="Attach a device before opening its ticket." />
             {customer.devices.length === 0 ? (
-              <p className="px-3 pb-3 text-[12px] text-muted">No devices attached.</p>
+              <p className="px-3 pb-3 text-[13px] text-muted">No devices attached.</p>
             ) : (
               <div className="grid gap-2 px-3 pb-3 sm:grid-cols-2">
                 {customer.devices.map((device) => (
                   <div key={device.id} className="rounded bg-paper px-3 py-2.5">
-                    <p className="text-[11px] text-muted">
+                    <p className="text-[13px] text-muted">
                       {DEVICE_CATEGORY_LABELS[device.category] ?? device.category}
                     </p>
                     <p className="mt-0.5 text-[13px] font-medium text-ink">
                       {device.brand} {device.model}
                     </p>
-                    <p className="mt-0.5 text-[11px] text-muted">
+                    <p className="mt-0.5 text-[13px] text-muted">
                       {device.serial || "No serial"} {device.color ? `· ${device.color}` : ""}
                     </p>
-                    <p className="mt-1.5 text-[10.5px] text-muted">Added {formatDate(device.created_at)}</p>
+                    <p className="mt-1.5 text-[13px] text-muted">Added {formatDate(device.created_at)}</p>
                   </div>
                 ))}
               </div>
@@ -163,7 +163,7 @@ export default async function CustomerDetailPage({
         <div className="space-y-3">
           <Panel className="px-4 py-4">
             <h2 className="text-[13.5px] font-semibold text-ink">Contact</h2>
-            <dl className="mt-3 space-y-2.5 text-[12px]">
+            <dl className="mt-3 space-y-2.5 text-[13px]">
               <div className="flex justify-between gap-3">
                 <dt className="text-muted">Phone</dt>
                 <dd className="text-right text-ink">{customer.phone}</dd>
@@ -190,17 +190,17 @@ export default async function CustomerDetailPage({
                 <dd className="figure text-[19px] font-semibold leading-none text-ink">
                   {customer.devices.length}
                 </dd>
-                <dt className="mt-1 text-[10.5px] text-muted">Devices</dt>
+                <dt className="mt-1 text-[13px] text-muted">Devices</dt>
               </div>
               <div className="rounded bg-paper px-2 py-2 text-center">
                 <dd className="figure text-[19px] font-semibold leading-none text-ink">
                   {customer.tickets.length}
                 </dd>
-                <dt className="mt-1 text-[10.5px] text-muted">Tickets</dt>
+                <dt className="mt-1 text-[13px] text-muted">Tickets</dt>
               </div>
               <div className="rounded bg-paper px-2 py-2 text-center">
                 <dd className="figure text-[19px] font-semibold leading-none text-accent">{openCount}</dd>
-                <dt className="mt-1 text-[10.5px] text-muted">Open</dt>
+                <dt className="mt-1 text-[13px] text-muted">Open</dt>
               </div>
             </dl>
           </Panel>

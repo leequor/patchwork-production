@@ -12,16 +12,23 @@ export function AuthCard({
   footer?: ReactNode;
 }) {
   return (
-    <div className="w-full max-w-form">
-      <h1 className="text-balance text-[24px] font-semibold leading-[1.15] tracking-[-0.025em] text-ink">
+    <div className="w-full">
+      <h2 className="rise display text-[26px] text-ink" style={{ animationDelay: "120ms" }}>
         {title}
-      </h1>
-      <p className="mt-2 text-[14px] leading-6 text-muted">{description}</p>
+      </h2>
+      <p
+        className="rise mt-2 max-w-[46ch] font-serif text-[15px] leading-6 text-muted"
+        style={{ animationDelay: "160ms" }}
+      >
+        {description}
+      </p>
 
-      <div className="mt-7">{children}</div>
+      <div className="rise mt-7" style={{ animationDelay: "210ms" }}>
+        {children}
+      </div>
 
       {footer ? (
-        <div className="mt-8 rounded-sm bg-raised px-3 py-3 text-[13px] leading-5 text-muted">
+        <div className="mt-7 rounded-sm bg-wash px-3.5 py-3 font-sans text-[13px] leading-5 text-muted">
           {footer}
         </div>
       ) : null}

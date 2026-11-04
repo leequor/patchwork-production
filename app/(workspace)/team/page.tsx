@@ -38,7 +38,7 @@ export default async function TeamPage({
       <Feedback notice={params.notice} error={params.error} />
 
       <div className="mt-4 grid gap-3 xl:grid-cols-[1.4fr_0.6fr]">
-        <Panel>
+        <Panel className="self-start">
           <PanelHeader
             title="Staff"
             detail={`${profiles.length} accounts · ${dashboard.openCount} open jobs`}
@@ -54,27 +54,27 @@ export default async function TeamPage({
                   className="grid gap-2 px-3 py-2.5 sm:grid-cols-[1.3fr_0.7fr_0.9fr_auto] sm:items-center sm:gap-3"
                 >
                   <span className="flex min-w-0 items-center gap-2.5">
-                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded bg-wash text-[11.5px] font-semibold text-ink">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded bg-wash text-[13px] font-semibold text-ink">
                       {initials(member.full_name || member.email)}
                     </span>
                     <span className="min-w-0">
                       <span className="block truncate text-[13px] font-medium text-ink">
                         {member.full_name || member.email}
                         {member.id === staff?.id ? (
-                          <span className="ml-1.5 text-[11.5px] text-muted">you</span>
+                          <span className="ml-1.5 text-[13px] text-muted">you</span>
                         ) : null}
                       </span>
-                      <span className="mt-0.5 block truncate text-[12px] text-muted">
+                      <span className="mt-0.5 block truncate text-[13px] text-muted">
                         {member.email}
                       </span>
                     </span>
                   </span>
 
-                  <span className="text-[12px] text-muted">{ROLE_LABELS[member.role]}</span>
+                  <span className="text-[13px] text-muted">{ROLE_LABELS[member.role]}</span>
 
-                  <span className="text-[12px] text-muted">
-                    <span className="figure text-[12.5px] text-ink">{memberLoad?.open ?? 0}</span> open ·{" "}
-                    <span className="figure text-[12.5px] text-ink">{memberLoad?.active ?? 0}</span>{" "}
+                  <span className="text-[13px] text-muted">
+                    <span className="figure text-[13px] text-ink">{memberLoad?.open ?? 0}</span> open ·{" "}
+                    <span className="figure text-[13px] text-ink">{memberLoad?.active ?? 0}</span>{" "}
                     in repair
                   </span>
 
@@ -89,7 +89,7 @@ export default async function TeamPage({
                           id={`role-${member.id}`}
                           name="role"
                           defaultValue={member.role}
-                          className="h-7 rounded border border-line bg-paper px-1.5 text-[12px] text-ink outline-none focus:border-accent"
+                          className="h-7 rounded border border-line bg-paper px-1.5 text-[13px] text-ink outline-none focus:border-accent"
                         >
                           {isOwner ? <option value="superadmin">Owner</option> : null}
                           <option value="admin">Manager</option>
@@ -97,13 +97,13 @@ export default async function TeamPage({
                         </select>
                         <button
                           type="submit"
-                          className="h-7 rounded px-2 text-[12px] text-muted transition-colors hover:bg-wash hover:text-ink"
+                          className="h-7 rounded px-2 text-[13px] text-muted transition-colors hover:bg-wash hover:text-ink"
                         >
                           Save
                         </button>
                       </form>
                     ) : (
-                      <span className="text-[11.5px] text-muted">
+                      <span className="text-[13px] text-muted">
                         {member.role === "superadmin" ? "Owner-managed" : "Manager-managed"}
                       </span>
                     )}
@@ -118,7 +118,7 @@ export default async function TeamPage({
           {canManage ? (
             <Panel className="px-4 py-4">
               <h2 className="text-[14px] font-semibold text-ink">Add staff</h2>
-              <p className="mt-1 text-[12.5px] leading-5 text-muted">
+              <p className="mt-1 text-[13px] leading-5 text-muted">
                 Creates a confirmed account. Share the temporary password privately; they can change
                 it from “Forgot password”.
               </p>
@@ -151,7 +151,7 @@ export default async function TeamPage({
           ) : (
             <Panel className="px-4 py-4">
               <h2 className="text-[14px] font-semibold text-ink">Access</h2>
-              <p className="mt-1.5 text-[12.5px] leading-5 text-muted">
+              <p className="mt-1.5 text-[13px] leading-5 text-muted">
                 Your account is a technician. Ask an owner or manager to change roles or add staff.
               </p>
             </Panel>
@@ -159,7 +159,7 @@ export default async function TeamPage({
 
           <Panel className="px-4 py-4">
             <h2 className="text-[14px] font-semibold text-ink">Role model</h2>
-            <dl className="mt-2.5 space-y-2 text-[12.5px] leading-5">
+            <dl className="mt-2.5 space-y-2 text-[13px] leading-5">
               <div>
                 <dt className="text-ink">Owner</dt>
                 <dd className="text-muted">Full access, staff, and owner roles.</dd>

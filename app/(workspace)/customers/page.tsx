@@ -34,25 +34,25 @@ export default async function CustomersPage({
 
       <Panel className="mt-4">
         <form className="flex flex-wrap items-center gap-2 p-3">
-          <label className="relative min-w-[220px] flex-1">
+          <label className="min-w-[220px] flex-1">
             <span className="sr-only">Search customers</span>
             <input
               name="q"
               defaultValue={params.q}
               placeholder="Search name, email, phone, or company"
-              className="h-8 w-full rounded border border-line bg-paper px-2.5 text-[13px] text-ink outline-none placeholder:text-muted/60 focus:border-accent"
+              className="h-10 w-full rounded-sm border border-line bg-raised px-2.5 font-sans text-[13px] text-ink outline-none placeholder:text-muted/70 focus:border-accent"
             />
           </label>
           <button
             type="submit"
-            className="inline-flex h-8 items-center justify-center rounded bg-wash px-3 text-[13px] font-medium text-ink transition-colors hover:bg-line"
+            className="inline-flex h-10 items-center justify-center rounded-sm bg-accent px-3.5 font-sans text-[13px] font-semibold text-onAccent transition-[background-color,transform] duration-150 hover:bg-gold active:scale-[0.98]"
           >
             Search
           </button>
           {params.q ? (
             <Link
               href="/customers"
-              className="inline-flex h-8 items-center rounded px-2.5 text-[13px] text-muted transition-colors hover:text-ink"
+              className="inline-flex h-10 items-center rounded-sm px-2.5 font-sans text-[13px] text-muted transition-colors hover:text-ink"
             >
               Clear
             </Link>
@@ -72,50 +72,70 @@ export default async function CustomersPage({
             />
           </div>
         ) : (
-          <>
-            <div className="hidden grid-cols-[1.6fr_1fr_5rem_5rem_5rem] gap-3 px-3 pb-1.5 text-[11.5px] text-muted md:grid">
-              <span>Customer</span>
-              <span>Company</span>
-              <span>Devices</span>
-              <span>Open</span>
-              <span className="text-right">All tickets</span>
-            </div>
-            <ul className="pb-2">
+          <table className="w-full border-collapse text-left">
+            <thead>
+              <tr className="font-sans text-[13px] text-muted">
+                <th scope="col" className="px-4 pb-2 font-normal">
+                  Customer
+                </th>
+                <th scope="col" className="hidden px-2 pb-2 font-normal md:table-cell">
+                  Company
+                </th>
+                <th scope="col" className="px-2 pb-2 text-right font-normal">
+                  Devices
+                </th>
+                <th scope="col" className="px-2 pb-2 text-right font-normal">
+                  Open
+                </th>
+                <th scope="col" className="px-4 pb-2 text-right font-normal">
+                  All tickets
+                </th>
+              </tr>
+            </thead>
+            <tbody>
               {customers.map((customer) => (
-                <li key={customer.id}>
-                  <Link
-                    href={`/customers/${customer.id}`}
-                    className="grid gap-1.5 px-3 py-2.5 transition-colors hover:bg-wash/40 md:grid-cols-[1.6fr_1fr_5rem_5rem_5rem] md:items-center md:gap-3"
-                  >
-                    <span className="flex min-w-0 items-center gap-2.5">
-                      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-sm bg-wash text-[11.5px] font-semibold text-ink">
+                <tr key={customer.id} className="group border-t border-line/70">
+                  <td className="px-4 py-3">
+                    <Link
+                      href={`/customers/${customer.id}`}
+                      className="flex min-w-0 items-center gap-3"
+                    >
+                      <span className="grid h-9 w-9 shrink-0 place-items-center bg-wash font-sans text-[13px] font-semibold text-ink">
                         {initials(customer.full_name)}
                       </span>
                       <span className="min-w-0">
-                        <span className="block truncate text-[13px] font-medium text-ink">
+                        <span className="block truncate font-sans text-[14px] font-medium text-ink group-hover:text-accent">
                           {customer.full_name}
                         </span>
-                        <span className="mt-0.5 block truncate text-[12px] text-muted">
+                        <span className="mt-0.5 block truncate font-serif text-[13px] text-muted">
                           {customer.phone}
                           {customer.email ? ` · ${customer.email}` : ""}
                         </span>
                       </span>
+                    </Link>
+                  </td>
+                  <td className="hidden px-2 py-3 md:table-cell">
+                    <span className="font-serif text-[14px] text-muted">
+                      {customer.company || "—"}
                     </span>
-                    <span className="truncate text-[12.5px] text-muted">{customer.company || "—"}</span>
-                    <span className="figure text-[12.5px] text-ink">{customer.device_count}</span>
-                    <span className="figure text-[12.5px] text-ink">{customer.open_count}</span>
-                    <span className="figure text-[12.5px] text-muted md:text-right">
-                      {customer.ticket_count}
-                    </span>
-                  </Link>
-                </li>
+                  </td>
+                  <td className="px-2 py-3 text-right">
+                    <span className="figure text-[14px] text-ink">{customer.device_count}</span>
+                  </td>
+                  <td className="px-2 py-3 text-right">
+                    <span className="figure text-[14px] text-ink">{customer.open_count}</span>
+                  </td>
+                  <td className="px-4 py-3 text-right">
+                    <span className="figure text-[13px] text-muted">{customer.ticket_count}</span>
+                  </td>
+                </tr>
               ))}
-            </ul>
-          </>
+            </tbody>
+          </table>
         )}
       </Panel>
 
-      <p className="mt-3 text-[12.5px] text-muted">
+      <p className="mt-3 font-serif text-[13px] text-muted">
         {customers.length} customer{customers.length === 1 ? "" : "s"} shown.
       </p>
     </div>

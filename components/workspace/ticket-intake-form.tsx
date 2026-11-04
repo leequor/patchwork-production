@@ -52,7 +52,7 @@ export function TicketIntakeForm({
             type="button"
             onClick={() => switchMode(value)}
             className={cn(
-              "h-7 rounded px-2.5 text-[12.5px] font-medium transition-colors",
+              "h-7 rounded px-2.5 text-[13px] font-medium transition-colors",
               mode === value ? "bg-wash text-ink" : "text-muted hover:text-ink",
             )}
             aria-pressed={mode === value}
@@ -103,7 +103,7 @@ export function TicketIntakeForm({
           </SelectField>
 
           {selected && devices.length === 0 ? (
-            <p className="text-[12.5px] leading-5 text-warn sm:col-span-2">
+            <p className="text-[13px] leading-5 text-warn sm:col-span-2">
               This customer has no device yet.{" "}
               <Link href={`/customers/${selected.id}`} className="underline underline-offset-2">
                 Add a device
@@ -113,7 +113,7 @@ export function TicketIntakeForm({
           ) : null}
 
           {customers.length === 0 ? (
-            <p className="text-[12.5px] leading-5 text-warn sm:col-span-2">
+            <p className="text-[13px] leading-5 text-warn sm:col-span-2">
               No customers yet.{" "}
               <Link href="/customers" className="underline underline-offset-2">
                 Add the first customer
@@ -192,14 +192,14 @@ export function TicketIntakeForm({
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-3 bg-raised px-3 py-2.5">
-        <p className="max-w-[52ch] text-[12px] leading-5 text-muted">
+        <p className="max-w-[52ch] text-[13px] leading-5 text-muted">
           Intake creates a public tracking code automatically. The customer can follow the repair
           with just that code.
         </p>
         <SubmitButton pendingText="Creating ticket...">Create ticket</SubmitButton>
       </div>
 
-      <p className="text-[12px] text-muted">
+      <p className="text-[13px] text-muted">
         Starts at {TICKET_STATUS_META.intake.label.toLowerCase()} · change it from the ticket page.
       </p>
     </form>

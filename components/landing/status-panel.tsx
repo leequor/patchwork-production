@@ -49,11 +49,11 @@ function StatusRow({
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3.5">
       <div>
-        <p className="text-[14px] font-medium text-ink">{label}</p>
-        <p className="mt-0.5 max-w-[58ch] text-[13.5px] leading-5 text-muted">{detail}</p>
+        <p className="text-[15px] font-medium text-ink">{label}</p>
+        <p className="mt-0.5 max-w-[58ch] font-serif text-[15px] leading-6 text-muted">{detail}</p>
       </div>
       <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium", TONE[state])}>
-        <span className={cn("h-1.5 w-1.5 rounded-full", DOT[state])} aria-hidden="true" />
+        <span className={cn("h-1.5 w-1.5", DOT[state])} aria-hidden="true" />
         {STATE_LABEL[state]}
       </span>
     </div>
@@ -103,7 +103,7 @@ export function StatusPanel() {
   return (
     <div>
       {error ? (
-        <div className="mb-3 rounded-md bg-negative-soft px-3.5 py-3 text-[13.5px] leading-5 text-negative-ink">
+        <div className="mb-3 rounded-sm bg-negative-soft px-3.5 py-3 text-[14px] leading-5 text-negative-ink">
           {error}
         </div>
       ) : null}
@@ -146,7 +146,7 @@ export function StatusPanel() {
         />
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 text-[13.5px] text-muted">
+      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-sans text-[13px] text-muted">
         <a className="transition-colors hover:text-ink" href="/api/health">
           /api/health
         </a>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { StatusPanel } from "@/components/landing/status-panel";
+import { ArchiveStrip } from "@/components/patchwork/archive-strip";
 import { Logo } from "@/components/ui/logo";
 
 export const metadata: Metadata = {
@@ -25,53 +26,62 @@ const RUNBOOK = [
 
 export default function StatusPage() {
   return (
-    <main className="flex min-h-[100dvh] flex-col bg-paper">
-      <header className="bg-surface">
-        <div className="mx-auto flex h-14 max-w-[1000px] items-center justify-between px-5 sm:px-6">
-          <Logo />
-          <Link
-            href="/"
-            className="inline-flex h-8 items-center rounded px-2.5 text-[13px] text-muted transition-colors hover:bg-wash hover:text-ink"
+    <main className="min-h-[100dvh] bg-paper">
+      <section className="bg-night px-4 pb-10 pt-5 sm:px-6 sm:pb-12">
+        <div className="mx-auto w-full max-w-[1000px]">
+          <header className="flex items-center justify-between gap-4">
+            <Logo tone="night" />
+            <Link
+              href="/"
+              className="font-sans text-[13px] text-creamMuted transition-colors hover:text-cream"
+            >
+              Back to desk
+            </Link>
+          </header>
+
+          <h1 className="rise display mt-12 max-w-[16ch] text-[clamp(38px,5.6vw,76px)] text-cream sm:mt-16">
+            Is the shop open?
+          </h1>
+          <p
+            className="rise mt-4 max-w-[54ch] font-serif text-[17px] leading-[1.55] text-creamMuted"
+            style={{ animationDelay: "80ms" }}
           >
-            Back to desk
-          </Link>
+            Two checks, run on demand and never cached: the app itself and the records service
+            behind it.
+          </p>
+
+          <ArchiveStrip className="mt-10" />
         </div>
-      </header>
+      </section>
 
-      <div className="mx-auto w-full max-w-[1000px] flex-1 px-5 pb-16 pt-8 sm:px-6 sm:pt-10">
-        <h1 className="text-[24px] font-semibold leading-tight tracking-[-0.02em] text-ink">
-          System status
-        </h1>
-        <p className="mt-1.5 max-w-[58ch] text-[13.5px] leading-6 text-muted">
-          Two checks, run on demand and never cached: the Next.js app and the configured Supabase
-          project.
-        </p>
-
-        <div className="mt-6 rounded bg-surface px-5 py-5">
+      <div className="mx-auto w-full max-w-[1000px] px-4 pb-16 pt-6 sm:px-6">
+        <div className="rise rounded-sm bg-surface px-5 py-5">
           <StatusPanel />
         </div>
 
-        <section className="mt-8">
+        <section className="mt-10">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
-            <h2 className="text-[14px] font-semibold text-ink">If a check fails</h2>
-            <p className="text-[12.5px] text-muted">Work top to bottom.</p>
+            <h2 className="rise display text-[24px] text-ink">If a check fails</h2>
+            <p className="font-sans text-[13px] text-muted">Work top to bottom.</p>
           </div>
-          <ol className="mt-3 space-y-2">
+          <ol className="mt-3 grid gap-2 md:grid-cols-3">
             {RUNBOOK.map((item, index) => (
-              <li key={item.title} className="rounded bg-surface px-4 py-3">
-                <div className="flex items-baseline gap-2">
-                  <span className="figure text-[12px] text-accent">
-                    {index + 1}
-                  </span>
-                  <p className="text-[13px] font-medium text-ink">{item.title}</p>
-                </div>
-                <p className="mt-1 max-w-[78ch] text-[13px] leading-5 text-muted">{item.body}</p>
+              <li
+                key={item.title}
+                className="rise rounded-sm bg-surface px-4 py-4"
+                style={{ animationDelay: `${80 + index * 70}ms` }}
+              >
+                <span className="block h-1.5 w-1.5 bg-accent" aria-hidden="true" />
+                <p className="mt-2 font-sans text-[15px] font-semibold text-ink">{item.title}</p>
+                <p className="mt-1.5 max-w-[46ch] font-serif text-[15px] leading-6 text-muted">
+                  {item.body}
+                </p>
               </li>
             ))}
           </ol>
         </section>
 
-        <p className="mt-8 text-[12.5px] text-muted">
+        <p className="mt-8 font-serif text-[13px] leading-5 text-muted">
           Health checks run on demand and are never cached.
         </p>
       </div>

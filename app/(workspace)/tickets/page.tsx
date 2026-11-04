@@ -28,7 +28,7 @@ type SearchParams = Promise<{
 }>;
 
 const FILTER =
-  "h-8 w-full rounded border border-line bg-paper px-2.5 text-[13px] text-ink outline-none placeholder:text-muted/60 focus:border-accent";
+  "h-10 w-full rounded-sm border border-line bg-raised px-2.5 font-sans text-[13px] text-ink outline-none placeholder:text-muted/70 focus:border-accent";
 
 export default async function TicketsPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
@@ -59,13 +59,13 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
       <Feedback notice={params.notice} error={params.error} />
 
       <Panel className="mt-4">
-        <form className="grid gap-2 p-3 lg:grid-cols-[1.6fr_0.9fr_0.8fr_1fr_auto]">
+        <form className="grid gap-2 p-3 lg:grid-cols-[1.7fr_1fr_0.9fr_1.1fr_auto]">
           <label>
             <span className="sr-only">Search tickets</span>
             <input
               name="q"
               defaultValue={params.q}
-              placeholder="Search ticket, customer, phone, device"
+              placeholder="Ticket, customer, phone, device"
               className={FILTER}
             />
           </label>
@@ -105,14 +105,14 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
           <div className="flex gap-2">
             <button
               type="submit"
-              className="inline-flex h-8 items-center justify-center rounded bg-wash px-3 text-[13px] font-medium text-ink transition-colors hover:bg-line"
+              className="inline-flex h-10 items-center justify-center rounded-sm bg-accent px-3.5 font-sans text-[13px] font-semibold text-onAccent transition-[background-color,transform] duration-150 hover:bg-gold active:scale-[0.98]"
             >
               Filter
             </button>
             {active ? (
               <Link
                 href="/tickets"
-                className="inline-flex h-8 items-center justify-center rounded px-2.5 text-[13px] text-muted transition-colors hover:text-ink"
+                className="inline-flex h-10 items-center justify-center rounded-sm px-2.5 font-sans text-[13px] text-muted transition-colors hover:text-ink"
               >
                 Clear
               </Link>
@@ -133,57 +133,84 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
             />
           </div>
         ) : (
-          <>
-            <div className="hidden grid-cols-[6.5rem_1fr_1.2fr_8rem_6rem_7rem_5rem] gap-3 px-3 pb-1.5 text-[11.5px] text-muted lg:grid">
-              <span>Ticket</span>
-              <span>Customer</span>
-              <span>Issue</span>
-              <span>Status</span>
-              <span>Priority</span>
-              <span>Technician</span>
-              <span className="text-right">Updated</span>
-            </div>
-            <ul className="pb-2">
+          <table className="w-full border-collapse text-left">
+            <thead>
+              <tr className="font-sans text-[13px] text-muted">
+                <th scope="col" className="px-4 pb-2 font-normal">
+                  Ticket
+                </th>
+                <th scope="col" className="px-2 pb-2 font-normal">
+                  Customer
+                </th>
+                <th scope="col" className="hidden px-2 pb-2 font-normal xl:table-cell">
+                  Issue
+                </th>
+                <th scope="col" className="px-2 pb-2 font-normal">
+                  Status
+                </th>
+                <th scope="col" className="hidden px-2 pb-2 font-normal lg:table-cell">
+                  Priority
+                </th>
+                <th scope="col" className="hidden px-2 pb-2 font-normal lg:table-cell">
+                  Technician
+                </th>
+                <th scope="col" className="px-4 pb-2 text-right font-normal">
+                  Updated
+                </th>
+              </tr>
+            </thead>
+            <tbody>
               {tickets.map((ticket) => (
-                <li key={ticket.id}>
-                  <Link
-                    href={`/tickets/${ticket.id}`}
-                    className="grid gap-1 px-3 py-2.5 transition-colors hover:bg-wash/40 lg:grid-cols-[6.5rem_1fr_1.2fr_8rem_6rem_7rem_5rem] lg:items-center lg:gap-3"
-                  >
-                    <span>
-                      <span className="figure block text-[12.5px] text-ink">{ticket.ticket_number}</span>
-                      <span className="figure mt-0.5 block text-[11.5px] text-muted">
+                <tr key={ticket.id} className="group border-t border-line/70">
+                  <td className="px-4 py-3 align-top">
+                    <Link href={`/tickets/${ticket.id}`} className="block">
+                      <span className="figure block text-[13px] font-semibold text-ink group-hover:text-accent">
+                        {ticket.ticket_number}
+                      </span>
+                      <span className="figure mt-0.5 block text-[13px] text-muted">
                         {ticket.public_code}
                       </span>
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block truncate text-[13px] font-medium text-ink">
+                    </Link>
+                  </td>
+                  <td className="px-2 py-3">
+                    <Link href={`/tickets/${ticket.id}`} className="block">
+                      <span className="block truncate font-sans text-[14px] font-medium text-ink">
                         {ticket.customer.full_name}
                       </span>
-                      <span className="mt-0.5 block truncate text-[12px] text-muted">
+                      <span className="mt-0.5 block truncate font-serif text-[13px] text-muted">
                         {ticket.device.brand} {ticket.device.model}
                       </span>
-                    </span>
-                    <span className="line-clamp-2 text-[12.5px] leading-5 text-muted">
+                    </Link>
+                  </td>
+                  <td className="hidden px-2 py-3 xl:table-cell">
+                    <span className="line-clamp-2 max-w-[34ch] font-serif text-[13px] leading-5 text-muted">
                       {ticket.issue}
                     </span>
+                  </td>
+                  <td className="px-2 py-3">
                     <StatusPill status={ticket.status} />
+                  </td>
+                  <td className="hidden px-2 py-3 lg:table-cell">
                     <PriorityPill priority={ticket.priority} />
-                    <span className="truncate text-[12.5px] text-ink">
+                  </td>
+                  <td className="hidden px-2 py-3 lg:table-cell">
+                    <span className="font-sans text-[13px] text-ink">
                       {ticket.assignee?.full_name || <span className="text-muted">Unassigned</span>}
                     </span>
-                    <span className="figure text-[12px] text-muted lg:text-right">
+                  </td>
+                  <td className="px-4 py-3 text-right align-top">
+                    <span className="figure text-[13px] text-muted">
                       {formatRelative(ticket.updated_at)}
                     </span>
-                  </Link>
-                </li>
+                  </td>
+                </tr>
               ))}
-            </ul>
-          </>
+            </tbody>
+          </table>
         )}
       </Panel>
 
-      <p className="mt-3 text-[12.5px] text-muted">
+      <p className="mt-3 font-serif text-[13px] text-muted">
         {tickets.length} ticket{tickets.length === 1 ? "" : "s"} shown.
       </p>
     </div>

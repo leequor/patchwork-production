@@ -11,14 +11,28 @@ import {
   SecondaryLink,
   StatusPill,
 } from "@/components/workspace/ui";
-import { formatCompactMoney, formatRelative, ROLE_LABELS } from "@/lib/repair/format";
+import {
+  formatCompactMoney,
+  formatRelative,
+  ROLE_LABELS,
+  TICKET_STATUS_META,
+} from "@/lib/repair/format";
 import { getDashboardData } from "@/lib/repair/queries";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = { title: "Repair desk" };
 
-const STAGES = ["intake", "diagnosing", "waiting_parts", "in_repair"] as const;
+const STAGES = ["intake", "diagnosing", "waiting_parts", "in_repair", "ready"] as const;
+
+const STAGE_BAR: Record<(typeof STAGES)[number], string> = {
+  intake: "bg-steel",
+  diagnosing: "bg-info",
+  waiting_parts: "bg-warn",
+  in_repair: "bg-accent",
+  ready: "bg-positive",
+};
 
 export default async function DashboardPage() {
   const data = await getDashboardData();
@@ -29,10 +43,10 @@ export default async function DashboardPage() {
   }).format(new Date());
 
   return (
-    <div>
+    <div className="space-y-3">
       <PageHeader
         title="Repair desk"
-        description={dateLabel}
+        description={`${dateLabel} · ${data.openCount} open on the bench, ${data.readyCount} waiting for pickup.`}
         actions={
           <>
             <SecondaryLink href="/track">Open tracker</SecondaryLink>
@@ -41,28 +55,34 @@ export default async function DashboardPage() {
         }
       />
 
-      <section aria-label="Tickets by stage" className="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4">
+      <section aria-label="Tickets by stage" className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-5">
         {STAGES.map((status) => (
           <Link
             key={status}
             href={`/tickets?status=${status}`}
-            className="flex items-baseline justify-between gap-3 rounded bg-surface px-3.5 py-3 transition-colors hover:bg-raised"
+            className="group rounded-sm bg-surface p-4 transition-colors duration-150 hover:bg-raised"
           >
-            <StatusPill status={status} />
-            <span className="figure text-[26px] font-semibold leading-none tracking-[-0.03em] text-ink">
+            <span aria-hidden="true" className={cn("block h-[3px] w-8", STAGE_BAR[status])} />
+            <span className="figure mt-3 block text-[34px] font-bold leading-none tracking-[-0.04em] text-ink">
               {data.counts[status]}
+            </span>
+            <span className="mt-2 block font-sans text-[13px] text-muted transition-colors group-hover:text-ink">
+              {TICKET_STATUS_META[status].label}
             </span>
           </Link>
         ))}
       </section>
 
-      <div className="mt-3 grid gap-3 xl:grid-cols-[1.5fr_0.5fr]">
+      <div className="grid gap-3 xl:grid-cols-[1.62fr_1fr]">
         <Panel className="overflow-hidden">
           <PanelHeader
             title="Live queue"
             detail={`${data.queue.length} open · newest first`}
             action={
-              <Link href="/tickets" className="text-[13px] text-muted transition-colors hover:text-ink">
+              <Link
+                href="/tickets"
+                className="font-sans text-[13px] font-semibold text-muted underline underline-offset-4 transition-colors hover:text-ink"
+              >
                 All tickets
               </Link>
             }
@@ -77,124 +97,108 @@ export default async function DashboardPage() {
               />
             </div>
           ) : (
-            <>
-              <div className="hidden grid-cols-[6rem_1fr_9rem_8.5rem_5rem] gap-3 px-4 pb-1.5 text-[11.5px] text-muted lg:grid">
-                <span>Ticket</span>
-                <span>Customer and device</span>
-                <span>Issue</span>
-                <span>Status</span>
-                <span className="text-right">Age</span>
-              </div>
-              <ul>
+            <table className="w-full table-fixed border-collapse text-left">
+              <thead>
+                <tr className="font-sans text-[13px] text-muted">
+                  <th scope="col" className="w-[6rem] px-4 pb-2 font-normal">
+                    Ticket
+                  </th>
+                  <th scope="col" className="px-2 pb-2 font-normal">
+                    Customer and device
+                  </th>
+                  <th scope="col" className="hidden w-[9rem] px-2 pb-2 font-normal md:table-cell">
+                    Status
+                  </th>
+                  <th scope="col" className="w-[6.5rem] px-4 pb-2 text-right font-normal">
+                    Age
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
                 {data.queue.map((ticket) => (
-                  <li key={ticket.id}>
-                    <Link
-                      href={`/tickets/${ticket.id}`}
-                      className="grid gap-1 px-4 py-2.5 transition-colors hover:bg-wash/40 lg:grid-cols-[6rem_1fr_9rem_8.5rem_5rem] lg:items-center lg:gap-3"
-                    >
-                      <span className="figure text-[12.5px] text-muted">{ticket.ticket_number}</span>
-                      <span className="min-w-0">
-                        <span className="block truncate text-[13px] font-medium text-ink">
+                  <tr key={ticket.id} className="group border-t border-line/70">
+                    <td className="px-4 py-3 align-top">
+                      <Link href={`/tickets/${ticket.id}`} className="figure text-[13px] text-ink">
+                        {ticket.ticket_number}
+                      </Link>
+                    </td>
+                    <td className="px-2 py-3">
+                      <Link href={`/tickets/${ticket.id}`} className="block">
+                        <span className="block truncate font-sans text-[14px] font-semibold text-ink group-hover:text-accent">
                           {ticket.customer.full_name}
                         </span>
-                        <span className="mt-0.5 block truncate text-[12px] text-muted">
-                          {ticket.device.brand} {ticket.device.model}
+                        <span className="mt-0.5 block truncate font-serif text-[13px] text-muted">
+                          {ticket.device.brand} {ticket.device.model} · {ticket.issue}
                         </span>
-                      </span>
-                      <span className="truncate text-[12.5px] text-muted">{ticket.issue}</span>
+                      </Link>
+                    </td>
+                    <td className="hidden whitespace-nowrap px-2 py-3 md:table-cell">
                       <StatusPill status={ticket.status} />
-                      <span className="figure text-[12px] text-muted lg:text-right">
+                    </td>
+                    <td className="px-4 py-3 text-right align-top">
+                      <span className="figure whitespace-nowrap text-[13px] text-muted">
                         {formatRelative(ticket.created_at)}
                       </span>
-                    </Link>
-                  </li>
+                    </td>
+                  </tr>
                 ))}
-              </ul>
-            </>
+              </tbody>
+            </table>
           )}
         </Panel>
 
-        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-          <Panel className="px-4 py-4">
-            <h2 className="text-[14px] font-semibold text-ink">Today</h2>
-            <dl className="mt-3 grid grid-cols-2 gap-x-3 gap-y-4">
+        <div className="grid content-start gap-3 sm:grid-cols-2 xl:grid-cols-1">
+          <Panel className="p-5">
+            <h2 className="font-sans text-[15px] font-semibold text-ink">Today</h2>
+            <dl className="mt-4 grid grid-cols-2 gap-x-4 gap-y-5">
               <div>
-                <dt className="text-[12px] text-muted">Open jobs</dt>
-                <dd className="figure mt-0.5 text-[22px] font-semibold leading-none tracking-[-0.03em] text-ink">
+                <dd className="figure text-[38px] font-bold leading-none tracking-[-0.04em] text-ink">
                   {data.openCount}
                 </dd>
+                <dt className="mt-1.5 font-sans text-[13px] text-muted">Open jobs</dt>
               </div>
               <div>
-                <dt className="text-[12px] text-muted">Ready to collect</dt>
-                <dd className="figure mt-0.5 text-[22px] font-semibold leading-none tracking-[-0.03em] text-positive">
+                <dd className="figure text-[38px] font-bold leading-none tracking-[-0.04em] text-positive">
                   {data.readyCount}
                 </dd>
+                <dt className="mt-1.5 font-sans text-[13px] text-muted">Ready to collect</dt>
               </div>
               <div>
-                <dt className="text-[12px] text-muted">Paid this month</dt>
-                <dd className="figure mt-0.5 text-[22px] font-semibold leading-none tracking-[-0.03em] text-ink">
+                <dd className="figure text-[38px] font-bold leading-none tracking-[-0.04em] text-ink">
                   {formatCompactMoney(data.revenueMtd)}
                 </dd>
+                <dt className="mt-1.5 font-sans text-[13px] text-muted">Paid this month</dt>
               </div>
               <div>
-                <dt className="text-[12px] text-muted">Low stock</dt>
-                <dd className="figure mt-0.5 text-[22px] font-semibold leading-none tracking-[-0.03em] text-warn">
+                <dd className="figure text-[38px] font-bold leading-none tracking-[-0.04em] text-warn">
                   {data.lowStock.length}
                 </dd>
+                <dt className="mt-1.5 font-sans text-[13px] text-muted">Low stock lines</dt>
               </div>
             </dl>
-            <div className="mt-4">
-              <div className="flex items-baseline justify-between gap-3">
-                <p className="text-[12px] text-muted">Next out the door</p>
-                <Link
-                  href="/tickets?status=ready"
-                  className="text-[12.5px] text-muted transition-colors hover:text-ink"
-                >
-                  View ready
-                </Link>
-              </div>
-              <ul className="mt-2 space-y-1">
-                {data.readyTickets.slice(0, 2).map((ticket) => (
-                  <li key={ticket.id}>
-                    <Link
-                      href={`/tickets/${ticket.id}`}
-                      className="flex items-baseline justify-between gap-2 rounded px-2 py-1.5 transition-colors hover:bg-wash/50"
-                    >
-                      <span className="min-w-0 truncate text-[13px] text-ink">
-                        {ticket.customer.full_name}
-                      </span>
-                      <span className="figure shrink-0 text-[11.5px] text-muted">
-                        {ticket.ticket_number}
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-                {data.readyTickets.length === 0 ? (
-                  <li className="px-2 py-1.5 text-[12.5px] text-muted">Nothing waiting for pickup.</li>
-                ) : null}
-              </ul>
-            </div>
           </Panel>
 
-          <Panel className="px-4 py-4">
+          <Panel className="p-5">
             <div className="flex items-baseline justify-between gap-3">
-              <h2 className="text-[14px] font-semibold text-ink">Bench load</h2>
-              <span className="text-[12px] text-muted">open jobs</span>
+              <h2 className="font-sans text-[15px] font-semibold text-ink">Bench load</h2>
+              <span className="font-sans text-[13px] text-muted">open jobs</span>
             </div>
-            <div className="mt-3 space-y-3">
+            <div className="mt-4 space-y-4">
               {data.teamLoad.length === 0 ? (
-                <p className="text-[12.5px] text-muted">No staff profiles yet.</p>
+                <p className="font-serif text-[14px] text-muted">No staff profiles yet.</p>
               ) : (
                 data.teamLoad.slice(0, 5).map((member) => (
                   <div key={member.id}>
                     <div className="flex items-baseline justify-between gap-3">
-                      <p className="min-w-0 truncate text-[13px] text-ink">
+                      <p className="min-w-0 truncate font-sans text-[13px] font-medium text-ink">
                         {member.full_name || member.email}
                       </p>
                       <span className="figure text-[13px] text-ink">{member.open}</span>
                     </div>
-                    <p className="mt-0.5 text-[11.5px] text-muted">{ROLE_LABELS[member.role]}</p>
-                    <div className="mt-1.5">
+                    <p className="mt-0.5 font-sans text-[13px] text-muted">
+                      {ROLE_LABELS[member.role]}
+                    </p>
+                    <div className="mt-2">
                       <DataBar value={member.open} max={Math.max(1, data.openCount)} />
                     </div>
                   </div>
@@ -205,29 +209,67 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
-        <Panel className="px-4 py-4">
+      <div className="grid gap-3 lg:grid-cols-[1fr_1fr_0.9fr]">
+        <Panel className="p-5">
           <div className="flex items-baseline justify-between gap-3">
-            <h2 className="text-[14px] font-semibold text-ink">Low stock</h2>
-            <Link href="/inventory" className="text-[12.5px] text-muted transition-colors hover:text-ink">
+            <h2 className="font-sans text-[15px] font-semibold text-ink">Next out the door</h2>
+            <Link
+              href="/tickets?status=ready"
+              className="font-sans text-[13px] font-semibold text-muted underline underline-offset-4 hover:text-ink"
+            >
+              View ready
+            </Link>
+          </div>
+          <ul className="mt-3">
+            {data.readyTickets.slice(0, 3).map((ticket) => (
+              <li key={ticket.id} className="border-t border-line/70 first:border-t-0">
+                <Link
+                  href={`/tickets/${ticket.id}`}
+                  className="flex items-baseline justify-between gap-3 py-2.5 transition-colors hover:text-accent"
+                >
+                  <span className="min-w-0 truncate font-sans text-[14px] text-ink">
+                    {ticket.customer.full_name}
+                  </span>
+                  <span className="figure shrink-0 text-[13px] text-muted">
+                    {ticket.ticket_number}
+                  </span>
+                </Link>
+              </li>
+            ))}
+            {data.readyTickets.length === 0 ? (
+              <li className="py-2 font-serif text-[14px] text-muted">Nothing waiting for pickup.</li>
+            ) : null}
+          </ul>
+        </Panel>
+
+        <Panel className="p-5">
+          <div className="flex items-baseline justify-between gap-3">
+            <h2 className="font-sans text-[15px] font-semibold text-ink">Low stock</h2>
+            <Link
+              href="/inventory"
+              className="font-sans text-[13px] font-semibold text-muted underline underline-offset-4 hover:text-ink"
+            >
               Inventory
             </Link>
           </div>
           {data.lowStock.length === 0 ? (
-            <p className="mt-3 text-[12.5px] text-muted">Stock levels are healthy.</p>
+            <p className="mt-3 font-serif text-[14px] text-muted">Stock levels are healthy.</p>
           ) : (
-            <ul className="mt-3 space-y-2">
+            <ul className="mt-3">
               {data.lowStock.slice(0, 4).map((part) => (
-                <li key={part.id} className="flex items-baseline justify-between gap-3">
+                <li
+                  key={part.id}
+                  className="flex items-baseline justify-between gap-3 border-t border-line/70 py-2.5 first:border-t-0"
+                >
                   <span className="min-w-0">
-                    <span className="block truncate text-[13px] text-ink">{part.name}</span>
-                    <span className="mt-0.5 block text-[11.5px] text-muted">{part.sku}</span>
+                    <span className="block truncate font-sans text-[14px] text-ink">{part.name}</span>
+                    <span className="mt-0.5 block font-serif text-[13px] text-muted">{part.sku}</span>
                   </span>
                   <span
                     className={
                       part.stock === 0
-                        ? "figure shrink-0 text-[12.5px] text-negative"
-                        : "figure shrink-0 text-[12.5px] text-warn"
+                        ? "figure shrink-0 text-[13px] text-negative"
+                        : "figure shrink-0 text-[13px] text-warn"
                     }
                   >
                     {part.stock} left
@@ -238,25 +280,23 @@ export default async function DashboardPage() {
           )}
         </Panel>
 
-        <Panel className="px-4 py-4">
-          <h2 className="text-[14px] font-semibold text-ink">Shop totals</h2>
-          <dl className="mt-3 space-y-2 text-[13px]">
-            <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-muted">Tickets on the bench</dt>
-              <dd className="figure text-ink">{data.openCount}</dd>
-            </div>
-            <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-muted">Waiting on customers</dt>
-              <dd className="figure text-ink">{data.readyCount}</dd>
-            </div>
-            <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-muted">Staff on shift</dt>
-              <dd className="figure text-ink">{data.teamLoad.length}</dd>
-            </div>
-            <div className="flex items-baseline justify-between gap-3">
-              <dt className="text-muted">Stock alerts</dt>
-              <dd className="figure text-ink">{data.lowStock.length}</dd>
-            </div>
+        <Panel className="p-5">
+          <h2 className="font-sans text-[15px] font-semibold text-ink">Shop totals</h2>
+          <dl className="mt-3 font-serif text-[14px]">
+            {[
+              ["Tickets on the bench", data.openCount],
+              ["Waiting on customers", data.readyCount],
+              ["Staff on shift", data.teamLoad.length],
+              ["Stock alerts", data.lowStock.length],
+            ].map(([label, value]) => (
+              <div
+                key={String(label)}
+                className="flex items-baseline justify-between gap-3 border-t border-line/70 py-2.5 first:border-t-0"
+              >
+                <dt className="text-muted">{label}</dt>
+                <dd className="figure text-[14px] font-semibold text-ink">{value}</dd>
+              </div>
+            ))}
           </dl>
         </Panel>
       </div>

@@ -70,7 +70,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Link href="/tickets" className="inline-flex items-center gap-1.5 text-[12.5px] text-muted transition-colors hover:text-ink">
+        <Link href="/tickets" className="inline-flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-ink">
           <span aria-hidden="true">←</span>
           All tickets
         </Link>
@@ -93,14 +93,14 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
           </div>
           <p className="mt-2 max-w-[78ch] text-[13px] leading-5 text-muted">{ticket.issue}</p>
         </div>
-        <dl className="flex gap-6 text-[11.5px] text-muted">
+        <dl className="flex gap-6 text-[13px] text-muted">
           <div>
             <dt>Opened</dt>
             <dd className="mt-0.5 text-ink">{formatRelative(ticket.created_at)}</dd>
           </div>
           <div>
             <dt>Tracking</dt>
-            <dd className="mt-0.5 font-mono text-ink">{ticket.public_code}</dd>
+            <dd className="figure mt-0.5 text-ink">{ticket.public_code}</dd>
           </div>
         </dl>
       </header>
@@ -113,14 +113,14 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
             <li key={status} className="flex items-center gap-1.5">
               <span
                 className={cn(
-                  "h-1.5 w-1.5 rounded-full",
+                  "h-1.5 w-1.5",
                   current ? "bg-accent" : done ? "bg-ink" : "bg-line",
                 )}
                 aria-hidden="true"
               />
               <span
                 className={cn(
-                  "text-[11px]",
+                  "text-[13px]",
                   current ? "text-ink" : done ? "text-muted" : "text-muted/50",
                 )}
                 aria-current={current ? "step" : undefined}
@@ -138,7 +138,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
             <PanelHeader title="Repair brief" detail="What came in, and what the bench found." />
             <dl className="grid gap-x-6 gap-y-3 px-4 pb-4 sm:grid-cols-2">
               <div>
-                <dt className="text-[11px] text-muted">Customer</dt>
+                <dt className="text-[13px] text-muted">Customer</dt>
                 <dd className="mt-0.5">
                   <Link
                     href={`/customers/${ticket.customer.id}`}
@@ -146,35 +146,35 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                   >
                     {ticket.customer.full_name}
                   </Link>
-                  <span className="mt-0.5 block text-[12px] text-muted">{ticket.customer.phone}</span>
+                  <span className="mt-0.5 block text-[13px] text-muted">{ticket.customer.phone}</span>
                   {ticket.customer.email ? (
-                    <span className="mt-0.5 block break-all text-[12px] text-muted">
+                    <span className="mt-0.5 block break-all text-[13px] text-muted">
                       {ticket.customer.email}
                     </span>
                   ) : null}
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] text-muted">Device</dt>
+                <dt className="text-[13px] text-muted">Device</dt>
                 <dd className="mt-0.5 text-[13px] font-medium text-ink">
                   {ticket.device.brand} {ticket.device.model}
-                  <span className="mt-0.5 block text-[12px] font-normal text-muted">
+                  <span className="mt-0.5 block text-[13px] font-normal text-muted">
                     {DEVICE_CATEGORY_LABELS[ticket.device.category] ?? ticket.device.category}
                     {ticket.device.serial ? ` · ${ticket.device.serial}` : ""}
                   </span>
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] text-muted">Technician</dt>
+                <dt className="text-[13px] text-muted">Technician</dt>
                 <dd className="mt-0.5 text-[13px] text-ink">
                   {ticket.assignee?.full_name || "Unassigned"}
                 </dd>
               </div>
               <div>
-                <dt className="text-[11px] text-muted">Target date</dt>
+                <dt className="text-[13px] text-muted">Target date</dt>
                 <dd className="mt-0.5 text-[13px] text-ink">
                   {formatDate(ticket.due_at)}
-                  <span className="mt-0.5 block text-[12px] text-muted">
+                  <span className="mt-0.5 block text-[13px] text-muted">
                     Estimate {formatMoney(ticket.estimate_cents)}
                   </span>
                 </dd>
@@ -182,12 +182,12 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
             </dl>
             <div className="grid gap-3 border-t border-line bg-raised px-4 py-3 sm:grid-cols-2">
               <div>
-                <p className="text-[11px] text-muted">Reported issue</p>
-                <p className="mt-1 text-[12.5px] leading-5 text-ink">{ticket.issue}</p>
+                <p className="text-[13px] text-muted">Reported issue</p>
+                <p className="mt-1 text-[13px] leading-5 text-ink">{ticket.issue}</p>
               </div>
               <div>
-                <p className="text-[11px] text-muted">Diagnosis</p>
-                <p className="mt-1 text-[12.5px] leading-5 text-muted">
+                <p className="text-[13px] text-muted">Diagnosis</p>
+                <p className="mt-1 text-[13px] leading-5 text-muted">
                   {ticket.diagnosis || "No diagnosis recorded yet."}
                 </p>
               </div>
@@ -200,18 +200,18 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
               detail={`${ticket.parts.length} on this repair · ${formatMoney(partsTotal)}`}
             />
             {ticket.parts.length === 0 ? (
-              <p className="px-4 pb-3 text-[12px] text-muted">No parts attached yet.</p>
+              <p className="px-4 pb-3 text-[13px] text-muted">No parts attached yet.</p>
             ) : (
               <ul className="pb-1">
                 {ticket.parts.map((part) => (
                   <li key={part.part.id} className="flex items-center justify-between gap-4 px-4 py-2">
                     <div className="min-w-0">
-                      <p className="truncate text-[12.5px] text-ink">{part.part.name}</p>
-                      <p className="mt-0.5 text-[11px] text-muted">
+                      <p className="truncate text-[13px] text-ink">{part.part.name}</p>
+                      <p className="mt-0.5 text-[13px] text-muted">
                         {part.part.sku} · {part.quantity} × {formatMoney(part.unit_price_cents)}
                       </p>
                     </div>
-                    <p className="figure shrink-0 text-[12px] text-ink">
+                    <p className="figure shrink-0 text-[13px] text-ink">
                       {formatMoney(part.quantity * part.unit_price_cents)}
                     </p>
                   </li>
@@ -232,7 +232,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
               <SubmitButton pendingText="Adding...">Add part</SubmitButton>
             </form>
             {!canAddPart ? (
-              <p className="px-4 py-2 text-[11.5px] text-warn">
+              <p className="px-4 py-2 text-[13px] text-warn">
                 No parts have stock. Restock from the inventory page first.
               </p>
             ) : null}
@@ -242,14 +242,14 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
             <PanelHeader title="Timeline" detail="Every status change and note, newest first." />
             <ol className="pb-1">
               {ticket.events.length === 0 ? (
-                <li className="px-4 pb-3 text-[12px] text-muted">No activity recorded.</li>
+                <li className="px-4 pb-3 text-[13px] text-muted">No activity recorded.</li>
               ) : (
                 ticket.events.map((event) => (
                   <li key={event.id} className="flex gap-2.5 px-4 py-2.5">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-line" aria-hidden="true" />
+                    <span className="mt-1.5 h-1 w-1 shrink-0 bg-steel/60" aria-hidden="true" />
                     <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11.5px]">
-                        <span className="text-[12.5px] text-ink">{event.actor?.full_name || "System"}</span>
+                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
+                        <span className="text-[13px] text-ink">{event.actor?.full_name || "System"}</span>
                         {event.status ? <StatusPill status={event.status} /> : null}
                         <span className="text-muted">{formatRelative(event.created_at)}</span>
                         {event.is_customer_visible ? (
@@ -257,7 +257,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                         ) : null}
                       </div>
                       {event.body ? (
-                        <p className="mt-1 text-[12.5px] leading-5 text-muted">{event.body}</p>
+                        <p className="mt-1 text-[13px] leading-5 text-muted">{event.body}</p>
                       ) : null}
                     </div>
                   </li>
@@ -273,7 +273,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                 placeholder="What changed, or what the customer needs to know."
               />
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <label className="flex items-center gap-2 text-[11.5px] text-muted">
+                <label className="flex items-center gap-2 text-[13px] text-muted">
                   <input
                     type="checkbox"
                     name="customer_visible"
@@ -370,21 +370,21 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
           <Panel className="px-4 py-3.5">
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-[13.5px] font-semibold text-ink">Customer</h2>
-              <Link href={`/customers/${ticket.customer.id}`} className="text-[11.5px] text-muted transition-colors hover:text-gold">
+              <Link href={`/customers/${ticket.customer.id}`} className="text-[13px] text-muted transition-colors hover:text-gold">
                 Open profile
               </Link>
             </div>
             <p className="mt-2 text-[13px] text-ink">{ticket.customer.full_name}</p>
-            <p className="mt-0.5 text-[12px] text-muted">{ticket.customer.phone}</p>
+            <p className="mt-0.5 text-[13px] text-muted">{ticket.customer.phone}</p>
             {ticket.customer.email ? (
-              <p className="mt-0.5 break-all text-[12px] text-muted">{ticket.customer.email}</p>
+              <p className="mt-0.5 break-all text-[13px] text-muted">{ticket.customer.email}</p>
             ) : null}
             <div className="mt-3 rounded bg-paper px-2.5 py-2">
-              <p className="text-[10.5px] text-muted">Device</p>
-              <p className="mt-0.5 text-[12.5px] text-ink">
+              <p className="text-[13px] text-muted">Device</p>
+              <p className="mt-0.5 text-[13px] text-ink">
                 {ticket.device.brand} {ticket.device.model}
               </p>
-              <p className="mt-0.5 text-[11px] text-muted">
+              <p className="mt-0.5 text-[13px] text-muted">
                 {ticket.device.serial || "No serial"} {ticket.device.color ? `· ${ticket.device.color}` : ""}
               </p>
             </div>
@@ -396,7 +396,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
               detail={invoice ? invoice.invoice_number : "Not generated yet"}
               action={invoice ? <InvoicePill status={invoice.status} /> : undefined}
             />
-            <dl className="space-y-1.5 px-4 pb-2 text-[12px]">
+            <dl className="space-y-1.5 px-4 pb-2 text-[13px]">
               <Row label="Labour" value={formatMoney(invoice?.labour_cents ?? ticket.labour_cents)} />
               <Row label="Parts" value={formatMoney(invoice?.parts_cents ?? partsTotal)} />
               <Row label="Tax (12%)" value={formatMoney(invoice?.tax_cents ?? tax)} />
@@ -407,7 +407,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
             </div>
             {invoice ? (
               invoice.status === "paid" ? (
-                <p className="px-4 pb-3 text-[12px] text-positive">Paid {formatDate(invoice.paid_at)}</p>
+                <p className="px-4 pb-3 text-[13px] text-positive">Paid {formatDate(invoice.paid_at)}</p>
               ) : canManageInvoices ? (
                 <form action={markInvoicePaidAction} className="px-4 pb-3">
                   <input type="hidden" name="invoice_id" value={invoice.id} />
@@ -417,7 +417,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                   </SubmitButton>
                 </form>
               ) : (
-                <p className="px-4 pb-3 text-[12px] text-muted">Awaiting manager collection.</p>
+                <p className="px-4 pb-3 text-[13px] text-muted">Awaiting manager collection.</p>
               )
             ) : canManageInvoices ? (
               <form action={createInvoiceAction} className="px-4 pb-3">
@@ -427,7 +427,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                 </SubmitButton>
               </form>
             ) : (
-              <p className="px-4 pb-3 text-[12px] text-muted">
+              <p className="px-4 pb-3 text-[13px] text-muted">
                 A manager generates the invoice when the repair is ready.
               </p>
             )}

@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  background: #0d1413;
+}
+
+body {
+  @apply bg-paper text-ink antialiased;
+  min-height: 100dvh;
+}
+
+::selection {
+  background: #3a2f14;
+  color: #f2ecd9;
+}
+
+@layer base {
+  * {
+    border-color: #26332f;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid #d9a441;
+    outline-offset: 2px;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e7e8e3;
+    box-shadow: 0 0 0 1000px #141d1b inset; /* taste-skill-ignore shadow */
+    caret-color: #e7e8e3;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0d1413;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #2b3a35;
+    border-radius: 9999px;
+    border: 2px solid #0d1413;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .figure {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

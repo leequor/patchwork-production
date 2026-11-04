@@ -215,6 +215,58 @@
     );
   }
 
+  /* Emerald halo for a finished repair. */
+  .glow-ready {
+    background: radial-gradient(
+      closest-side,
+      rgba(52, 211, 153, 0.32) 0%,
+      rgba(16, 185, 129, 0.12) 52%,
+      transparent 78%
+    );
+  }
+
+  /* A 1px edge with light on top and shadow below: the glass bevel. */
+  .edge-lit {
+    position: relative;
+    border-color: transparent !important;
+  }
+
+  .edge-lit::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.18) 0%,
+      rgba(255, 255, 255, 0.04) 42%,
+      rgba(0, 0, 0, 0.55) 100%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Recessed field: the surface sits below the panel. */
+  .field-inset {
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .field-inset:focus {
+    box-shadow:
+      inset 0 2px 4px rgba(0, 0, 0, 0.5),
+      0 0 0 2px rgba(99, 102, 241, 0.45),
+      0 0 20px -2px rgba(99, 102, 241, 0.35);
+  }
+
+  /* The bench scanner: one pass over the board while diagnosing. */
+  .animate-scan {
+    animation: scan 2.8s linear infinite;
+  }
+
   /* The gradient edge on a hovered or active row. */
   .accent-underline {
     box-shadow: inset 2px 0 0 0 var(--accent);
@@ -251,6 +303,23 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes scan {
+  0% {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(520%);
+    opacity: 0;
   }
 }
 

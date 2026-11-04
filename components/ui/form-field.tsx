@@ -46,9 +46,9 @@ export function FormField({
         aria-invalid={Boolean(error)}
         aria-describedby={describedBy}
         className={cn(
-          "h-11 w-full rounded-lg border border-hairline bg-raised px-3 font-sans text-[16px] text-ink",
-          "outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/60",
-          "hover:border-hairline-strong focus:border-accent focus:ring-2 focus:ring-accent/40 focus-visible:outline-none",
+          "field-inset h-11 w-full rounded-lg border border-hairline bg-raised px-3 font-sans text-[16px] text-ink",
+          "outline-none transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] placeholder:text-ink-secondary/60",
+          "hover:border-hairline-strong focus:border-accent focus-visible:outline-none",
           error ? "border-negative focus:border-negative" : null,
           className,
         )}

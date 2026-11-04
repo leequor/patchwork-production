@@ -21,8 +21,8 @@ export function SelectField({
       <select
         id={id}
         className={cn(
-          "h-10 w-full rounded-lg border border-hairline bg-raised px-2.5 font-sans text-[13px] text-ink",
-          "outline-none transition-[border-color,box-shadow] duration-150 hover:border-hairline-strong focus:border-accent focus:ring-2 focus:ring-accent/40 focus-visible:outline-none",
+          "field-inset h-10 w-full rounded-lg border border-hairline bg-raised px-2.5 font-sans text-[13px] text-ink",
+          "outline-none transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-hairline-strong focus:border-accent focus-visible:outline-none",
           className,
         )}
         {...props}
@@ -55,8 +55,8 @@ export function TextAreaField({
       <textarea
         id={id}
         className={cn(
-          "min-h-[96px] w-full rounded-lg border border-hairline bg-raised px-2.5 py-2 font-sans text-[15px] leading-6 text-ink",
-          "outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/60 hover:border-hairline-strong focus:border-accent focus:ring-2 focus:ring-accent/40 focus-visible:outline-none",
+          "field-inset min-h-[96px] w-full rounded-lg border border-hairline bg-raised px-2.5 py-2 font-sans text-[15px] leading-6 text-ink",
+          "outline-none transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] placeholder:text-ink-secondary/60 hover:border-hairline-strong focus:border-accent focus-visible:outline-none",
           className,
         )}
         {...props}

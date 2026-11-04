@@ -1,13 +1,16 @@
 "use client";
 
 import {
+  animate,
   motion,
   useMotionValue,
   useSpring,
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import { useEffect } from "react";
 
+import type { TicketStatus } from "@/lib/repair/types";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
@@ -15,11 +18,46 @@ const DEPTH = [-1.5, -1, -0.5, 0.5, 1, 1.5];
 const Z = [-110, -66, -22, 22, 66, 110];
 const Y = [-90, -54, -18, 18, 54, 90];
 
-function layerTransform(index: number, x: number, y: number) {
+/**
+ * How the bench reads a job. Intake sits closed; diagnosing lifts only the
+ * screen; a repair in progress is fully open; ready closes it under a green
+ * light; a collected device drops back to a wireframe.
+ */
+const SHAPES: Record<
+  TicketStatus,
+  {
+    explode: number;
+    screen: number;
+    glow: number;
+    ring: "indigo" | "emerald" | "none";
+    scan?: boolean;
+    wireframe?: boolean;
+  }
+> = {
+  intake: { explode: 0, screen: 0, glow: 0.25, ring: "indigo" },
+  diagnosing: { explode: 0, screen: 1, glow: 0.55, ring: "indigo", scan: true },
+  waiting_parts: { explode: 0.42, screen: 0, glow: 0.45, ring: "indigo" },
+  in_repair: { explode: 1, screen: 0, glow: 1, ring: "indigo" },
+  ready: { explode: 0, screen: 0, glow: 1, ring: "emerald" },
+  picked_up: { explode: 0, screen: 0, glow: 0, ring: "none", wireframe: true },
+  cancelled: { explode: 0, screen: 0, glow: 0.15, ring: "none" },
+};
+
+function layerTransform(
+  index: number,
+  x: number,
+  y: number,
+  explode: number,
+  screen: number,
+) {
   const depth = DEPTH[index];
   const shiftX = x * depth * 14;
-  const shiftY = Y[index] + y * depth * 9;
-  return `translate(-50%, -50%) translate3d(${shiftX.toFixed(2)}px, ${shiftY.toFixed(2)}px, ${Z[index]}px)`;
+  const baseY = Y[index] * explode + (index === 4 ? -92 * screen : 0);
+  const baseZ = Z[index] * explode + (index === 4 ? 64 * screen : 0);
+  const shiftY = baseY + y * depth * 9 * (explode > 0 || screen > 0 ? 1 : 0.4);
+  return `translate(-50%, -50%) translate3d(${shiftX.toFixed(2)}px, ${shiftY.toFixed(
+    2,
+  )}px, ${baseZ.toFixed(2)}px)`;
 }
 
 /**
@@ -29,45 +67,64 @@ function layerTransform(index: number, x: number, y: number) {
  */
 export function ExplodedDevice({
   className,
+  status,
   pointerX,
   pointerY,
 }: {
   className?: string;
+  status: TicketStatus;
   pointerX?: MotionValue<number>;
   pointerY?: MotionValue<number>;
 }) {
   const reduced = usePrefersReducedMotion();
+  const shape = SHAPES[status];
+  const explodeTarget = shape.explode;
+  const screenTarget = shape.screen;
+
   const restX = useMotionValue(0);
   const restY = useMotionValue(0);
   const px = useSpring(pointerX ?? restX, { stiffness: 120, damping: 24, mass: 0.7 });
   const py = useSpring(pointerY ?? restY, { stiffness: 120, damping: 24, mass: 0.7 });
 
+  const explode = useMotionValue(explodeTarget);
+  const screen = useMotionValue(screenTarget);
+
+  useEffect(() => {
+    const spring = { type: "spring", stiffness: 130, damping: 22, mass: 0.8 } as const;
+    const explodeControls = animate(explode, explodeTarget, spring);
+    const screenControls = animate(screen, screenTarget, spring);
+    return () => {
+      explodeControls.stop();
+      screenControls.stop();
+    };
+  }, [explode, screen, explodeTarget, screenTarget]);
+
   const rotateX = useTransform(py, (value) => 14 - value * 8);
   const rotateY = useTransform(px, (value) => -20 + value * 10);
 
-  const l0 = useTransform([px, py], (latest) => {
-    const [x, y] = latest as number[];
-    return layerTransform(0, x, y);
+  const l0 = useTransform([px, py, explode, screen], (latest) => {
+    const [x, y, e, s] = latest as number[];
+    return layerTransform(0, x, y, e, s);
   });
-  const l1 = useTransform([px, py], (latest) => {
-    const [x, y] = latest as number[];
-    return layerTransform(1, x, y);
+  const l1 = useTransform([px, py, explode, screen], (latest) => {
+    const [x, y, e, s] = latest as number[];
+    return layerTransform(1, x, y, e, s);
   });
-  const l2 = useTransform([px, py], (latest) => {
-    const [x, y] = latest as number[];
-    return layerTransform(2, x, y);
+  const l2 = useTransform([px, py, explode, screen], (latest) => {
+    const [x, y, e, s] = latest as number[];
+    return layerTransform(2, x, y, e, s);
   });
-  const l3 = useTransform([px, py], (latest) => {
-    const [x, y] = latest as number[];
-    return layerTransform(3, x, y);
+  const l3 = useTransform([px, py, explode, screen], (latest) => {
+    const [x, y, e, s] = latest as number[];
+    return layerTransform(3, x, y, e, s);
   });
-  const l4 = useTransform([px, py], (latest) => {
-    const [x, y] = latest as number[];
-    return layerTransform(4, x, y);
+  const l4 = useTransform([px, py, explode, screen], (latest) => {
+    const [x, y, e, s] = latest as number[];
+    return layerTransform(4, x, y, e, s);
   });
-  const l5 = useTransform([px, py], (latest) => {
-    const [x, y] = latest as number[];
-    return layerTransform(5, x, y);
+  const l5 = useTransform([px, py, explode, screen], (latest) => {
+    const [x, y, e, s] = latest as number[];
+    return layerTransform(5, x, y, e, s);
   });
 
   const transforms = [l0, l1, l2, l3, l4, l5];
@@ -120,6 +177,12 @@ export function ExplodedDevice({
           <div className="absolute right-3 top-4 h-10 w-10 rounded-md border border-white/10 bg-[#151a1e]" />
           <div className="absolute left-4 top-24 h-8 w-20 rounded-sm border border-white/10 bg-[#12161a]" />
           <div className="absolute right-4 top-28 h-6 w-12 rounded-sm border border-white/10 bg-[#12161a]" />
+          {shape.scan ? (
+            <div
+              aria-hidden="true"
+              className="animate-scan pointer-events-none absolute inset-x-0 top-0 h-12 bg-gradient-to-b from-transparent via-accent-cyan/30 to-transparent"
+            />
+          ) : null}
         </div>
       ),
     },
@@ -161,11 +224,23 @@ export function ExplodedDevice({
 
   return (
     <div aria-hidden="true" className={cn("relative flex items-center justify-center", className)}>
-      <div className="absolute left-1/2 top-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent/10 blur-3xl" />
+      <div
+        aria-hidden="true"
+        className="glow-accent pointer-events-none absolute left-1/2 top-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500"
+        style={{ opacity: shape.ring === "indigo" ? shape.glow : 0 }}
+      />
+      <div
+        aria-hidden="true"
+        className="glow-ready pointer-events-none absolute left-1/2 top-1/2 h-[280px] w-[280px] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-500"
+        style={{ opacity: shape.ring === "emerald" ? shape.glow : 0 }}
+      />
 
       <div className="relative h-[340px] w-[240px] [perspective:1500px] sm:h-[380px] sm:w-[280px]">
         <motion.div
-          className="relative h-full w-full [transform-style:preserve-3d]"
+          className={cn(
+            "relative h-full w-full [transform-style:preserve-3d] transition-[opacity,filter] duration-500",
+            shape.wireframe ? "opacity-30 saturate-0" : "opacity-100",
+          )}
           style={{
             rotateX: reduced ? 0 : rotateX,
             rotateY: reduced ? 0 : rotateY,
@@ -176,7 +251,11 @@ export function ExplodedDevice({
             <motion.div
               key={layer.key}
               className="absolute left-1/2 top-1/2 h-[236px] w-[118px] sm:h-[264px] sm:w-[132px]"
-              style={{ transform: reduced ? layerTransform(index, 0, 0) : transforms[index] }}
+              style={{
+                transform: reduced
+                  ? layerTransform(index, 0, 0, explodeTarget, screenTarget)
+                  : transforms[index],
+              }}
             >
               {layer.body}
             </motion.div>

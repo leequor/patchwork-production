@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import {
   ChevronDown,
   ExternalLink,
@@ -11,7 +12,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { logoutAction } from "@/app/actions/auth";
 import { Logo } from "@/components/ui/logo";
@@ -23,10 +24,50 @@ import { CommandPalette } from "./command-palette";
 import { NAV_ITEMS, isActivePath } from "./nav";
 import { PageTransition } from "./page-transition";
 
+const RAIL_COLLAPSED = 72;
+const RAIL_EXPANDED = 248;
+const RAIL_CLOSE_DELAY = 300;
+
 /**
- * The console shell. A 72px instrument rail that widens on hover or focus,
- * a floating glass header, and a main region that goes full-bleed for the
- * Mission Control workspace.
+ * One label, two lives. Open, it staggers in with the rail. Closed, the same
+ * words stay in the accessibility tree so an icon-only link never loses its
+ * name — the rail can collapse visually without becoming a mystery.
+ */
+function RailLabel({
+  show,
+  children,
+  className,
+  delay = 0,
+}: {
+  show: boolean;
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}) {
+  return (
+    <>
+      {show ? null : <div className="sr-only">{children}</div>}
+      <AnimatePresence initial={false}>
+        {show ? (
+          <motion.div
+            initial={{ opacity: 0, x: -6 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, transition: { duration: 0 } }}
+            transition={{ duration: 0.18, delay, ease: [0.23, 1, 0.32, 1] }}
+            className={cn("relative z-10 min-w-0 truncate whitespace-nowrap", className)}
+          >
+            {children}
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+    </>
+  );
+}
+
+/**
+ * The console shell. A 72px instrument rail that widens on hover or focus and
+ * floats over the page instead of pushing it, a glass header, and a main
+ * region that goes full-bleed for the Mission Control workspace.
  */
 export function WorkspaceShell({
   user,
@@ -39,12 +80,27 @@ export function WorkspaceShell({
   const [mobileOpen, setMobileOpen] = useState(false);
   const [paletteOpen, setPaletteOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [railExpanded, setRailExpanded] = useState(false);
   const profileRef = useRef<HTMLDivElement>(null);
+  const railTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const displayName = user.fullName || user.email;
   const avatar = initials(displayName) || "PW";
   const section = NAV_ITEMS.find((item) => isActivePath(pathname, item.href)) ?? NAV_ITEMS[0];
   const isMissionControl = pathname === "/";
+
+  const openRail = () => {
+    if (railTimer.current) {
+      clearTimeout(railTimer.current);
+      railTimer.current = null;
+    }
+    setRailExpanded(true);
+  };
+
+  const closeRail = () => {
+    if (railTimer.current) clearTimeout(railTimer.current);
+    railTimer.current = setTimeout(() => setRailExpanded(false), RAIL_CLOSE_DELAY);
+  };
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -55,6 +111,12 @@ export function WorkspaceShell({
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (railTimer.current) clearTimeout(railTimer.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -69,9 +131,7 @@ export function WorkspaceShell({
   }, [profileOpen]);
 
   function renderRail(forceLabels: boolean, onNavigate?: () => void) {
-    const label = forceLabels
-      ? "opacity-100"
-      : "opacity-0 transition-opacity duration-200 group-hover/rail:opacity-100 group-focus-within/rail:opacity-100";
+    const show = forceLabels || railExpanded;
 
     return (
       <div className="flex h-full w-[248px] flex-col p-3">
@@ -79,29 +139,30 @@ export function WorkspaceShell({
           <span className="grid h-12 w-12 shrink-0 place-items-center">
             <Logo href="/" markOnly />
           </span>
-          <span
-            className={cn(
-              "display relative z-10 min-w-0 truncate pl-1 pr-3 text-[15px] text-ink",
-              label,
-            )}
+          <RailLabel
+            show={show}
+            delay={0.02}
+            className="display pl-1 pr-3 text-[15px] text-ink"
           >
             Patchwork
-          </span>
+          </RailLabel>
         </div>
 
         <Link
           href="/tickets/new"
           onClick={onNavigate}
-          className="mt-4 flex h-10 items-center overflow-hidden rounded-xl bg-accent-fill text-[13px] font-semibold text-white shadow-inset-line transition duration-150 hover:brightness-110 active:scale-[0.985]"
+          className="mt-4 flex h-10 items-center overflow-hidden rounded-xl bg-accent-fill text-[13px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition duration-150 hover:brightness-110 active:scale-95"
         >
           <span className="grid h-10 w-12 shrink-0 place-items-center">
             <Plus className="h-4 w-4" strokeWidth={2.2} aria-hidden="true" />
           </span>
-          <span className={cn("relative z-10 min-w-0 truncate pr-3", label)}>New intake</span>
+          <RailLabel show={show} delay={0.05} className="pr-3">
+            New intake
+          </RailLabel>
         </Link>
 
         <nav aria-label="Main navigation" className="mt-5 flex flex-col gap-0.5">
-          {NAV_ITEMS.map((item) => {
+          {NAV_ITEMS.map((item, index) => {
             const active = isActivePath(pathname, item.href);
             const Icon = item.icon;
             return (
@@ -126,7 +187,9 @@ export function WorkspaceShell({
                 <span className="grid h-11 w-12 shrink-0 place-items-center">
                   <Icon className="h-[18px] w-[18px]" strokeWidth={1.8} aria-hidden="true" />
                 </span>
-                <span className={cn("relative z-10 min-w-0 truncate pr-3", label)}>{item.label}</span>
+                <RailLabel show={show} delay={0.07 + index * 0.025} className="pr-3">
+                  {item.label}
+                </RailLabel>
               </Link>
             );
           })}
@@ -141,9 +204,9 @@ export function WorkspaceShell({
             <span className="grid h-10 w-12 shrink-0 place-items-center">
               <ExternalLink className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
             </span>
-            <span className={cn("relative z-10 min-w-0 truncate pr-3", label)}>
+            <RailLabel show={show} delay={0.11} className="pr-3">
               Public tracker
-            </span>
+            </RailLabel>
           </Link>
 
           <div className="mt-2 flex items-center overflow-hidden rounded-xl border border-hairline bg-panel/50">
@@ -152,12 +215,12 @@ export function WorkspaceShell({
                 {avatar}
               </span>
             </span>
-            <div className={cn("relative z-10 min-w-0 flex-1 pr-2", label)}>
+            <RailLabel show={show} delay={0.13} className="flex-1 pr-2">
               <p className="truncate text-[12px] font-medium text-ink">{displayName}</p>
               <p className="truncate text-[11px] text-ink-tertiary">
                 {ROLE_LABELS[user.role]} · {user.email}
               </p>
-            </div>
+            </RailLabel>
           </div>
 
           <form action={logoutAction}>
@@ -170,7 +233,9 @@ export function WorkspaceShell({
               <span className="grid h-10 w-12 shrink-0 place-items-center">
                 <LogOut className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
               </span>
-              <span className={cn("relative z-10 min-w-0 truncate pr-3", label)}>Log out</span>
+              <RailLabel show={show} delay={0.15} className="pr-3">
+                Log out
+              </RailLabel>
             </button>
           </form>
         </div>
@@ -180,16 +245,28 @@ export function WorkspaceShell({
 
   return (
     <div className="min-h-[100dvh]">
-      <aside
+      <motion.aside
         aria-label="Workspace"
-        className="group/rail fixed inset-y-0 left-0 z-50 isolate hidden w-[72px] overflow-hidden border-r border-hairline bg-canvas transition-[width] duration-300 ease-spring will-change-[width] hover:w-[248px] focus-within:w-[248px] lg:block"
+        initial={false}
+        animate={{ width: railExpanded ? RAIL_EXPANDED : RAIL_COLLAPSED }}
+        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        onHoverStart={openRail}
+        onHoverEnd={closeRail}
+        onFocusCapture={openRail}
+        onBlurCapture={(event) => {
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) closeRail();
+        }}
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 isolate hidden w-[72px] overflow-hidden border-r border-hairline bg-canvas/90 backdrop-blur-2xl transition-shadow duration-300 lg:block",
+          railExpanded ? "shadow-[0_28px_70px_-24px_rgba(0,0,0,0.95)]" : "shadow-none",
+        )}
       >
         {renderRail(false)}
-      </aside>
+      </motion.aside>
 
       <div className="lg:pl-[72px]">
         <header className="sticky top-0 z-30 px-3 pt-3 sm:px-4">
-          <div className="flex h-14 items-center gap-2 rounded-xl border border-hairline bg-panel/55 px-2.5 shadow-panel backdrop-blur-xl">
+          <div className="edge-lit flex h-14 items-center gap-2 rounded-xl bg-panel/55 px-2.5 shadow-panel backdrop-blur-xl">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
@@ -221,7 +298,7 @@ export function WorkspaceShell({
 
             <Link
               href="/tickets/new"
-              className="hidden h-9 shrink-0 items-center gap-2 rounded-lg bg-accent-fill px-3 text-[12px] font-semibold text-white transition duration-150 hover:brightness-110 active:scale-[0.985] sm:flex"
+              className="hidden h-9 shrink-0 items-center gap-2 rounded-lg bg-accent-fill px-3 text-[12px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition duration-150 hover:brightness-110 active:scale-95 sm:flex"
             >
               <Plus className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
               New intake

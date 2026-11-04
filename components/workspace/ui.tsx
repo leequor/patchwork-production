@@ -119,7 +119,7 @@ export function EmptyState({
 }
 
 const LINK_BASE =
-  "inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3.5 font-sans text-[13px] font-semibold transition-[background-color,filter,transform] duration-150 active:scale-[0.985]";
+  "inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3.5 font-sans text-[13px] font-semibold transition-[background-color,filter,transform] duration-150 active:scale-95";
 
 export function SecondaryLink({
   href,
@@ -156,7 +156,11 @@ export function PrimaryLink({
   return (
     <Link
       href={href}
-      className={cn(LINK_BASE, "bg-accent-fill text-white hover:brightness-110", className)}
+      className={cn(
+        LINK_BASE,
+        "bg-accent-fill text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] hover:brightness-110",
+        className,
+      )}
     >
       {children}
     </Link>
@@ -166,7 +170,9 @@ export function PrimaryLink({
 /** Panels separate by a step in tone, not by an outline. */
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div className={cn("rounded-xl border border-hairline bg-panel", className)}>{children}</div>
+    <div className={cn("edge-lit rounded-xl border border-hairline bg-panel", className)}>
+      {children}
+    </div>
   );
 }
 

@@ -323,10 +323,10 @@ export function MissionControl({
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={selected.id}
-                initial={reduced ? false : { opacity: 0, y: 8 }}
+                initial={reduced ? false : { opacity: 0, y: 18 }}
                 animate={{ opacity: 1, y: 0 }}
-                exit={reduced ? undefined : { opacity: 0, y: -6 }}
-                transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
+                exit={reduced ? undefined : { opacity: 0, y: 18 }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
                 className="flex min-h-0 flex-1 flex-col"
               >
             <header className="flex flex-wrap items-start justify-between gap-3 px-5 pb-1 pt-5">
@@ -386,7 +386,12 @@ export function MissionControl({
                 className="glow-accent pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2"
               />
 
-              <ExplodedDevice className="relative h-full" pointerX={pointerX} pointerY={pointerY} />
+              <ExplodedDevice
+                className="relative h-full"
+                status={selected.status}
+                pointerX={pointerX}
+                pointerY={pointerY}
+              />
 
               <FloatPill
                 className="left-5 top-4"
@@ -433,7 +438,7 @@ export function MissionControl({
             <div className="relative z-10 flex flex-wrap items-center gap-2 border-t border-hairline bg-panel/70 px-4 py-3 backdrop-blur-xl">
               <Link
                 href={`/tickets/${selected.id}`}
-                className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent-fill px-3.5 text-[12px] font-semibold text-white transition duration-150 hover:brightness-110 active:scale-[0.985]"
+                className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent-fill px-3.5 text-[12px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition duration-150 hover:brightness-110 active:scale-95"
               >
                 <Wrench className="h-3.5 w-3.5" aria-hidden="true" />
                 Update status

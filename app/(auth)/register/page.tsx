@@ -24,14 +24,14 @@ export default function RegisterPage() {
       }
     >
       <div className="space-y-5">
-        <p className="font-serif text-[16px] leading-7 text-ink">
+        <p className="font-sans text-[16px] leading-7 text-ink">
           Ask an owner or manager to add you from the <span className="font-semibold">Team</span> page.
           They hand over an email and a temporary password for the first sign-in.
         </p>
 
-        <div className="rounded-sm bg-wash px-4 py-3.5">
+        <div className="rounded-sm bg-overlay px-4 py-3.5">
           <p className="font-sans text-[13px] font-semibold text-ink">After your first sign-in</p>
-          <p className="mt-1 font-serif text-[14px] leading-6 text-muted">
+          <p className="mt-1 font-sans text-[14px] leading-6 text-ink-secondary">
             Change the temporary password from “Forgot password” on the sign-in screen. Nobody on
             the desk needs to know it but you.
           </p>
@@ -39,7 +39,7 @@ export default function RegisterPage() {
 
         <Link
           href="/login"
-          className="inline-flex h-11 w-full items-center justify-center rounded-sm bg-accent font-sans text-[15px] font-semibold text-onAccent transition-colors hover:bg-gold"
+          className="inline-flex h-11 w-full items-center justify-center rounded-sm bg-accent font-sans text-[15px] font-semibold text-white transition-colors hover:bg-accent-deep"
         >
           Back to sign in
         </Link>

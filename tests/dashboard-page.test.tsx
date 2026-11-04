@@ -16,6 +16,7 @@ const ticket = {
   status: "in_repair" as const,
   priority: "high" as const,
   issue: "Screen cracked after a drop.",
+  estimate_cents: 18500,
   customer: { id: "c1", full_name: "Maya Chen", phone: "415-555-0142", email: "maya@example.com" },
   device: { id: "d1", category: "phone" as const, brand: "Apple", model: "iPhone 15 Pro" },
   assignee: { id: "s1", full_name: "Demo Admin", email: "admin@example.com" },
@@ -54,21 +55,40 @@ const data = {
 } as unknown as DashboardData;
 
 describe("DashboardPage", () => {
-  it("renders live shop metrics and the queue", async () => {
+  it("stages the newest ticket with its queue and workbench actions", async () => {
     vi.mocked(getDashboardData).mockResolvedValue(data);
     render(await DashboardPage());
 
-    expect(screen.getByRole("heading", { name: "Repair desk" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Mission control" })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Live queue" })).toBeInTheDocument();
+
     expect(screen.getAllByText("PW-1041").length).toBeGreaterThan(0);
     expect(screen.getAllByText("Maya Chen").length).toBeGreaterThan(0);
-    expect(screen.getByText("Open jobs")).toBeInTheDocument();
-    expect(screen.getByText("Dell XPS OLED panel")).toBeInTheDocument();
-    expect(screen.getByText("Alex Campita")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Open tracker/ })).toHaveAttribute("href", "/track");
+    expect(screen.getAllByText("In repair").length).toBeGreaterThan(0);
+
+    expect(screen.getByText("Open")).toBeInTheDocument();
+    expect(screen.getByText("Ready")).toBeInTheDocument();
+    expect(screen.getByText("MTD")).toBeInTheDocument();
+
+    expect(screen.getByRole("link", { name: /Update status/ })).toHaveAttribute(
+      "href",
+      "/tickets/ticket-1",
+    );
+    expect(screen.getByRole("link", { name: /Add part/ })).toHaveAttribute(
+      "href",
+      "/tickets/ticket-1",
+    );
+    expect(screen.getByRole("link", { name: /Create invoice/ })).toHaveAttribute(
+      "href",
+      "/tickets/ticket-1",
+    );
+    expect(screen.getByRole("link", { name: /1 low stock/ })).toHaveAttribute(
+      "href",
+      "/inventory",
+    );
   });
 
-  it("shows empty states when the queue is clear", async () => {
+  it("shows the clear-bench state when no ticket is open", async () => {
     vi.mocked(getDashboardData).mockResolvedValue({
       ...data,
       queue: [],
@@ -81,8 +101,9 @@ describe("DashboardPage", () => {
     render(await DashboardPage());
 
     expect(screen.getByText("The bench is clear")).toBeInTheDocument();
-    expect(screen.getByText("Nothing waiting for pickup.")).toBeInTheDocument();
-    expect(screen.getByText("Stock levels are healthy.")).toBeInTheDocument();
-    expect(screen.getByText("No staff profiles yet.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "New intake" })).toHaveAttribute(
+      "href",
+      "/tickets/new",
+    );
   });
 });

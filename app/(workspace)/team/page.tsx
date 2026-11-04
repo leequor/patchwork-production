@@ -54,25 +54,25 @@ export default async function TeamPage({
                   className="grid gap-2 px-3 py-2.5 sm:grid-cols-[1.3fr_0.7fr_0.9fr_auto] sm:items-center sm:gap-3"
                 >
                   <span className="flex min-w-0 items-center gap-2.5">
-                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded bg-wash text-[13px] font-semibold text-ink">
+                    <span className="grid h-8 w-8 shrink-0 place-items-center rounded bg-overlay text-[13px] font-semibold text-ink">
                       {initials(member.full_name || member.email)}
                     </span>
                     <span className="min-w-0">
                       <span className="block truncate text-[13px] font-medium text-ink">
                         {member.full_name || member.email}
                         {member.id === staff?.id ? (
-                          <span className="ml-1.5 text-[13px] text-muted">you</span>
+                          <span className="ml-1.5 text-[13px] text-ink-secondary">you</span>
                         ) : null}
                       </span>
-                      <span className="mt-0.5 block truncate text-[13px] text-muted">
+                      <span className="mt-0.5 block truncate text-[13px] text-ink-secondary">
                         {member.email}
                       </span>
                     </span>
                   </span>
 
-                  <span className="text-[13px] text-muted">{ROLE_LABELS[member.role]}</span>
+                  <span className="text-[13px] text-ink-secondary">{ROLE_LABELS[member.role]}</span>
 
-                  <span className="text-[13px] text-muted">
+                  <span className="text-[13px] text-ink-secondary">
                     <span className="figure text-[13px] text-ink">{memberLoad?.open ?? 0}</span> open ·{" "}
                     <span className="figure text-[13px] text-ink">{memberLoad?.active ?? 0}</span>{" "}
                     in repair
@@ -89,7 +89,7 @@ export default async function TeamPage({
                           id={`role-${member.id}`}
                           name="role"
                           defaultValue={member.role}
-                          className="h-7 rounded border border-line bg-paper px-1.5 text-[13px] text-ink outline-none focus:border-accent"
+                          className="h-7 rounded border border-hairline bg-canvas px-1.5 text-[13px] text-ink outline-none focus:border-accent"
                         >
                           {isOwner ? <option value="superadmin">Owner</option> : null}
                           <option value="admin">Manager</option>
@@ -97,13 +97,13 @@ export default async function TeamPage({
                         </select>
                         <button
                           type="submit"
-                          className="h-7 rounded px-2 text-[13px] text-muted transition-colors hover:bg-wash hover:text-ink"
+                          className="h-7 rounded px-2 text-[13px] text-ink-secondary transition-colors hover:bg-overlay hover:text-ink"
                         >
                           Save
                         </button>
                       </form>
                     ) : (
-                      <span className="text-[13px] text-muted">
+                      <span className="text-[13px] text-ink-secondary">
                         {member.role === "superadmin" ? "Owner-managed" : "Manager-managed"}
                       </span>
                     )}
@@ -118,7 +118,7 @@ export default async function TeamPage({
           {canManage ? (
             <Panel className="px-4 py-4">
               <h2 className="text-[14px] font-semibold text-ink">Add staff</h2>
-              <p className="mt-1 text-[13px] leading-5 text-muted">
+              <p className="mt-1 text-[13px] leading-5 text-ink-secondary">
                 Creates a confirmed account. Share the temporary password privately; they can change
                 it from “Forgot password”.
               </p>
@@ -151,7 +151,7 @@ export default async function TeamPage({
           ) : (
             <Panel className="px-4 py-4">
               <h2 className="text-[14px] font-semibold text-ink">Access</h2>
-              <p className="mt-1.5 text-[13px] leading-5 text-muted">
+              <p className="mt-1.5 text-[13px] leading-5 text-ink-secondary">
                 Your account is a technician. Ask an owner or manager to change roles or add staff.
               </p>
             </Panel>
@@ -162,15 +162,15 @@ export default async function TeamPage({
             <dl className="mt-2.5 space-y-2 text-[13px] leading-5">
               <div>
                 <dt className="text-ink">Owner</dt>
-                <dd className="text-muted">Full access, staff, and owner roles.</dd>
+                <dd className="text-ink-secondary">Full access, staff, and owner roles.</dd>
               </div>
               <div>
                 <dt className="text-ink">Manager</dt>
-                <dd className="text-muted">Tickets, customers, inventory, invoices, staff roles.</dd>
+                <dd className="text-ink-secondary">Tickets, customers, inventory, invoices, staff roles.</dd>
               </div>
               <div>
                 <dt className="text-ink">Technician</dt>
-                <dd className="text-muted">Day-to-day tickets and customer work.</dd>
+                <dd className="text-ink-secondary">Day-to-day tickets and customer work.</dd>
               </div>
             </dl>
           </Panel>

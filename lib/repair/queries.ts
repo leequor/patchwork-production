@@ -153,7 +153,7 @@ export async function getDashboardData(): Promise<DashboardData> {
     readyCount: counts.ready,
     revenueMtd,
     lowStock,
-    queue: tickets.filter((ticket) => isOpenStatus(ticket.status)).slice(0, 8),
+    queue: tickets.filter((ticket) => isOpenStatus(ticket.status)).slice(0, 60),
     readyTickets: tickets.filter((ticket) => ticket.status === "ready").slice(0, 4),
     teamLoad,
   };

@@ -18,7 +18,7 @@ export default function ResetPasswordPreviewPage() {
         title="Set a new password"
         description="Sample recovery session for screenshots and design review. The real page only renders this form when Supabase has verified the reset link."
         footer={
-          <p className="text-[13.5px] text-muted">
+          <p className="text-[13.5px] text-ink-secondary">
             Local preview only. The form action still requires a real recovery session.
           </p>
         }

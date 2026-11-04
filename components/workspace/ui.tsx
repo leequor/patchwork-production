@@ -75,7 +75,7 @@ export function PageHeader({
       <div className="min-w-0">
         <h1 className="display text-[30px] text-ink sm:text-[34px]">{title}</h1>
         {description ? (
-          <p className="mt-1.5 max-w-[62ch] font-serif text-[15px] leading-6 text-muted">
+          <p className="mt-1.5 max-w-[62ch] font-sans text-[15px] leading-6 text-ink-secondary">
             {description}
           </p>
         ) : null}
@@ -90,7 +90,7 @@ export function Feedback({ notice, error }: { notice?: string; error?: string })
   return (
     <div
       className={cn(
-        "mt-4 rounded-sm px-3.5 py-2.5 font-sans text-[13px] leading-5",
+        "mt-4 rounded-lg px-3.5 py-2.5 font-sans text-[13px] leading-5",
         error ? "bg-negative-soft text-negative-ink" : "bg-positive-soft text-positive-ink",
       )}
       role={error ? "alert" : "status"}
@@ -110,16 +110,16 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-sm bg-paper px-6 py-10">
+    <div className="rounded-xl border border-dashed border-hairline bg-canvas/40 px-6 py-10">
       <p className="font-sans text-[15px] font-semibold text-ink">{title}</p>
-      <p className="mt-1.5 max-w-[52ch] font-serif text-[14px] leading-6 text-muted">{body}</p>
+      <p className="mt-1.5 max-w-[52ch] font-sans text-[14px] leading-6 text-ink-secondary">{body}</p>
       {action ? <div className="mt-4">{action}</div> : null}
     </div>
   );
 }
 
 const LINK_BASE =
-  "inline-flex h-10 items-center justify-center gap-2 rounded-sm px-3.5 font-sans text-[13px] font-semibold transition-[background-color,transform] duration-150 active:scale-[0.98]";
+  "inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3.5 font-sans text-[13px] font-semibold transition-[background-color,filter,transform] duration-150 active:scale-[0.985]";
 
 export function SecondaryLink({
   href,
@@ -131,7 +131,14 @@ export function SecondaryLink({
   className?: string;
 }) {
   return (
-    <Link href={href} className={cn(LINK_BASE, "bg-wash text-ink hover:bg-[#D2CDC2]", className)}>
+    <Link
+      href={href}
+      className={cn(
+        LINK_BASE,
+        "border border-hairline bg-raised text-ink hover:bg-overlay",
+        className,
+      )}
+    >
       {children}
     </Link>
   );
@@ -147,7 +154,10 @@ export function PrimaryLink({
   className?: string;
 }) {
   return (
-    <Link href={href} className={cn(LINK_BASE, "bg-accent text-onAccent hover:bg-gold", className)}>
+    <Link
+      href={href}
+      className={cn(LINK_BASE, "bg-accent-fill text-white hover:brightness-110", className)}
+    >
       {children}
     </Link>
   );
@@ -155,7 +165,9 @@ export function PrimaryLink({
 
 /** Panels separate by a step in tone, not by an outline. */
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={cn("rounded-sm bg-surface", className)}>{children}</div>;
+  return (
+    <div className={cn("rounded-xl border border-hairline bg-panel", className)}>{children}</div>
+  );
 }
 
 export function PanelHeader({
@@ -172,7 +184,7 @@ export function PanelHeader({
       <div className="min-w-0">
         <h2 className="font-sans text-[15px] font-semibold text-ink">{title}</h2>
         {detail ? (
-          <p className="mt-0.5 font-serif text-[13px] leading-5 text-muted">{detail}</p>
+          <p className="mt-0.5 font-sans text-[13px] leading-5 text-ink-secondary">{detail}</p>
         ) : null}
       </div>
       {action}
@@ -191,7 +203,7 @@ export function DataBar({
 }) {
   const width = max <= 0 ? 0 : Math.max(0, Math.min(100, Math.round((value / max) * 100)));
   return (
-    <div className="h-1.5 w-full overflow-hidden bg-wash">
+    <div className="h-1.5 w-full overflow-hidden bg-overlay">
       <div className={cn("h-full", tone)} style={{ width: `${width}%` }} />
     </div>
   );

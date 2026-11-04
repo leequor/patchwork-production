@@ -7,10 +7,10 @@ type ButtonSize = "sm" | "md" | "lg";
 
 const VARIANTS: Record<ButtonVariant, string> = {
   primary:
-    "bg-accent text-onAccent hover:bg-gold active:bg-[#8E2A10] disabled:bg-accent/60",
+    "bg-accent-fill text-white shadow-inset-line hover:brightness-110 active:brightness-95 disabled:opacity-60",
   secondary:
-    "bg-wash text-ink hover:bg-[#D2CDC2] active:bg-[#C8C3B8] disabled:opacity-60",
-  ghost: "bg-transparent text-muted hover:bg-wash hover:text-ink",
+    "bg-raised text-ink ring-1 ring-inset ring-hairline hover:bg-overlay active:brightness-95 disabled:opacity-60",
+  ghost: "bg-transparent text-ink-secondary hover:bg-overlay hover:text-ink",
 };
 
 const SIZES: Record<ButtonSize, string> = {
@@ -35,8 +35,9 @@ export function Button({
     <button
       type={type}
       className={cn(
-        "inline-flex select-none items-center justify-center gap-2 rounded-sm font-sans font-semibold",
-        "transition-[background-color,transform,color] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)]",
+        "inline-flex select-none items-center justify-center gap-2 rounded-lg font-sans font-semibold",
+        "transition-[background-color,transform,color,filter] duration-150 ease-[cubic-bezier(0.23,1,0.32,1)]",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-canvas",
         "active:scale-[0.98] disabled:pointer-events-none disabled:opacity-55",
         VARIANTS[variant],
         SIZES[size],

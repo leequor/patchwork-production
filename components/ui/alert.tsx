@@ -7,7 +7,7 @@ type AlertTone = "error" | "success" | "info";
 const TONES: Record<AlertTone, string> = {
   error: "bg-negative-soft text-negative-ink",
   success: "bg-positive-soft text-positive-ink",
-  info: "bg-wash text-ink",
+  info: "bg-overlay text-ink",
 };
 
 export function Alert({

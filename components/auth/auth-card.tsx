@@ -17,7 +17,7 @@ export function AuthCard({
         {title}
       </h2>
       <p
-        className="rise mt-2 max-w-[46ch] font-serif text-[15px] leading-6 text-muted"
+        className="rise mt-2 max-w-[46ch] font-sans text-[15px] leading-6 text-ink-secondary"
         style={{ animationDelay: "160ms" }}
       >
         {description}
@@ -28,7 +28,7 @@ export function AuthCard({
       </div>
 
       {footer ? (
-        <div className="mt-7 rounded-sm bg-wash px-3.5 py-3 font-sans text-[13px] leading-5 text-muted">
+        <div className="mt-7 rounded-sm bg-overlay px-3.5 py-3 font-sans text-[13px] leading-5 text-ink-secondary">
           {footer}
         </div>
       ) : null}

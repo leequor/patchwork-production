@@ -34,9 +34,9 @@ export function FormField({
           {label}
         </label>
         {labelExtra ? (
-          <span className="font-sans text-[13px] text-muted">{labelExtra}</span>
+          <span className="font-sans text-[13px] text-ink-secondary">{labelExtra}</span>
         ) : hint ? (
-          <span id={`${id}-hint`} className="font-sans text-[13px] text-muted">
+          <span id={`${id}-hint`} className="font-sans text-[13px] text-ink-secondary">
             {hint}
           </span>
         ) : null}
@@ -46,16 +46,16 @@ export function FormField({
         aria-invalid={Boolean(error)}
         aria-describedby={describedBy}
         className={cn(
-          "h-11 w-full rounded-sm border border-line bg-raised px-3 font-serif text-[16px] text-ink",
-          "outline-none transition-colors duration-150 placeholder:text-muted/60",
-          "hover:border-[#B8B2A6] focus:border-accent focus-visible:outline-none",
+          "h-11 w-full rounded-lg border border-hairline bg-raised px-3 font-sans text-[16px] text-ink",
+          "outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/60",
+          "hover:border-hairline-strong focus:border-accent focus:ring-2 focus:ring-accent/40 focus-visible:outline-none",
           error ? "border-negative focus:border-negative" : null,
           className,
         )}
         {...inputProps}
       />
       {hint && labelExtra ? (
-        <p id={`${id}-hint`} className="font-sans text-[13px] leading-5 text-muted">
+        <p id={`${id}-hint`} className="font-sans text-[13px] leading-5 text-ink-secondary">
           {hint}
         </p>
       ) : null}

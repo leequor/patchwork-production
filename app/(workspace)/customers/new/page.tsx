@@ -26,7 +26,7 @@ export default async function NewCustomerPage({
         actions={
           <Link
             href="/customers"
-            className="inline-flex h-9 items-center justify-center rounded-sm bg-wash px-3.5 text-[13px] font-semibold text-ink hover:border-muted/40"
+            className="inline-flex h-9 items-center justify-center rounded-sm bg-overlay px-3.5 text-[13px] font-semibold text-ink hover:border-ink-secondary/40"
           >
             Back to customers
           </Link>
@@ -55,14 +55,14 @@ export default async function NewCustomerPage({
         <div className="space-y-4">
           <Panel className="p-5">
             <h2 className="text-[14px] font-medium text-ink">Why create the profile first?</h2>
-            <p className="mt-2 text-[13px] leading-5 text-muted">
+            <p className="mt-2 text-[13px] leading-5 text-ink-secondary">
               The profile holds contact details and every device. Tickets link to both, so repair
               history stays with the customer instead of a loose device.
             </p>
           </Panel>
           <Panel className="p-5">
             <h2 className="text-[14px] font-medium text-ink">Public tracking</h2>
-            <p className="mt-2 text-[13px] leading-5 text-muted">
+            <p className="mt-2 text-[13px] leading-5 text-ink-secondary">
               Add an email or phone for normal customer contact. The tracking code is generated on
               the ticket, so the customer can follow the repair at{" "}
               <span className="text-ink">/track</span> without an account.

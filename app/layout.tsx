@@ -1,22 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Libre_Franklin, Source_Serif_4 } from "next/font/google";
+import { Geist, Geist_Mono } from "next/font/google";
 
 import { APP_DESCRIPTION, APP_NAME, getSiteUrl } from "@/lib/config";
 
 import "./globals.css";
 
-const display = Libre_Franklin({
+const sans = Geist({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800"],
-  variable: "--font-display",
+  variable: "--font-sans",
   display: "swap",
 });
 
-const text = Source_Serif_4({
+const mono = Geist_Mono({
   subsets: ["latin"],
-  weight: ["400", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-text",
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -36,8 +33,8 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#E9E6DE",
-  colorScheme: "light",
+  themeColor: "#0A0A0A",
+  colorScheme: "dark",
 };
 
 export default function RootLayout({
@@ -49,7 +46,7 @@ export default function RootLayout({
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${display.variable} ${text.variable}`}
+      className={`${sans.variable} ${mono.variable}`}
     >
       <body>{children}</body>
     </html>

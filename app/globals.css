@@ -2,30 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-}
-
-html {
-  background: #e2e5dd;
-}
-
-body {
-  @apply bg-paper text-ink antialiased;
-  font-family: var(--font-text), Georgia, serif;
-  min-height: 100dvh;
-}
-
-::selection {
-  background: #ce3f1b;
-  color: #fffaf0;
-}
-
+/**
+ * Patchwork — design tokens and ground.
+ *
+ * Colours and type live in tailwind.config.ts. This file holds what utilities
+ * cannot express: the layered ground, focus and selection, scrollbars, and the
+ * three motion primitives the rebuilt surfaces share.
+ */
 @layer base {
+  :root {
+    color-scheme: dark;
+
+    /* Surfaces */
+    --canvas: #0a0a0a;
+    --panel: #0e0e10;
+    --raised: #151519;
+    --overlay: #1b1b21;
+
+    /* Ink */
+    --ink: #f5f5f7;
+    --ink-secondary: #a3a3ac;
+    --ink-tertiary: #73737d;
+    --ink-faint: #4f4f58;
+
+    /* Accent */
+    --accent: #6366f1;
+    --accent-bright: #818cf8;
+    --cyan: #22d3ee;
+
+    /* Motion */
+    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    --duration-fast: 140ms;
+    --duration-base: 220ms;
+    --duration-slow: 420ms;
+
+    /* Layout */
+    --sidebar-width: 264px;
+    --header-height: 64px;
+    --gutter: 24px;
+  }
+
+  html {
+    background-color: var(--canvas);
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas text-ink antialiased;
+    min-height: 100dvh;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    font-feature-settings: "ss01", "cv11";
+
+    /* The ground: one indigo wash at the top, one cyan breath to the right,
+       then a 24px dot mesh held still while content scrolls over it. */
+    background-image:
+      radial-gradient(80rem 40rem at 50% -18%, rgba(99, 102, 241, 0.16), transparent 68%),
+      radial-gradient(56rem 32rem at 106% -4%, rgba(34, 211, 238, 0.07), transparent 62%),
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
+    background-size:
+      auto,
+      auto,
+      24px 24px;
+    background-attachment: fixed, fixed, fixed;
+  }
+
+  /* Film grain. 3.5% over everything, behind anything that stacks above it. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: #ffffff;
+  }
+
   * {
-    border-color: #c7ccc1;
+    border-color: #ffffff14;
   }
 
   a,
@@ -37,8 +96,9 @@ body {
   }
 
   :focus-visible {
-    outline: 2px solid #ce3f1b;
+    outline: 2px solid var(--accent-bright);
     outline-offset: 2px;
+    border-radius: 4px;
   }
 
   h1,
@@ -47,15 +107,21 @@ body {
   h4,
   h5,
   h6 {
-    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  ::placeholder {
+    color: var(--ink-faint);
   }
 
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #131a1d;
-    box-shadow: 0 0 0 1000px #fbfaf6 inset; /* taste-skill-ignore shadow */
-    caret-color: #131a1d;
+    -webkit-text-fill-color: var(--ink);
+    box-shadow: 0 0 0 1000px var(--raised) inset;
+    caret-color: var(--ink);
   }
 
   ::-webkit-scrollbar {
@@ -64,13 +130,17 @@ body {
   }
 
   ::-webkit-scrollbar-track {
-    background: #e2e5dd;
+    background: transparent;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #bcc2b8;
+    background: #26262d;
     border-radius: 9999px;
-    border: 2px solid #e2e5dd;
+    border: 2px solid var(--canvas);
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
   }
 }
 
@@ -79,97 +149,97 @@ body {
     text-wrap: balance;
   }
 
-  /* Display face settings: one face, one weight, tuned for large sizes. */
+  /* Display type: one face, tight tracking, leading under 1. */
   .display {
-    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
-    font-weight: 700;
+    font-weight: 600;
     letter-spacing: -0.035em;
-    line-height: 0.92;
+    line-height: 0.98;
   }
 
   .display-tight {
-    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.08;
   }
 
+  /* Every figure in the product is mono and tabular so columns line up. */
   .figure {
-    font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
     font-variant-numeric: tabular-nums;
-    font-feature-settings: "tnum" 1;
+    letter-spacing: -0.01em;
   }
 
-  /* The two surfaces in one page: ink field with cream type. */
+  .mono-id {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.02em;
+    color: var(--ink-tertiary);
+  }
+
+  /* Opt-in mesh for a single section that needs its own ground. */
+  .dot-grid {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      rgba(255, 255, 255, 0.07) 1px,
+      transparent 0
+    );
+    background-size: 22px 22px;
+  }
+
+  /* The queue feed fades at its own edges, not with an overlay bar. */
+  .fade-y {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 14px,
+      #000 calc(100% - 14px),
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 14px,
+      #000 calc(100% - 14px),
+      transparent 100%
+    );
+  }
+
+  /* Halo behind the hero device. Radial only — no blur filter to pay for. */
+  .glow-accent {
+    background: radial-gradient(
+      closest-side,
+      rgba(99, 102, 241, 0.3) 0%,
+      rgba(34, 211, 238, 0.12) 52%,
+      transparent 78%
+    );
+  }
+
+  /* The gradient edge on a hovered or active row. */
+  .accent-underline {
+    box-shadow: inset 2px 0 0 0 var(--accent);
+  }
+
   .on-night {
-    color: #f1ebdd;
-  }
-}
-
-/* The poster's one entrance. Everything else is already in place. */
-@media (prefers-reduced-motion: no-preference) {
-  .plate-reveal {
-    animation: plate-reveal 800ms var(--ease-out) both;
+    color: var(--ink);
   }
 
-  .plate-reveal-image {
-    animation: plate-settle 1400ms var(--ease-out) both;
-  }
-
-  .rise {
-    animation: rise 520ms var(--ease-out) both;
-  }
-
-  /* Photographs screened back to the poster's two inks, then settled in. */
-  .photo-print {
-    filter: grayscale(1) contrast(1.12);
-    mix-blend-mode: multiply;
-    animation: photo-settle 1600ms var(--ease-out) both;
-    transition: transform 900ms var(--ease-out);
-  }
-
-  .photo-print:hover {
-    transform: scale(1.04);
-  }
-
-  @keyframes photo-settle {
-    from {
-      transform: scale(1.07);
-      opacity: 0;
-    }
-    to {
-      transform: scale(1);
-      opacity: 1;
-    }
-  }
-
-  /* Feedback on every control, not only the pointer. */
+  /* Press feedback on every control, pointer or keyboard. */
   .press {
     transition:
-      background-color 160ms var(--ease-out),
-      transform 160ms var(--ease-out);
+      transform var(--duration-fast) var(--ease-spring),
+      background-color var(--duration-fast) var(--ease-spring),
+      border-color var(--duration-fast) var(--ease-spring);
   }
 
   .press:active {
-    transform: scale(0.98);
+    transform: scale(0.985);
   }
 }
 
-@keyframes plate-reveal {
-  from {
-    clip-path: inset(0 100% 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-@keyframes plate-settle {
-  from {
-    transform: scale(1.06);
-  }
-  to {
-    transform: scale(1);
+@media (prefers-reduced-motion: no-preference) {
+  .rise {
+    animation: rise 520ms var(--ease-spring) both;
   }
 }
 
@@ -191,5 +261,6 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

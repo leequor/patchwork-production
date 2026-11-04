@@ -51,7 +51,7 @@ export function ArchiveStrip({
             target="_blank"
             rel="noreferrer"
             title={frame.title}
-            className={cn("relative block overflow-hidden bg-cream", height)}
+            className={cn("relative block overflow-hidden bg-ink", height)}
           >
             <Image
               src={frame.src}
@@ -65,10 +65,10 @@ export function ArchiveStrip({
         ))}
       </div>
 
-      <p className="mt-2 truncate font-sans text-[13px] leading-5 text-creamMuted/70">
+      <p className="mt-2 truncate font-sans text-[13px] leading-5 text-ink-secondary/70">
         Photographs from Wikimedia Commons —{" "}
         <a
-          className="underline underline-offset-2 transition-colors hover:text-cream"
+          className="underline underline-offset-2 transition-colors hover:text-ink"
           href="/archive/credits.json"
         >
           credits

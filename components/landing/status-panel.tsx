@@ -24,14 +24,14 @@ const STATE_LABEL = {
 } as const;
 
 const TONE = {
-  loading: "text-muted",
+  loading: "text-ink-secondary",
   ok: "text-positive",
   warn: "text-warn",
   error: "text-negative",
 } as const;
 
 const DOT = {
-  loading: "bg-[#5a6b62]",
+  loading: "bg-ink-tertiary",
   ok: "bg-positive",
   warn: "bg-warn",
   error: "bg-negative",
@@ -50,7 +50,7 @@ function StatusRow({
     <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3.5">
       <div>
         <p className="text-[15px] font-medium text-ink">{label}</p>
-        <p className="mt-0.5 max-w-[58ch] font-serif text-[15px] leading-6 text-muted">{detail}</p>
+        <p className="mt-0.5 max-w-[58ch] font-sans text-[15px] leading-6 text-ink-secondary">{detail}</p>
       </div>
       <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium", TONE[state])}>
         <span className={cn("h-1.5 w-1.5", DOT[state])} aria-hidden="true" />
@@ -108,7 +108,7 @@ export function StatusPanel() {
         </div>
       ) : null}
 
-      <div className="overflow-hidden rounded bg-paper">
+      <div className="overflow-hidden rounded bg-canvas">
         <StatusRow
           label="Next.js app"
           state={app ? "ok" : error ? "error" : "loading"}
@@ -146,7 +146,7 @@ export function StatusPanel() {
         />
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-sans text-[13px] text-muted">
+      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-sans text-[13px] text-ink-secondary">
         <a className="transition-colors hover:text-ink" href="/api/health">
           /api/health
         </a>

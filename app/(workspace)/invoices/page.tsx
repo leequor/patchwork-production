@@ -3,6 +3,8 @@ import Link from "next/link";
 
 import { markInvoicePaidAction } from "@/app/actions/repair";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { MotionItem } from "@/components/workspace/motion-row";
+import { StaggerGroup, StaggerItem } from "@/components/workspace/stagger";
 import {
   EmptyState,
   Feedback,
@@ -43,26 +45,32 @@ export default async function InvoicesPage({
       />
       <Feedback notice={params.notice} error={params.error} />
 
-      <div className="mt-4 grid gap-2 sm:grid-cols-3">
-        <Panel className="px-3.5 py-3">
-          <p className="text-[13px] text-muted">Collected</p>
-          <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-positive">
-            {formatMoney(revenue)}
-          </p>
-        </Panel>
-        <Panel className="px-3.5 py-3">
-          <p className="text-[13px] text-muted">Unpaid</p>
-          <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-warn">
-            {unpaid.length}
-          </p>
-        </Panel>
-        <Panel className="px-3.5 py-3">
-          <p className="text-[13px] text-muted">Invoices issued</p>
-          <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-ink">
-            {invoices.length}
-          </p>
-        </Panel>
-      </div>
+      <StaggerGroup className="mt-4 grid gap-2 sm:grid-cols-3">
+        <StaggerItem>
+          <Panel className="px-3.5 py-3">
+            <p className="text-[13px] text-ink-secondary">Collected</p>
+            <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-positive">
+              {formatMoney(revenue)}
+            </p>
+          </Panel>
+        </StaggerItem>
+        <StaggerItem>
+          <Panel className="px-3.5 py-3">
+            <p className="text-[13px] text-ink-secondary">Unpaid</p>
+            <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-warn">
+              {unpaid.length}
+            </p>
+          </Panel>
+        </StaggerItem>
+        <StaggerItem>
+          <Panel className="px-3.5 py-3">
+            <p className="text-[13px] text-ink-secondary">Invoices issued</p>
+            <p className="figure mt-1 text-[22px] font-semibold leading-none tracking-[-0.03em] text-ink">
+              {invoices.length}
+            </p>
+          </Panel>
+        </StaggerItem>
+      </StaggerGroup>
 
       <Panel className="mt-3">
         <PanelHeader title="Invoice ledger" detail="Newest first. Payment marks the ticket collected." />
@@ -77,7 +85,7 @@ export default async function InvoicesPage({
           </div>
         ) : (
           <>
-            <div className="hidden grid-cols-[6.5rem_5.5rem_1fr_1fr_6rem_6rem_8rem] gap-3 px-3 pb-1.5 text-[13px] text-muted lg:grid">
+            <div className="hidden grid-cols-[6.5rem_5.5rem_1fr_1fr_6rem_6rem_8rem] gap-3 px-3 pb-1.5 text-[13px] text-ink-secondary lg:grid">
               <span>Invoice</span>
               <span>Ticket</span>
               <span>Customer</span>
@@ -88,28 +96,28 @@ export default async function InvoicesPage({
             </div>
             <ul className="pb-2">
               {invoices.map((invoice) => (
-                <li
+                <MotionItem
                   key={invoice.id}
-                  className="grid gap-1.5 px-3 py-2.5 lg:grid-cols-[6.5rem_5.5rem_1fr_1fr_6rem_6rem_8rem] lg:items-center lg:gap-3"
+                  className="grid gap-1.5 rounded-lg px-3 py-2.5 transition-colors duration-150 hover:bg-white/[0.04] lg:grid-cols-[6.5rem_5.5rem_1fr_1fr_6rem_6rem_8rem] lg:items-center lg:gap-3"
                 >
                   <span>
-                    <span className="figure block text-[13px] text-ink">
+                    <span className="mono-id block text-[13px] font-medium">
                       {invoice.invoice_number}
                     </span>
-                    <span className="mt-0.5 block text-[13px] text-muted">
+                    <span className="mt-0.5 block text-[13px] text-ink-faint">
                       {formatDate(invoice.issued_at)}
                     </span>
                   </span>
                   <Link
                     href={`/tickets/${invoice.ticket_id}`}
-                    className="figure text-[13px] text-muted transition-colors hover:text-ink"
+                    className="mono-id text-[12px] transition-colors hover:text-ink"
                   >
                     {invoice.ticket.ticket_number}
                   </Link>
-                  <span className="truncate text-[13px] text-ink">
+                  <span className="truncate text-[13px] font-semibold text-ink">
                     {invoice.ticket.customer.full_name}
                   </span>
-                  <span className="truncate text-[13px] text-muted">
+                  <span className="truncate text-[13px] text-ink-secondary">
                     {invoice.ticket.device.brand} {invoice.ticket.device.model}
                   </span>
                   <InvoicePill status={invoice.status} />
@@ -118,11 +126,11 @@ export default async function InvoicesPage({
                   </span>
                   <span className="flex lg:justify-end">
                     {invoice.status === "paid" ? (
-                      <span className="text-[13px] text-muted">
+                      <span className="text-[13px] text-ink-secondary">
                         Paid {formatDate(invoice.paid_at)}
                       </span>
                     ) : invoice.status === "void" ? (
-                      <span className="text-[13px] text-muted">Void</span>
+                      <span className="text-[13px] text-ink-secondary">Void</span>
                     ) : canManage ? (
                       <form action={markInvoicePaidAction}>
                         <input type="hidden" name="invoice_id" value={invoice.id} />
@@ -130,10 +138,10 @@ export default async function InvoicesPage({
                         <SubmitButton pendingText="Recording...">Mark paid</SubmitButton>
                       </form>
                     ) : (
-                      <span className="text-[13px] text-muted">Manager review</span>
+                      <span className="text-[13px] text-ink-secondary">Manager review</span>
                     )}
                   </span>
-                </li>
+                </MotionItem>
               ))}
             </ul>
           </>

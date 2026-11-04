@@ -70,7 +70,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <Link href="/tickets" className="inline-flex items-center gap-1.5 text-[13px] text-muted transition-colors hover:text-ink">
+        <Link href="/tickets" className="inline-flex items-center gap-1.5 text-[13px] text-ink-secondary transition-colors hover:text-ink">
           <span aria-hidden="true">←</span>
           All tickets
         </Link>
@@ -91,9 +91,9 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
             <StatusPill status={ticket.status} />
             <PriorityPill priority={ticket.priority} />
           </div>
-          <p className="mt-2 max-w-[78ch] text-[13px] leading-5 text-muted">{ticket.issue}</p>
+          <p className="mt-2 max-w-[78ch] text-[13px] leading-5 text-ink-secondary">{ticket.issue}</p>
         </div>
-        <dl className="flex gap-6 text-[13px] text-muted">
+        <dl className="flex gap-6 text-[13px] text-ink-secondary">
           <div>
             <dt>Opened</dt>
             <dd className="mt-0.5 text-ink">{formatRelative(ticket.created_at)}</dd>
@@ -105,7 +105,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
         </dl>
       </header>
 
-      <ol className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 bg-paper px-3 py-2" aria-label="Repair stage">
+      <ol className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2 bg-canvas px-3 py-2" aria-label="Repair stage">
         {railStatuses.map((status, index) => {
           const done = index < stageIndex;
           const current = index === stageIndex;
@@ -114,14 +114,14 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
               <span
                 className={cn(
                   "h-1.5 w-1.5",
-                  current ? "bg-accent" : done ? "bg-ink" : "bg-line",
+                  current ? "bg-accent" : done ? "bg-ink" : "bg-hairline",
                 )}
                 aria-hidden="true"
               />
               <span
                 className={cn(
                   "text-[13px]",
-                  current ? "text-ink" : done ? "text-muted" : "text-muted/50",
+                  current ? "text-ink" : done ? "text-ink-secondary" : "text-ink-secondary/50",
                 )}
                 aria-current={current ? "step" : undefined}
               >
@@ -138,56 +138,56 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
             <PanelHeader title="Repair brief" detail="What came in, and what the bench found." />
             <dl className="grid gap-x-6 gap-y-3 px-4 pb-4 sm:grid-cols-2">
               <div>
-                <dt className="text-[13px] text-muted">Customer</dt>
+                <dt className="text-[13px] text-ink-secondary">Customer</dt>
                 <dd className="mt-0.5">
                   <Link
                     href={`/customers/${ticket.customer.id}`}
-                    className="text-[13px] font-medium text-ink hover:text-gold"
+                    className="text-[13px] font-medium text-ink hover:text-accent-deep"
                   >
                     {ticket.customer.full_name}
                   </Link>
-                  <span className="mt-0.5 block text-[13px] text-muted">{ticket.customer.phone}</span>
+                  <span className="mt-0.5 block text-[13px] text-ink-secondary">{ticket.customer.phone}</span>
                   {ticket.customer.email ? (
-                    <span className="mt-0.5 block break-all text-[13px] text-muted">
+                    <span className="mt-0.5 block break-all text-[13px] text-ink-secondary">
                       {ticket.customer.email}
                     </span>
                   ) : null}
                 </dd>
               </div>
               <div>
-                <dt className="text-[13px] text-muted">Device</dt>
+                <dt className="text-[13px] text-ink-secondary">Device</dt>
                 <dd className="mt-0.5 text-[13px] font-medium text-ink">
                   {ticket.device.brand} {ticket.device.model}
-                  <span className="mt-0.5 block text-[13px] font-normal text-muted">
+                  <span className="mt-0.5 block text-[13px] font-normal text-ink-secondary">
                     {DEVICE_CATEGORY_LABELS[ticket.device.category] ?? ticket.device.category}
                     {ticket.device.serial ? ` · ${ticket.device.serial}` : ""}
                   </span>
                 </dd>
               </div>
               <div>
-                <dt className="text-[13px] text-muted">Technician</dt>
+                <dt className="text-[13px] text-ink-secondary">Technician</dt>
                 <dd className="mt-0.5 text-[13px] text-ink">
                   {ticket.assignee?.full_name || "Unassigned"}
                 </dd>
               </div>
               <div>
-                <dt className="text-[13px] text-muted">Target date</dt>
+                <dt className="text-[13px] text-ink-secondary">Target date</dt>
                 <dd className="mt-0.5 text-[13px] text-ink">
                   {formatDate(ticket.due_at)}
-                  <span className="mt-0.5 block text-[13px] text-muted">
+                  <span className="mt-0.5 block text-[13px] text-ink-secondary">
                     Estimate {formatMoney(ticket.estimate_cents)}
                   </span>
                 </dd>
               </div>
             </dl>
-            <div className="grid gap-3 border-t border-line bg-raised px-4 py-3 sm:grid-cols-2">
+            <div className="grid gap-3 border-t border-hairline bg-raised px-4 py-3 sm:grid-cols-2">
               <div>
-                <p className="text-[13px] text-muted">Reported issue</p>
+                <p className="text-[13px] text-ink-secondary">Reported issue</p>
                 <p className="mt-1 text-[13px] leading-5 text-ink">{ticket.issue}</p>
               </div>
               <div>
-                <p className="text-[13px] text-muted">Diagnosis</p>
-                <p className="mt-1 text-[13px] leading-5 text-muted">
+                <p className="text-[13px] text-ink-secondary">Diagnosis</p>
+                <p className="mt-1 text-[13px] leading-5 text-ink-secondary">
                   {ticket.diagnosis || "No diagnosis recorded yet."}
                 </p>
               </div>
@@ -200,14 +200,14 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
               detail={`${ticket.parts.length} on this repair · ${formatMoney(partsTotal)}`}
             />
             {ticket.parts.length === 0 ? (
-              <p className="px-4 pb-3 text-[13px] text-muted">No parts attached yet.</p>
+              <p className="px-4 pb-3 text-[13px] text-ink-secondary">No parts attached yet.</p>
             ) : (
               <ul className="pb-1">
                 {ticket.parts.map((part) => (
                   <li key={part.part.id} className="flex items-center justify-between gap-4 px-4 py-2">
                     <div className="min-w-0">
                       <p className="truncate text-[13px] text-ink">{part.part.name}</p>
-                      <p className="mt-0.5 text-[13px] text-muted">
+                      <p className="mt-0.5 text-[13px] text-ink-secondary">
                         {part.part.sku} · {part.quantity} × {formatMoney(part.unit_price_cents)}
                       </p>
                     </div>
@@ -218,7 +218,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                 ))}
               </ul>
             )}
-            <form action={addTicketPartAction} className="grid gap-3 border-t border-line bg-raised px-4 py-3 sm:grid-cols-[1fr_84px_auto] sm:items-end">
+            <form action={addTicketPartAction} className="grid gap-3 border-t border-hairline bg-raised px-4 py-3 sm:grid-cols-[1fr_84px_auto] sm:items-end">
               <input type="hidden" name="ticket_id" value={ticket.id} />
               <SelectField id="part_id" name="part_id" label="Add a part" defaultValue="">
                 <option value="">Choose inventory part</option>
@@ -242,29 +242,29 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
             <PanelHeader title="Timeline" detail="Every status change and note, newest first." />
             <ol className="pb-1">
               {ticket.events.length === 0 ? (
-                <li className="px-4 pb-3 text-[13px] text-muted">No activity recorded.</li>
+                <li className="px-4 pb-3 text-[13px] text-ink-secondary">No activity recorded.</li>
               ) : (
                 ticket.events.map((event) => (
                   <li key={event.id} className="flex gap-2.5 px-4 py-2.5">
-                    <span className="mt-1.5 h-1 w-1 shrink-0 bg-steel/60" aria-hidden="true" />
+                    <span className="mt-1.5 h-1 w-1 shrink-0 bg-raised/60" aria-hidden="true" />
                     <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px]">
                         <span className="text-[13px] text-ink">{event.actor?.full_name || "System"}</span>
                         {event.status ? <StatusPill status={event.status} /> : null}
-                        <span className="text-muted">{formatRelative(event.created_at)}</span>
+                        <span className="text-ink-secondary">{formatRelative(event.created_at)}</span>
                         {event.is_customer_visible ? (
-                          <span className="text-muted/70">· customer visible</span>
+                          <span className="text-ink-secondary/70">· customer visible</span>
                         ) : null}
                       </div>
                       {event.body ? (
-                        <p className="mt-1 text-[13px] leading-5 text-muted">{event.body}</p>
+                        <p className="mt-1 text-[13px] leading-5 text-ink-secondary">{event.body}</p>
                       ) : null}
                     </div>
                   </li>
                 ))
               )}
             </ol>
-            <form action={addTicketNoteAction} className="space-y-3 border-t border-line bg-raised px-4 py-3">
+            <form action={addTicketNoteAction} className="space-y-3 border-t border-hairline bg-raised px-4 py-3">
               <input type="hidden" name="ticket_id" value={ticket.id} />
               <TextAreaField
                 id="body"
@@ -273,12 +273,12 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                 placeholder="What changed, or what the customer needs to know."
               />
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <label className="flex items-center gap-2 text-[13px] text-muted">
+                <label className="flex items-center gap-2 text-[13px] text-ink-secondary">
                   <input
                     type="checkbox"
                     name="customer_visible"
                     defaultChecked
-                    className="h-3.5 w-3.5 rounded-none border-line bg-paper accent-accent"
+                    className="h-3.5 w-3.5 rounded-none border-hairline bg-canvas accent-accent"
                   />
                   Show this note to the customer
                 </label>
@@ -312,7 +312,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
               </SubmitButton>
             </form>
 
-            <form action={updateTicketDetailsAction} className="space-y-3 border-t border-line bg-raised px-4 py-3">
+            <form action={updateTicketDetailsAction} className="space-y-3 border-t border-hairline bg-raised px-4 py-3">
               <input type="hidden" name="ticket_id" value={ticket.id} />
               <div className="grid grid-cols-2 gap-3">
                 <SelectField id="priority" name="priority" label="Priority" defaultValue={ticket.priority}>
@@ -370,21 +370,21 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
           <Panel className="px-4 py-3.5">
             <div className="flex items-center justify-between gap-3">
               <h2 className="text-[13.5px] font-semibold text-ink">Customer</h2>
-              <Link href={`/customers/${ticket.customer.id}`} className="text-[13px] text-muted transition-colors hover:text-gold">
+              <Link href={`/customers/${ticket.customer.id}`} className="text-[13px] text-ink-secondary transition-colors hover:text-accent-deep">
                 Open profile
               </Link>
             </div>
             <p className="mt-2 text-[13px] text-ink">{ticket.customer.full_name}</p>
-            <p className="mt-0.5 text-[13px] text-muted">{ticket.customer.phone}</p>
+            <p className="mt-0.5 text-[13px] text-ink-secondary">{ticket.customer.phone}</p>
             {ticket.customer.email ? (
-              <p className="mt-0.5 break-all text-[13px] text-muted">{ticket.customer.email}</p>
+              <p className="mt-0.5 break-all text-[13px] text-ink-secondary">{ticket.customer.email}</p>
             ) : null}
-            <div className="mt-3 rounded bg-paper px-2.5 py-2">
-              <p className="text-[13px] text-muted">Device</p>
+            <div className="mt-3 rounded bg-canvas px-2.5 py-2">
+              <p className="text-[13px] text-ink-secondary">Device</p>
               <p className="mt-0.5 text-[13px] text-ink">
                 {ticket.device.brand} {ticket.device.model}
               </p>
-              <p className="mt-0.5 text-[13px] text-muted">
+              <p className="mt-0.5 text-[13px] text-ink-secondary">
                 {ticket.device.serial || "No serial"} {ticket.device.color ? `· ${ticket.device.color}` : ""}
               </p>
             </div>
@@ -401,7 +401,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
               <Row label="Parts" value={formatMoney(invoice?.parts_cents ?? partsTotal)} />
               <Row label="Tax (12%)" value={formatMoney(invoice?.tax_cents ?? tax)} />
             </dl>
-            <div className="mx-4 flex items-center justify-between border-t border-line py-2.5 text-[13px] text-ink">
+            <div className="mx-4 flex items-center justify-between border-t border-hairline py-2.5 text-[13px] text-ink">
               <span>Total</span>
               <span className="figure font-semibold">{formatMoney(invoice?.total_cents ?? total)}</span>
             </div>
@@ -417,7 +417,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                   </SubmitButton>
                 </form>
               ) : (
-                <p className="px-4 pb-3 text-[13px] text-muted">Awaiting manager collection.</p>
+                <p className="px-4 pb-3 text-[13px] text-ink-secondary">Awaiting manager collection.</p>
               )
             ) : canManageInvoices ? (
               <form action={createInvoiceAction} className="px-4 pb-3">
@@ -427,7 +427,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
                 </SubmitButton>
               </form>
             ) : (
-              <p className="px-4 pb-3 text-[13px] text-muted">
+              <p className="px-4 pb-3 text-[13px] text-ink-secondary">
                 A manager generates the invoice when the repair is ready.
               </p>
             )}
@@ -441,7 +441,7 @@ export default async function TicketDetailPage({ params, searchParams }: PagePro
 function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-4">
-      <dt className="text-muted">{label}</dt>
+      <dt className="text-ink-secondary">{label}</dt>
       <dd className="figure text-ink">{value}</dd>
     </div>
   );

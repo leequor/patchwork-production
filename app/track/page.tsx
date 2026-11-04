@@ -1,11 +1,13 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, BadgeCheck, ClipboardList, ScanLine, Wrench } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 
 import { CursorSpotlight } from "@/components/patchwork/cursor-spotlight";
+import { ProcessTimeline } from "@/components/patchwork/process-timeline";
+import { SystemAlert } from "@/components/patchwork/system-alert";
 import { Logo } from "@/components/ui/logo";
 import { RelativeTime } from "@/components/ui/relative-time";
-import { Feedback, Panel, StatusPill } from "@/components/workspace/ui";
+import { Panel, StatusPill } from "@/components/workspace/ui";
 import {
   DEVICE_CATEGORY_LABELS,
   formatDate,
@@ -27,45 +29,8 @@ type SearchParams = Promise<{ code?: string; error?: string }>;
 /** The stages a repair passes through, in shop order. */
 const RAIL: TicketStatus[] = ["intake", "diagnosing", "waiting_parts", "in_repair", "ready"];
 
-/** The four beats a customer actually needs to picture. */
-const PROCESS = [
-  { label: "Intake", icon: ClipboardList },
-  { label: "Diagnosing", icon: ScanLine },
-  { label: "In repair", icon: Wrench },
-  { label: "Ready", icon: BadgeCheck },
-] as const;
-
 function railIndex(status: TicketStatus) {
   return RAIL.indexOf(status);
-}
-
-function ProcessTimeline() {
-  return (
-    <ol
-      aria-label="How a repair moves through the shop"
-      className="rise relative mt-14 grid grid-cols-4 sm:mt-20"
-      style={{ animationDelay: "240ms" }}
-    >
-      <span
-        aria-hidden="true"
-        className="absolute left-[12.5%] right-[12.5%] top-7 h-px bg-gradient-to-r from-transparent via-white/15 to-transparent"
-      />
-      {PROCESS.map(({ label, icon: Icon }) => (
-        <li key={label} className="relative flex flex-col items-center gap-3">
-          <span className="relative grid h-14 w-14 place-items-center rounded-2xl border border-white/10 bg-white/[0.04] shadow-[inset_0_1px_0_rgba(255,255,255,0.08),0_20px_44px_-26px_rgba(99,102,241,0.95)]">
-            <span
-              aria-hidden="true"
-              className="absolute inset-2 rounded-xl bg-gradient-to-br from-accent/30 to-[#22d3ee]/20 blur-xl"
-            />
-            <Icon className="relative h-5 w-5 text-white" strokeWidth={1.6} />
-          </span>
-          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-secondary sm:text-[11px] sm:tracking-[0.24em]">
-            {label}
-          </span>
-        </li>
-      ))}
-    </ol>
-  );
 }
 
 export default async function TrackPage({ searchParams }: { searchParams: SearchParams }) {
@@ -169,22 +134,19 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
         </section>
 
         <div className="mx-auto w-full max-w-[1100px] px-4 pb-16 sm:px-6">
-          <div className="edge-lit rounded-xl bg-panel/45 px-4 py-3 backdrop-blur-xl sm:px-5">
-            <Feedback
-              error={
-                params.error ||
-                (hasQuery && !ticket
-                  ? "No ticket matched that code. Check the ten characters on the receipt."
-                  : undefined)
-              }
-            />
-            {!hasQuery ? (
+          {params.error || (hasQuery && !ticket) ? (
+            <SystemAlert title={params.error ? "Error: request failed" : "Error: code not found"}>
+              {params.error ||
+                "No ticket matched that code. Check the ten characters on the receipt."}
+            </SystemAlert>
+          ) : !hasQuery ? (
+            <div className="edge-lit rounded-xl bg-panel/40 px-5 py-4 backdrop-blur-xl">
               <p className="font-sans text-[14px] leading-6 text-ink-secondary">
                 The shop updates this page as the job moves. Bookmark it and come back when you
                 want to look.
               </p>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
           {ticket ? (
             <div className="mt-3 grid gap-3 lg:grid-cols-[1.15fr_0.85fr]">

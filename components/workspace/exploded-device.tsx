@@ -15,8 +15,9 @@ import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
 const DEPTH = [-1.5, -1, -0.5, 0.5, 1, 1.5];
-const Z = [-110, -66, -22, 22, 66, 110];
-const Y = [-90, -54, -18, 18, 54, 90];
+/** Forty either side of the frame: an 80px tear-down, not a fanned deck. */
+const Z = [-40, -24, -8, 8, 24, 40];
+const Y = [-10, -6, -2, 2, 6, 10];
 
 /**
  * How the bench reads a job. Intake sits closed; diagnosing lifts only the
@@ -51,13 +52,15 @@ function layerTransform(
   screen: number,
 ) {
   const depth = DEPTH[index];
-  const shiftX = x * depth * 14;
-  const baseY = Y[index] * explode + (index === 4 ? -92 * screen : 0);
-  const baseZ = Z[index] * explode + (index === 4 ? 64 * screen : 0);
-  const shiftY = baseY + y * depth * 9 * (explode > 0 || screen > 0 ? 1 : 0.4);
+  const isScreen = index >= 4;
+  const shiftX = x * depth * 12;
+  const baseY = Y[index] * explode;
+  const baseZ = Z[index] * explode + (isScreen ? 25 * screen : 0);
+  const shiftY = baseY + y * depth * 7 * (explode > 0 || screen > 0 ? 1 : 0.4);
+  const tilt = isScreen ? -15 * screen : 0;
   return `translate(-50%, -50%) translate3d(${shiftX.toFixed(2)}px, ${shiftY.toFixed(
     2,
-  )}px, ${baseZ.toFixed(2)}px)`;
+  )}px, ${baseZ.toFixed(2)}px) rotateX(${tilt.toFixed(2)}deg)`;
 }
 
 /**
@@ -90,7 +93,7 @@ export function ExplodedDevice({
   const screen = useMotionValue(screenTarget);
 
   useEffect(() => {
-    const spring = { type: "spring", stiffness: 130, damping: 22, mass: 0.8 } as const;
+    const spring = { type: "spring", stiffness: 120, damping: 26, mass: 0.9 } as const;
     const explodeControls = animate(explode, explodeTarget, spring);
     const screenControls = animate(screen, screenTarget, spring);
     return () => {
@@ -235,7 +238,7 @@ export function ExplodedDevice({
         style={{ opacity: shape.ring === "emerald" ? shape.glow : 0 }}
       />
 
-      <div className="relative h-[340px] w-[240px] [perspective:1500px] sm:h-[380px] sm:w-[280px]">
+      <div className="relative h-[340px] w-[240px] [perspective:2500px] [transform-style:preserve-3d] sm:h-[380px] sm:w-[280px]">
         <motion.div
           className={cn(
             "relative h-full w-full [transform-style:preserve-3d] transition-[opacity,filter] duration-500",
@@ -244,7 +247,7 @@ export function ExplodedDevice({
           style={{
             rotateX: reduced ? 0 : rotateX,
             rotateY: reduced ? 0 : rotateY,
-            transformPerspective: 1500,
+            transformPerspective: 2500,
           }}
         >
           {layers.map((layer, index) => (
@@ -255,6 +258,7 @@ export function ExplodedDevice({
                 transform: reduced
                   ? layerTransform(index, 0, 0, explodeTarget, screenTarget)
                   : transforms[index],
+                transformOrigin: index >= 4 ? "50% 0%" : "50% 50%",
               }}
             >
               {layer.body}

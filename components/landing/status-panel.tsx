@@ -1,5 +1,6 @@
 "use client";
 
+import { TriangleAlert } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
@@ -52,7 +53,12 @@ function StatusRow({
         <p className="text-[15px] font-medium text-ink">{label}</p>
         <p className="mt-0.5 max-w-[58ch] font-sans text-[15px] leading-6 text-ink-secondary">{detail}</p>
       </div>
-      <span className={cn("inline-flex shrink-0 items-center gap-1.5 text-[13px] font-medium", TONE[state])}>
+      <span
+        className={cn(
+          "inline-flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em]",
+          TONE[state],
+        )}
+      >
         <span className={cn("h-1.5 w-1.5", DOT[state])} aria-hidden="true" />
         {STATE_LABEL[state]}
       </span>
@@ -103,12 +109,27 @@ export function StatusPanel() {
   return (
     <div>
       {error ? (
-        <div className="mb-3 rounded-sm bg-negative-soft px-3.5 py-3 text-[14px] leading-5 text-negative-ink">
-          {error}
+        <div
+          role="alert"
+          className="edge-lit mb-3 rounded-xl border border-[#f43f5e]/25 bg-[#f43f5e]/[0.07] px-4 py-3 shadow-[0_0_45px_-20px_rgba(244,63,94,0.5)] backdrop-blur-xl"
+        >
+          <div className="flex items-start gap-3">
+            <TriangleAlert
+              aria-hidden="true"
+              className="mt-0.5 h-4 w-4 shrink-0 text-[#fb7185]"
+              strokeWidth={1.7}
+            />
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-[#fda4af]">
+                Error: health check failed
+              </p>
+              <p className="mt-1 font-sans text-[14px] leading-5 text-ink">{error}</p>
+            </div>
+          </div>
         </div>
       ) : null}
 
-      <div className="overflow-hidden rounded bg-canvas">
+      <div className="divide-y divide-white/[0.06] overflow-hidden rounded-xl border border-white/10 bg-black/25">
         <StatusRow
           label="Next.js app"
           state={app ? "ok" : error ? "error" : "loading"}
@@ -146,7 +167,7 @@ export function StatusPanel() {
         />
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-sans text-[13px] text-ink-secondary">
+      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] text-ink-secondary">
         <a className="transition-colors hover:text-ink" href="/api/health">
           /api/health
         </a>

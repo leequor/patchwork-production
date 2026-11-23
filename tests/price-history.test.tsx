@@ -21,11 +21,11 @@ describe("price history", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("stays closed when a part has only ever had its starting price", () => {
-    const { container } = render(
-      <PriceHistory events={[event({ old_price_cents: 7900, new_price_cents: 7900 })]} />,
-    );
-    expect(container).toBeEmptyDOMElement();
+  it("shows the starting price when nothing has changed yet", () => {
+    render(<PriceHistory events={[event({ old_price_cents: 7900, new_price_cents: 7900 })]} />);
+
+    expect(screen.getByText(/Price history/)).toBeInTheDocument();
+    expect(screen.getByText(/Set at \$79\.00/)).toBeInTheDocument();
   });
 
   it("labels the starting price as a start, not a change of zero", () => {

@@ -25,11 +25,9 @@ export function PriceHistory({
 }) {
   if (events.length === 0) return null;
 
-  /* A part that has only ever had its starting price has nothing to disclose;
-     a closed triangle on every row would be noise. */
-  const hasChange = events.some((event) => event.old_price_cents !== event.new_price_cents);
-  if (!hasChange) return null;
-
+  /* Shown even when the only row is the starting price. Hiding an empty
+     ledger made the feature invisible: a shop that had just changed a price
+     saw nothing, and concluded the history was broken rather than empty. */
   const shown = events.slice(0, limit);
   const rest = events.length - shown.length;
 

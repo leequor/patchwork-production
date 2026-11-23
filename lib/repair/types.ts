@@ -113,6 +113,16 @@ export type Part = {
   updated_at: string;
 };
 
+export type PartPriceEvent = {
+  id: number;
+  part_id: string;
+  old_price_cents: number;
+  new_price_cents: number;
+  changed_by: string | null;
+  created_at: string;
+  actor: { full_name: string | null } | null;
+};
+
 export type TicketPart = {
   quantity: number;
   unit_price_cents: number;

@@ -4,10 +4,12 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("@/app/actions/repair", () => ({
   addPartAction: vi.fn(),
   adjustStockAction: vi.fn(),
+  updatePartPriceAction: vi.fn(),
 }));
 
 vi.mock("@/lib/repair/queries", () => ({
   getInventory: vi.fn(),
+  getPartPriceHistory: vi.fn().mockResolvedValue([]),
 }));
 
 vi.mock("@/lib/repair/session", () => ({

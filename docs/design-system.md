@@ -225,6 +225,23 @@ batch tool would be a control nobody asked for.
   but it is never silent.
 - The action stores exactly what was typed; it does not infer or round.
 
+### Price history
+
+Every change is kept in `part_price_events`, written by a trigger on
+`parts.price_cents` rather than by the action — so a price changed by psql or by
+the API is recorded the same way as one changed in the UI. The trigger records
+the old price, the new price, `auth.uid()` and the timestamp.
+
+On the row, history is a native `<details>` (`PriceHistory`): no client state,
+works with JavaScript off, and the browser already knows how to describe a
+disclosure to a screen reader. It reads newest first, states each change as
+`old → new` with who did it and when, labels the part's first row as
+`Set at $X` instead of pretending it was a change of zero, and hides anything
+past the fourth row behind `+N earlier`.
+
+One query per page fetches the history for every visible part; a per-row fetch
+would be the slowest thing on the screen.
+
 ## The way back
 
 `components/patchwork/back-link.tsx` is the one back control. It goes back

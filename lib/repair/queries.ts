@@ -11,6 +11,7 @@ import {
   type Invoice,
   type InvoiceRow,
   type Part,
+  type PartPriceEvent,
   type StaffProfile,
   type TicketDetail,
   type TicketEvent,
@@ -333,6 +334,26 @@ export async function getInventory(search?: string): Promise<Part[]> {
       .filter(Boolean)
       .some((value) => String(value).toLowerCase().includes(term)),
   );
+}
+
+/**
+ * What a set of parts used to sell for. One query for the whole page rather
+ * than one per row: the inventory table shows twelve to forty rows and a
+ * per-row fetch would be the slowest thing on the screen.
+ */
+export async function getPartPriceHistory(partIds: string[]): Promise<PartPriceEvent[]> {
+  if (partIds.length === 0) return [];
+
+  const supabase = await createSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("part_price_events")
+    .select("id, part_id, old_price_cents, new_price_cents, changed_by, created_at, actor:profiles(full_name)")
+    .in("part_id", partIds)
+    .order("created_at", { ascending: false })
+    .limit(400);
+
+  if (error) fail(error.message);
+  return (data ?? []) as unknown as PartPriceEvent[];
 }
 
 export async function getInvoices(): Promise<InvoiceRow[]> {

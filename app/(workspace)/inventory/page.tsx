@@ -5,12 +5,13 @@ import { addPartAction, adjustStockAction } from "@/app/actions/repair";
 import { FormField } from "@/components/ui/form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { PriceEditor } from "@/components/workspace/price-editor";
+import { PriceHistory } from "@/components/workspace/price-history";
 import { SelectField } from "@/components/workspace/form-controls";
 import { MotionItem } from "@/components/workspace/motion-row";
 import { StaggerGroup, StaggerItem } from "@/components/workspace/stagger";
 import { DataBar, Feedback, PageHeader, Panel, PrimaryLink } from "@/components/workspace/ui";
 import { formatMoney } from "@/lib/repair/format";
-import { getInventory } from "@/lib/repair/queries";
+import { getInventory, getPartPriceHistory } from "@/lib/repair/queries";
 import { getStaff } from "@/lib/repair/session";
 
 export const dynamic = "force-dynamic";
@@ -36,6 +37,13 @@ export default async function InventoryPage({
 }) {
   const params = await searchParams;
   const [parts, staff] = await Promise.all([getInventory(params.q), getStaff()]);
+  const priceHistory = await getPartPriceHistory(parts.map((part) => part.id));
+  const historyByPart = new Map<string, typeof priceHistory>();
+  for (const event of priceHistory) {
+    const list = historyByPart.get(event.part_id) ?? [];
+    list.push(event);
+    historyByPart.set(event.part_id, list);
+  }
   const canManage = staff?.role !== "user";
   const lowStock = parts.filter((part) => part.stock <= part.reorder_level);
   const stockValue = parts.reduce((total, part) => total + part.stock * part.cost_cents, 0);
@@ -218,6 +226,7 @@ export default async function InventoryPage({
                         <p className="text-[13px] text-ink-secondary">cost {formatMoney(part.cost_cents)}</p>
                       </>
                     )}
+                    <PriceHistory events={historyByPart.get(part.id) ?? []} />
                   </div>
                   <div className="flex gap-1.5 lg:justify-end">
                     {canManage ? (

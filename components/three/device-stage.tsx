@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { useEffect, useRef } from "react";
 
 import type { TicketStatus } from "@/lib/repair/types";
+import { FORM_SPECS, type DeviceForm } from "@/lib/device-form";
 import { cn } from "@/lib/utils";
 
 /**
@@ -55,8 +56,6 @@ const LEAN_COLOR: Record<Lean, number> = {
   moss: 0x9fe9c4,
   steel: 0xa8bcc9,
 };
-
-const CARD = { width: 7.0, height: 14.4, radius: 1.45 };
 
 /* ------------------------------------------------------------------ */
 /* Geometry                                                            */
@@ -328,6 +327,7 @@ function environmentTexture(renderer: THREE.WebGLRenderer) {
 
 export type DeviceStageProps = {
   status: TicketStatus;
+  form?: DeviceForm;
   className?: string;
   quality?: "high" | "low";
   label?: string;
@@ -335,6 +335,7 @@ export type DeviceStageProps = {
 
 export default function DeviceStage({
   status,
+  form = "handheld",
   className,
   quality = "high",
   label = "Bench view of the device, opened into its parts",
@@ -368,6 +369,11 @@ export default function DeviceStage({
     renderer.domElement.style.display = "block";
     renderer.domElement.style.width = "100%";
     renderer.domElement.style.height = "100%";
+
+    /* Every dimension below is derived from the form, so a laptop reads as a wide
+       shallow stack and a console as a squat one, without a second scene. */
+    const spec = FORM_SPECS[form];
+    const CARD = { width: spec.width, height: spec.height, radius: spec.radius };
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(32, 1, 1, 320);
@@ -520,76 +526,82 @@ export default function DeviceStage({
         ),
       );
 
-      const plateau = new THREE.Mesh(
-        slabGeometry({ width: 2.7, height: 3.1, depth: 0.26, radius: 0.7, bevel: 0.12 }),
-        aluminium,
-      );
-      plateau.position.set(-1.7, 4.5, -0.3);
-      group.add(plateau);
+      if (spec.camera) {
+        const plateau = new THREE.Mesh(
+          slabGeometry({ width: 2.7, height: 3.1, depth: 0.26, radius: 0.7, bevel: 0.12 }),
+          aluminium,
+        );
+        plateau.position.set(-1.7, 4.5, -0.3);
+        group.add(plateau);
 
-      const lensBody = new THREE.CylinderGeometry(0.44, 0.44, 0.16, 30);
-      const lensGlass = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 30);
-      const lensMaterial = new THREE.MeshPhysicalMaterial({
-        color: 0x05080c,
-        metalness: 0.95,
-        roughness: 0.05,
-        clearcoat: 1,
-        envMapIntensity: 2.4,
-      });
+        const lensBody = new THREE.CylinderGeometry(0.44, 0.44, 0.16, 30);
+        const lensGlass = new THREE.CylinderGeometry(0.3, 0.3, 0.2, 30);
+        const lensMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0x05080c,
+          metalness: 0.95,
+          roughness: 0.05,
+          clearcoat: 1,
+          envMapIntensity: 2.4,
+        });
 
-      [
-        [-0.52, 0.72],
-        [-0.52, -0.72],
-        [0.68, 0],
-      ].forEach(([dx, dy]) => {
-        const ring = new THREE.Mesh(lensBody, aluminium);
-        ring.rotation.x = Math.PI / 2;
-        ring.position.set(-1.7 + dx, 4.5 + dy, -0.44);
-        group.add(ring);
+        [
+          [-0.52, 0.72],
+          [-0.52, -0.72],
+          [0.68, 0],
+        ].forEach(([dx, dy]) => {
+          const ring = new THREE.Mesh(lensBody, aluminium);
+          ring.rotation.x = Math.PI / 2;
+          ring.position.set(-1.7 + dx, 4.5 + dy, -0.44);
+          group.add(ring);
 
-        const glass = new THREE.Mesh(lensGlass, lensMaterial);
-        glass.rotation.x = Math.PI / 2;
-        glass.position.set(-1.7 + dx, 4.5 + dy, -0.5);
-        group.add(glass);
-      });
+          const glass = new THREE.Mesh(lensGlass, lensMaterial);
+          glass.rotation.x = Math.PI / 2;
+          glass.position.set(-1.7 + dx, 4.5 + dy, -0.5);
+          group.add(glass);
+        });
+      }
 
       /* The charging coil, on the inside face of the back panel. */
-      const coil = new THREE.Mesh(
-        new THREE.TorusGeometry(2.35, 0.075, 10, 64),
-        new THREE.MeshPhysicalMaterial({
-          color: 0xb08432,
-          metalness: 1,
-          roughness: 0.34,
-          envMapIntensity: 1.2,
-        }),
-      );
-      coil.position.set(0, -1.4, 0.19);
-      group.add(coil);
+      if (spec.coil) {
+        const coil = new THREE.Mesh(
+          new THREE.TorusGeometry(2.35, 0.075, 10, 64),
+          new THREE.MeshPhysicalMaterial({
+            color: 0xb08432,
+            metalness: 1,
+            roughness: 0.34,
+            envMapIntensity: 1.2,
+          }),
+        );
+        coil.position.set(0, -1.4, 0.19);
+        group.add(coil);
 
-      const coilInner = new THREE.Mesh(
-        new THREE.TorusGeometry(1.92, 0.055, 10, 64),
-        new THREE.MeshPhysicalMaterial({
-          color: 0x8c6a28,
-          metalness: 1,
-          roughness: 0.42,
-          envMapIntensity: 1,
-        }),
-      );
-      coilInner.position.set(0, -1.4, 0.19);
-      group.add(coilInner);
+        const coilInner = new THREE.Mesh(
+          new THREE.TorusGeometry(1.92, 0.055, 10, 64),
+          new THREE.MeshPhysicalMaterial({
+            color: 0x8c6a28,
+            metalness: 1,
+            roughness: 0.42,
+            envMapIntensity: 1,
+          }),
+        );
+        coilInner.position.set(0, -1.4, 0.19);
+        group.add(coilInner);
+      }
 
-      const flash = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.16, 0.16, 0.1, 18),
-        new THREE.MeshPhysicalMaterial({
-          color: 0xe8dcc4,
-          metalness: 0,
-          roughness: 0.5,
-          emissive: new THREE.Color(0x2a2418),
-        }),
-      );
-      flash.rotation.x = Math.PI / 2;
-      flash.position.set(-0.9, 3.2, -0.44);
-      group.add(flash);
+      if (spec.camera) {
+        const flash = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.16, 0.16, 0.1, 18),
+          new THREE.MeshPhysicalMaterial({
+            color: 0xe8dcc4,
+            metalness: 0,
+            roughness: 0.5,
+            emissive: new THREE.Color(0x2a2418),
+          }),
+        );
+        flash.rotation.x = Math.PI / 2;
+        flash.position.set(-0.9, 3.2, -0.44);
+        group.add(flash);
+      }
 
       addLayer({ group, z: -0.42, travel: -7.0 });
     }
@@ -631,6 +643,7 @@ export default function DeviceStage({
         roughness: 0.34,
         envMapIntensity: 1.4,
       });
+      if (spec.screen) {
       [
         { y: 2.6, h: 1.5 },
         { y: 0.5, h: 0.9 },
@@ -640,6 +653,71 @@ export default function DeviceStage({
         button.position.set((CARD.width + 0.18) / 2, y, 0);
         group.add(button);
       });
+      }
+
+      /* A laptop base carries a keyboard and a trackpad; a phone's frame does not. */
+      if (form === "clamshell") {
+        const deckW = CARD.width - 0.62;
+        const deckH = CARD.height - 0.62;
+        const keycap = new THREE.MeshPhysicalMaterial({
+          color: 0x24262a,
+          metalness: 0.25,
+          roughness: 0.72,
+          envMapIntensity: 0.6,
+        });
+
+        const keyWell = new THREE.Mesh(
+          new THREE.BoxGeometry(deckW * 0.9, deckH * 0.56, 0.05),
+          new THREE.MeshPhysicalMaterial({ color: 0x0a0a09, metalness: 0.3, roughness: 0.88 }),
+        );
+        keyWell.position.set(0, deckH * 0.16, 0.2);
+        group.add(keyWell);
+
+        for (let row = 0; row < 5; row += 1) {
+          for (let col = 0; col < 14; col += 1) {
+            const key = new THREE.Mesh(
+              new THREE.BoxGeometry(deckW * 0.052, deckH * 0.072, 0.035),
+              keycap,
+            );
+            key.position.set(
+              (col - 6.5) * deckW * 0.0605,
+              deckH * 0.16 + (2 - row) * deckH * 0.092,
+              0.235,
+            );
+            group.add(key);
+          }
+        }
+
+        const trackpad = new THREE.Mesh(
+          new THREE.BoxGeometry(deckW * 0.36, deckH * 0.24, 0.04),
+          new THREE.MeshPhysicalMaterial({
+            color: 0x1b1d20,
+            metalness: 0.2,
+            roughness: 0.5,
+            envMapIntensity: 0.8,
+          }),
+        );
+        trackpad.position.set(0, -deckH * 0.31, 0.22);
+        group.add(trackpad);
+      }
+
+      /* A console's back edge is ports, not buttons. */
+      if (form === "box") {
+        const portMaterial = new THREE.MeshPhysicalMaterial({
+          color: 0x08080a,
+          metalness: 0.6,
+          roughness: 0.4,
+        });
+        [
+          { w: 1.1, h: 0.18, x: -CARD.width * 0.3 },
+          { w: 0.5, h: 0.16, x: -CARD.width * 0.12 },
+          { w: 0.6, h: 0.16, x: CARD.width * 0.3 },
+        ].forEach(({ w, h, x }) => {
+          const port = new THREE.Mesh(new THREE.BoxGeometry(w, h, 0.12), portMaterial);
+          port.position.set(x, -CARD.height / 2 + 0.22, 0.18);
+          group.add(port);
+        });
+      }
 
       addLayer({ group, z: -0.06, travel: -3.4 });
     }
@@ -648,20 +726,45 @@ export default function DeviceStage({
     {
       const group = new THREE.Group();
 
-      const cell = new THREE.Mesh(
-        slabGeometry({ width: 5.4, height: 6.2, depth: 0.32, radius: 0.5, bevel: 0.14 }),
-        batteryMaterial,
-      );
-      cell.position.y = 2.0;
-      group.add(cell);
+      if (spec.screen) {
+        const cell = new THREE.Mesh(
+          slabGeometry({
+            width: Math.min(5.4, CARD.width * 0.44),
+            height: Math.min(6.2, CARD.height * 0.46),
+            depth: 0.32,
+            radius: 0.5,
+            bevel: 0.14,
+          }),
+          batteryMaterial,
+        );
+        cell.position.y = CARD.height * 0.12;
+        group.add(cell);
 
-      /* Fitted into the frame rather than floating: a sub-plate under the board. */
-      const subPlate = new THREE.Mesh(
-        new THREE.BoxGeometry(1.9, 4.6, 0.16),
-        plastic,
-      );
-      subPlate.position.set(0, -2.6, 0);
-      group.add(subPlate);
+        /* Fitted into the frame rather than floating: a sub-plate under the board. */
+        const subPlate = new THREE.Mesh(
+          new THREE.BoxGeometry(1.9, CARD.height * 0.32, 0.16),
+          plastic,
+        );
+        subPlate.position.set(0, -CARD.height * 0.19, 0);
+        group.add(subPlate);
+      } else {
+        /* A console's power stage is a heatsink and a fan, not a cell. */
+        for (let i = 0; i < 11; i += 1) {
+          const fin = new THREE.Mesh(
+            new THREE.BoxGeometry(CARD.width * 0.62, 0.09, 0.55),
+            aluminium,
+          );
+          fin.position.set(-CARD.width * 0.12, -CARD.height * 0.22 + i * 0.14, 0.1);
+          group.add(fin);
+        }
+
+        const fan = new THREE.Mesh(
+          new THREE.TorusGeometry(CARD.height * 0.17, 0.1, 10, 40),
+          plastic,
+        );
+        fan.position.set(CARD.width * 0.3, CARD.height * 0.1, 0.12);
+        group.add(fan);
+      }
 
       addLayer({ group, z: 0.22, travel: 0, ghostable: true });
     }
@@ -669,9 +772,13 @@ export default function DeviceStage({
     /* 3 — logic board: traces, chips, a shield can, the charge connector. */
     const boardGroup = new THREE.Group();
     {
+      /* The active area of the board scales with the device. */
+      const boardW = Math.min(4.5, spec.width * 0.56);
+      const boardH = Math.min(5.5, spec.height * 0.62);
+
       boardGroup.add(
         new THREE.Mesh(
-          slabGeometry({ width: 4.5, height: 5.5, depth: 0.14, radius: 0.28, bevel: 0.05 }),
+          slabGeometry({ width: boardW, height: boardH, depth: 0.14, radius: 0.28, bevel: 0.05 }),
           boardMaterial,
         ),
       );
@@ -729,18 +836,38 @@ export default function DeviceStage({
       );
       group.add(bezel);
 
-      const glass = new THREE.Mesh(
-        slabGeometry({
-          width: CARD.width - 0.16,
-          height: CARD.height - 0.16,
-          depth: 0.16,
-          radius: CARD.radius - 0.08,
-          bevel: 0.12,
-        }),
-        displayGlass,
-      );
-      glass.position.z = 0.24;
-      group.add(glass);
+      if (spec.screen) {
+        const glass = new THREE.Mesh(
+          slabGeometry({
+            width: CARD.width - 0.16,
+            height: CARD.height - 0.16,
+            depth: 0.16,
+            radius: CARD.radius - 0.08,
+            bevel: 0.12,
+          }),
+          displayGlass,
+        );
+        glass.position.z = 0.24;
+        group.add(glass);
+      } else {
+        /* Vents, so the last layer reads as a console cover. */
+        for (let i = 0; i < 16; i += 1) {
+          const slot = new THREE.Mesh(
+            new THREE.BoxGeometry(CARD.width * 0.5, 0.07, 0.06),
+            new THREE.MeshPhysicalMaterial({
+              color: 0x0a0a09,
+              metalness: 0.4,
+              roughness: 0.8,
+            }),
+          );
+          slot.position.set(
+            i % 2 === 0 ? -CARD.width * 0.24 : CARD.width * 0.1,
+            CARD.height * 0.34 - Math.floor(i / 2) * 0.19,
+            0.25,
+          );
+          group.add(slot);
+        }
+      }
 
       const punch = new THREE.Mesh(
         new THREE.CylinderGeometry(0.13, 0.13, 0.06, 20),
@@ -748,7 +875,7 @@ export default function DeviceStage({
       );
       punch.rotation.x = Math.PI / 2;
       punch.position.set(0, CARD.height / 2 - 0.55, 0.33);
-      group.add(punch);
+      if (spec.screen) group.add(punch);
 
       /* The ribbon that carries the panel, tucked behind it. */
       const flex = new THREE.Mesh(
@@ -938,7 +1065,7 @@ export default function DeviceStage({
         host.removeChild(renderer.domElement);
       }
     };
-  }, [quality]);
+  }, [quality, form]);
 
   return (
     <div

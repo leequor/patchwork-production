@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
 import type { TicketStatus } from "@/lib/repair/types";
+import type { DeviceForm } from "@/lib/device-form";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import { cn } from "@/lib/utils";
 
@@ -22,11 +23,14 @@ const DeviceStage = dynamic(() => import("./device-stage"), {
  */
 export function DeviceStageMount({
   status,
+  form = "handheld",
   className,
   quality = "high",
   caption,
 }: {
   status: TicketStatus;
+  /** Which device the bench is holding. Defaults to a handset. */
+  form?: DeviceForm;
   className?: string;
   quality?: "high" | "low";
   caption?: string;
@@ -82,6 +86,7 @@ export function DeviceStageMount({
         {ready ? (
           <DeviceStage
             status={status}
+            form={form}
             quality={reduced ? "low" : quality}
             label={caption ?? "Bench view of the device in this repair"}
           />

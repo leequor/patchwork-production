@@ -110,6 +110,19 @@ loader). This is the product's signature element and its progress indicator.
   buttons), battery (labelled cell plus sub-plate), logic board (traced PCB, chips, shield can, edge
   contacts, brass charge connector), and the display assembly (bezel, black glass, punch-hole
   camera, ribbon).
+- **The teardown takes the shape of the thing that came in.** `lib/device-form.ts` maps a device
+  category to one of four forms, and the scene derives every dimension from it, so a laptop is a
+  wide shallow stack and a console a squat one — never a phone standing in for a PlayStation.
+
+| Form | Categories | Proportions | Its own details |
+| --- | --- | --- | --- |
+| `handheld` | phone, other | 7.0 × 14.4 | camera block, three lenses, flash, charging coil, side buttons |
+| `tablet` | tablet | 11.2 × 13.4 | camera block and lenses, no coil |
+| `clamshell` | laptop | 12.8 × 8.9 | keyboard deck (5 × 14 keys), trackpad, vents |
+| `box` | console, camera | 12.4 × 7.6 | heatsink fins and fan instead of a cell, vented top cover, port slots |
+
+The module is plain TypeScript with no client marker, because the tracker is a server component and
+has to choose a form before the scene is ever fetched.
 - Lit like a product render: one warm bench lamp, a neutral key, a cool rim, a hemisphere fill, and
   a small procedural environment (PMREM) so metal and glass have something to reflect. Tone-mapped
   with ACES; the scene is transparent so the page ground shows through.

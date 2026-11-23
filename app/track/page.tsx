@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { SiteFooter, SiteHeader } from "@/components/patchwork/site-frame";
 import { SystemAlert } from "@/components/patchwork/system-alert";
 import { DeviceStageMount } from "@/components/three/device-stage-mount";
+import { formForCategory } from "@/lib/device-form";
 import { RelativeTime } from "@/components/ui/relative-time";
 import { StatusPill } from "@/components/workspace/ui";
 import { DEVICE_CATEGORY_LABELS, formatDate, TICKET_STATUS_META } from "@/lib/repair/format";
@@ -110,6 +111,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
             >
               <DeviceStageMount
                 status={stage}
+                form={formForCategory(ticket?.device.category ?? "phone")}
                 quality="high"
                 className="h-[340px] w-full sm:h-[420px] lg:h-[500px]"
                 caption={

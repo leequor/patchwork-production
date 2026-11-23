@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DeviceStageMount } from "@/components/three/device-stage-mount";
+import { formForCategory } from "@/lib/device-form";
 import { RelativeTime } from "@/components/ui/relative-time";
 import {
   PRIORITY_META,
@@ -369,6 +370,7 @@ export function MissionControl({
             <div className="relative min-h-0 flex-1 overflow-hidden">
               <DeviceStageMount
                 status={selected.status}
+                form={formForCategory(selected.device.category)}
                 className="h-full px-4 py-6"
                 caption={`bench · ${TICKET_STATUS_META[selected.status].label}`}
               />

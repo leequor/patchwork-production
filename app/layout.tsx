@@ -1,20 +1,28 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 
 import { APP_DESCRIPTION, APP_NAME, getSiteUrl } from "@/lib/config";
 
 import "./globals.css";
 
-const sans = Geist({
+/**
+ * Two faces, both sourced for the job they do. Instrument Sans is drawn for
+ * interfaces on screens and carries the product's voice at display sizes;
+ * IBM Plex Mono sets the ticket codes, tracking codes and money, where figures
+ * have to line up in a column.
+ */
+const sans = Instrument_Sans({
   subsets: ["latin"],
   variable: "--font-sans",
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
-const mono = Geist_Mono({
+const mono = IBM_Plex_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
   display: "swap",
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {
@@ -33,7 +41,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0A0A0A",
+  themeColor: "#0C0C0B",
   colorScheme: "dark",
 };
 

@@ -1,10 +1,11 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValue } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Boxes, Receipt, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import { DeviceStageMount } from "@/components/three/device-stage-mount";
 import { RelativeTime } from "@/components/ui/relative-time";
 import {
   PRIORITY_META,
@@ -16,15 +17,15 @@ import type { TicketRow } from "@/lib/repair/types";
 import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 import { cn, initials } from "@/lib/utils";
 
-import { ExplodedDevice } from "./exploded-device";
-
 const PAGE_SIZE = 12;
 
 function Stat({ label, value, tone }: { label: string; value: string; tone?: string }) {
   return (
     <div className="px-3.5 py-3">
-      <p className={cn("figure text-[17px] font-semibold leading-none text-ink", tone)}>{value}</p>
-      <p className="mt-1 text-[10px] uppercase tracking-[0.14em] text-ink-faint">{label}</p>
+      <p className={cn("figure text-[18px] font-semibold leading-none text-ink", tone)}>{value}</p>
+      <p className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-faint">
+        {label}
+      </p>
     </div>
   );
 }
@@ -43,15 +44,15 @@ function FloatPill({
   return (
     <div
       className={cn(
-        "absolute hidden items-center gap-2.5 rounded-full border border-hairline-strong bg-panel/60 py-1.5 pl-1.5 pr-4 shadow-lift backdrop-blur-xl lg:flex",
+        "absolute hidden items-center gap-2.5 rounded-sm border border-hairline bg-panel/85 py-1.5 pl-1.5 pr-3.5 lg:flex",
         className,
       )}
     >
-      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full border border-hairline bg-raised">
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-sm border border-hairline bg-raised">
         {mark}
       </span>
       <span className="flex flex-col leading-tight">
-        <span className="text-[9px] uppercase tracking-[0.16em] text-ink-faint">{label}</span>
+        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-faint">{label}</span>
         <span className="mt-0.5 text-[12px] font-medium text-ink">{value}</span>
       </span>
     </div>
@@ -87,7 +88,7 @@ function QueueRow({
       {active ? (
         <span
           aria-hidden="true"
-          className="absolute inset-y-2 left-0 w-[2px] rounded-full bg-accent-lit"
+          className="absolute inset-y-2 left-0 w-[2px] bg-accent"
         />
       ) : null}
 
@@ -146,8 +147,6 @@ export function MissionControl({
   const sentinelRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const reduced = usePrefersReducedMotion();
-  const pointerX = useMotionValue(0);
-  const pointerY = useMotionValue(0);
 
   const visible = useMemo(() => queue.slice(0, visibleCount), [queue, visibleCount]);
   const selected = queue.find((ticket) => ticket.id === selectedId) ?? queue[0] ?? null;
@@ -167,13 +166,6 @@ export function MissionControl({
     observer.observe(node);
     return () => observer.disconnect();
   }, [queue.length]);
-
-  const trackPointer = (event: React.PointerEvent<HTMLDivElement>) => {
-    const rect = event.currentTarget.getBoundingClientRect();
-    if (!rect.width || !rect.height) return;
-    pointerX.set(((event.clientX - rect.left) / rect.width - 0.5) * 2);
-    pointerY.set(((event.clientY - rect.top) / rect.height - 0.5) * 2);
-  };
 
   const move = (delta: number) => {
     if (!selected) return;
@@ -196,7 +188,7 @@ export function MissionControl({
           </p>
           <Link
             href="/tickets/new"
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-accent-fill px-4 text-[13px] font-semibold text-white transition hover:brightness-110"
+            className="brass inline-flex h-10 items-center gap-2 rounded-sm px-4 text-[13px] font-semibold transition hover:brightness-105"
           >
             New intake
           </Link>
@@ -209,7 +201,7 @@ export function MissionControl({
     <section className="flex h-full min-h-0 flex-col">
       <h1 className="sr-only">Mission control</h1>
 
-      <div className="mb-3 flex gap-1 rounded-xl border border-hairline bg-panel/50 p-1 lg:hidden">
+      <div className="mb-3 flex gap-1 rounded-sm border border-hairline bg-panel p-1 lg:hidden">
         {(["queue", "bench"] as const).map((view) => (
           <button
             key={view}
@@ -217,7 +209,7 @@ export function MissionControl({
             aria-pressed={mobileView === view}
             onClick={() => setMobileView(view)}
             className={cn(
-              "h-8 flex-1 rounded-lg text-[12px] font-medium capitalize transition-colors",
+              "h-7 flex-1 rounded-sm text-[12px] font-medium capitalize transition-colors",
               mobileView === view ? "bg-raised text-ink" : "text-ink-tertiary",
             )}
           >
@@ -226,14 +218,14 @@ export function MissionControl({
         ))}
       </div>
 
-      <div className="flex min-h-0 flex-1 overflow-hidden rounded-2xl border border-hairline bg-panel/40">
+      <div className="flex min-h-0 flex-1 overflow-hidden rounded-md border border-hairline bg-panel">
         {/* The queue */}
         <motion.aside
           initial={reduced ? false : { opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 260, damping: 30, delay: 0.04 }}
           className={cn(
-            "min-w-0 flex-col border-hairline bg-canvas/40 lg:flex lg:w-[35%] lg:min-w-[320px] lg:max-w-[440px] lg:border-r",
+            "min-w-0 flex-col border-hairline bg-canvas/50 lg:flex lg:w-[34%] lg:min-w-[312px] lg:max-w-[420px] lg:border-r",
             mobileView === "queue" ? "flex w-full" : "hidden",
           )}
         >
@@ -292,7 +284,7 @@ export function MissionControl({
             {visibleCount < queue.length ? <div ref={sentinelRef} className="h-px w-full" /> : null}
           </div>
 
-          <div className="flex items-center justify-between gap-3 border-t border-hairline px-4 py-2 text-[10px] text-ink-faint">
+          <div className="flex items-center justify-between gap-3 border-t border-hairline px-4 py-2.5 font-mono text-[10px] text-ink-tertiary">
             <span>↑ ↓ move · click to stage</span>
             {lowStockCount > 0 ? (
               <Link href="/inventory" className="text-warn transition-colors hover:text-warn-ink">
@@ -310,11 +302,6 @@ export function MissionControl({
             initial={reduced ? false : { opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ type: "spring", stiffness: 260, damping: 30, delay: 0.1 }}
-            onPointerMove={trackPointer}
-            onPointerLeave={() => {
-              pointerX.set(0);
-              pointerY.set(0);
-            }}
             className={cn(
               "relative min-w-0 flex-1 flex-col lg:flex",
               mobileView === "bench" ? "flex" : "hidden",
@@ -355,7 +342,7 @@ export function MissionControl({
 
               <Link
                 href={`/tickets/${selected.id}`}
-                className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-lg border border-hairline bg-raised px-3 text-[12px] font-medium text-ink transition-colors hover:bg-overlay"
+                className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-sm border border-hairline-strong bg-raised px-2.5 text-[12px] font-medium text-ink transition-colors hover:border-ink-faint hover:bg-overlay"
               >
                 Open ticket
                 <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -363,48 +350,31 @@ export function MissionControl({
             </header>
 
             <div className="flex flex-wrap gap-2 px-5 pt-3 lg:hidden">
-              <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-panel/70 px-3 py-1.5 text-[11px] text-ink-secondary">
+              <span className="inline-flex items-center gap-2 rounded-sm border border-hairline bg-panel px-2.5 py-1 text-[11px] text-ink-secondary">
                 <span className={cn("h-1.5 w-1.5 rounded-full", TICKET_STATUS_META[selected.status].dot)} />
                 {TICKET_STATUS_META[selected.status].label}
               </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-panel/70 px-3 py-1.5 text-[11px] text-ink-secondary">
+              <span className="inline-flex items-center gap-2 rounded-sm border border-hairline bg-panel px-2.5 py-1 text-[11px] text-ink-secondary">
                 {selected.assignee?.full_name ?? "Unassigned"}
               </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-panel/70 px-3 py-1.5 text-[11px] text-ink-secondary">
+              <span className="inline-flex items-center gap-2 rounded-sm border border-hairline bg-panel px-2.5 py-1 text-[11px] text-ink-secondary">
                 <span className={cn("h-1.5 w-1.5 rounded-full", PRIORITY_META[selected.priority].dot)} />
                 {PRIORITY_META[selected.priority].label}
               </span>
-              <span className="inline-flex items-center gap-2 rounded-full border border-hairline bg-panel/70 px-3 py-1.5 font-mono text-[11px] text-ink-secondary">
+              <span className="inline-flex items-center gap-2 rounded-sm border border-hairline bg-panel px-2.5 py-1 font-mono text-[11px] text-ink-secondary">
                 {selected.estimate_cents > 0 ? formatMoney(selected.estimate_cents) : "No estimate"}
               </span>
             </div>
 
             <div className="relative min-h-0 flex-1 overflow-hidden">
-              <div aria-hidden="true" className="dot-grid absolute inset-0 opacity-40" />
-              <div
-                aria-hidden="true"
-                className="glow-accent pointer-events-none absolute left-1/2 top-1/2 h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2"
-              />
-
-              <ExplodedDevice
-                className="relative h-full"
+              <DeviceStageMount
                 status={selected.status}
-                pointerX={pointerX}
-                pointerY={pointerY}
+                className="h-full px-4 py-6"
+                caption={`bench · ${TICKET_STATUS_META[selected.status].label}`}
               />
 
               <FloatPill
-                className="left-5 top-4"
-                label="Status"
-                value={TICKET_STATUS_META[selected.status].label}
-                mark={
-                  <span
-                    className={cn("h-1.5 w-1.5 rounded-full", TICKET_STATUS_META[selected.status].dot)}
-                  />
-                }
-              />
-              <FloatPill
-                className="right-5 top-10"
+                className="right-5 top-5"
                 label="Assigned"
                 value={selected.assignee?.full_name ?? "Unassigned"}
                 mark={
@@ -414,7 +384,7 @@ export function MissionControl({
                 }
               />
               <FloatPill
-                className="bottom-20 left-8"
+                className="bottom-16 left-6"
                 label="Priority"
                 value={PRIORITY_META[selected.priority].label}
                 mark={
@@ -424,7 +394,7 @@ export function MissionControl({
                 }
               />
               <FloatPill
-                className="bottom-24 right-8"
+                className="bottom-20 right-6"
                 label="Estimate"
                 value={
                   selected.estimate_cents > 0
@@ -435,24 +405,24 @@ export function MissionControl({
               />
             </div>
 
-            <div className="relative z-10 flex flex-wrap items-center gap-2 border-t border-hairline bg-panel/70 px-4 py-3 backdrop-blur-xl">
+            <div className="relative z-10 flex flex-wrap items-center gap-2 border-t border-hairline bg-panel px-4 py-3">
               <Link
                 href={`/tickets/${selected.id}`}
-                className="inline-flex h-9 items-center gap-2 rounded-lg bg-accent-fill px-3.5 text-[12px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition duration-150 hover:brightness-110 active:scale-95"
+                className="brass inline-flex h-8 items-center gap-2 rounded-sm px-3 text-[12px] font-semibold transition duration-150 hover:brightness-105 active:translate-y-px"
               >
                 <Wrench className="h-3.5 w-3.5" aria-hidden="true" />
                 Update status
               </Link>
               <Link
                 href={`/tickets/${selected.id}`}
-                className="inline-flex h-9 items-center gap-2 rounded-lg border border-hairline bg-raised px-3.5 text-[12px] font-medium text-ink transition-colors hover:bg-overlay"
+                className="inline-flex h-8 items-center gap-2 rounded-sm border border-hairline-strong bg-raised px-3 text-[12px] font-medium text-ink transition-colors hover:border-ink-faint hover:bg-overlay"
               >
                 <Boxes className="h-3.5 w-3.5" aria-hidden="true" />
                 Add part
               </Link>
               <Link
                 href={`/tickets/${selected.id}`}
-                className="inline-flex h-9 items-center gap-2 rounded-lg border border-hairline bg-raised px-3.5 text-[12px] font-medium text-ink transition-colors hover:bg-overlay"
+                className="inline-flex h-8 items-center gap-2 rounded-sm border border-hairline-strong bg-raised px-3 text-[12px] font-medium text-ink transition-colors hover:border-ink-faint hover:bg-overlay"
               >
                 <Receipt className="h-3.5 w-3.5" aria-hidden="true" />
                 Create invoice

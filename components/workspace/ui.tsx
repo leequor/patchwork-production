@@ -110,7 +110,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-hairline bg-canvas/40 px-6 py-10">
+    <div className="rounded-sm border border-dashed border-hairline-strong bg-canvas/50 px-6 py-10">
       <p className="font-sans text-[15px] font-semibold text-ink">{title}</p>
       <p className="mt-1.5 max-w-[52ch] font-sans text-[14px] leading-6 text-ink-secondary">{body}</p>
       {action ? <div className="mt-4">{action}</div> : null}
@@ -119,7 +119,7 @@ export function EmptyState({
 }
 
 const LINK_BASE =
-  "inline-flex h-10 items-center justify-center gap-2 rounded-lg px-3.5 font-sans text-[13px] font-semibold transition-[background-color,filter,transform] duration-150 active:scale-95";
+  "inline-flex h-9 items-center justify-center gap-2 rounded-sm px-3.5 font-sans text-[13px] font-semibold transition-[background-color,border-color,transform] duration-150 active:scale-[0.99]";
 
 export function SecondaryLink({
   href,
@@ -135,7 +135,7 @@ export function SecondaryLink({
       href={href}
       className={cn(
         LINK_BASE,
-        "border border-hairline bg-raised text-ink hover:bg-overlay",
+        "border border-hairline-strong bg-raised text-ink hover:border-ink-faint hover:bg-overlay",
         className,
       )}
     >
@@ -158,7 +158,7 @@ export function PrimaryLink({
       href={href}
       className={cn(
         LINK_BASE,
-        "bg-accent-fill text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] hover:brightness-110",
+        "brass hover:brightness-[1.06]",
         className,
       )}
     >
@@ -169,11 +169,7 @@ export function PrimaryLink({
 
 /** Panels separate by a step in tone, not by an outline. */
 export function Panel({ children, className }: { children: ReactNode; className?: string }) {
-  return (
-    <div className={cn("edge-lit rounded-xl border border-hairline bg-panel", className)}>
-      {children}
-    </div>
-  );
+  return <div className={cn("rounded-md bg-panel", className)}>{children}</div>;
 }
 
 export function PanelHeader({

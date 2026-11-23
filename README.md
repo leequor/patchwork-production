@@ -29,7 +29,7 @@ Production runs on Vercel with Supabase Auth and Postgres. Sign-in and the publi
 | **Team** | Role-based staff access with server-side guards and confirmed staff accounts. |
 | **Public tracker** | Customers follow repair progress with the tracking code from their receipt. No account, email, or phone number required. |
 | **Command palette** | Keyboard-first navigation and actions from anywhere in the workspace with `Cmd/Ctrl + K`. |
-| **3D workbench** | A CSS 3D exploded-device scene with spring parallax that responds to the pointer, with a static fallback for reduced-motion users. |
+| **Bench scene** | A WebGL teardown of the device itself: five modelled parts, lit like a product render, that assemble as the repair advances. It is the progress indicator on `/track`, the brand image on the sign-in screen, and the centre of Mission control. |
 
 ## Stack
 
@@ -37,6 +37,7 @@ Production runs on Vercel with Supabase Auth and Postgres. Sign-in and the publi
 | --- | --- |
 | Framework | Next.js 16 App Router, Server Components, Server Actions |
 | UI | React 19, Tailwind CSS 3, Lucide icons, Geist Sans and Geist Mono |
+| 3D | Three.js — one procedurally modelled device, PMREM environment lighting, damped pointer parallax |
 | Motion | Framer Motion 14 — page transitions, staggered panels, crossfades, spring hovers |
 | Data | Supabase Postgres with Row Level Security, Supabase Auth, security-definer RPCs |
 | Language | TypeScript 5 (strict) |
@@ -72,7 +73,7 @@ Open <http://localhost:3000>. The workspace requires a session and redirects to 
 | `SUPABASE_SERVICE_ROLE_KEY` | Server only | Seed scripts and staff creation. Never expose it to the browser. |
 | `NEXT_PUBLIC_SITE_URL` | Browser and server | Base URL used in Supabase auth redirects. |
 | `DEMO_PASSWORD` | Local only | Password for the seeded demo accounts. |
-| `NEXT_PUBLIC_DESIGN_PREVIEW` | Local only | Enables the design-preview screenshot route. |
+| `NEXT_PUBLIC_DESIGN_PREVIEW` | Local only | Enables the `/design-preview/*` routes: the workspace dashboard against fixture data, and the bench scene in every stage. Never set this in a deployment. |
 
 `.env` and `.env.local` are ignored by git. Real keys and passwords never belong in the repository.
 

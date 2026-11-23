@@ -151,9 +151,9 @@ export function WorkspaceShell({
         <Link
           href="/tickets/new"
           onClick={onNavigate}
-          className="mt-4 flex h-10 items-center overflow-hidden rounded-xl bg-accent-fill text-[13px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition duration-150 hover:brightness-110 active:scale-95"
+          className="brass mt-4 flex h-9 items-center overflow-hidden rounded-sm text-[13px] font-semibold transition duration-150 hover:brightness-[1.06] active:translate-y-px"
         >
-          <span className="grid h-10 w-12 shrink-0 place-items-center">
+          <span className="grid h-9 w-12 shrink-0 place-items-center">
             <Plus className="h-4 w-4" strokeWidth={2.2} aria-hidden="true" />
           </span>
           <RailLabel show={show} delay={0.05} className="pr-3">
@@ -172,7 +172,7 @@ export function WorkspaceShell({
                 onClick={onNavigate}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "relative flex h-11 items-center rounded-xl text-[13px] font-medium transition-colors duration-150",
+                  "relative flex h-9 items-center rounded-sm text-[13px] font-medium transition-colors duration-150",
                   active
                     ? "bg-raised text-ink shadow-inset-line"
                     : "text-ink-tertiary hover:bg-raised/60 hover:text-ink",
@@ -184,7 +184,7 @@ export function WorkspaceShell({
                     className="absolute -left-3 top-1/2 z-10 h-5 w-[2px] -translate-y-1/2 rounded-full bg-accent-lit"
                   />
                 ) : null}
-                <span className="grid h-11 w-12 shrink-0 place-items-center">
+                <span className="grid h-9 w-12 shrink-0 place-items-center">
                   <Icon className="h-[18px] w-[18px]" strokeWidth={1.8} aria-hidden="true" />
                 </span>
                 <RailLabel show={show} delay={0.07 + index * 0.025} className="pr-3">
@@ -199,9 +199,9 @@ export function WorkspaceShell({
           <Link
             href="/track"
             onClick={onNavigate}
-            className="flex h-10 items-center overflow-hidden rounded-xl text-[12px] text-ink-tertiary transition-colors duration-150 hover:bg-raised/60 hover:text-ink"
+            className="flex h-9 items-center overflow-hidden rounded-sm text-[12px] text-ink-tertiary transition-colors duration-150 hover:bg-raised/60 hover:text-ink"
           >
-            <span className="grid h-10 w-12 shrink-0 place-items-center">
+            <span className="grid h-9 w-12 shrink-0 place-items-center">
               <ExternalLink className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
             </span>
             <RailLabel show={show} delay={0.11} className="pr-3">
@@ -209,7 +209,7 @@ export function WorkspaceShell({
             </RailLabel>
           </Link>
 
-          <div className="mt-2 flex items-center overflow-hidden rounded-xl border border-hairline bg-panel/50">
+          <div className="mt-2 flex items-center overflow-hidden rounded-sm border border-hairline bg-panel">
             <span className="grid h-12 w-12 shrink-0 place-items-center">
               <span className="grid h-8 w-8 place-items-center rounded-lg bg-accent-soft text-[11px] font-semibold text-accent-bright">
                 {avatar}
@@ -228,9 +228,9 @@ export function WorkspaceShell({
               type="submit"
               aria-label="Log out"
               title="Log out"
-              className="flex h-10 w-full items-center overflow-hidden rounded-xl text-[12px] text-ink-tertiary transition-colors duration-150 hover:bg-raised/60 hover:text-ink"
+              className="flex h-9 w-full items-center overflow-hidden rounded-sm text-[12px] text-ink-tertiary transition-colors duration-150 hover:bg-raised/60 hover:text-ink"
             >
-              <span className="grid h-10 w-12 shrink-0 place-items-center">
+              <span className="grid h-9 w-12 shrink-0 place-items-center">
                 <LogOut className="h-4 w-4" strokeWidth={1.8} aria-hidden="true" />
               </span>
               <RailLabel show={show} delay={0.15} className="pr-3">
@@ -266,12 +266,12 @@ export function WorkspaceShell({
 
       <div className="lg:pl-[72px]">
         <header className="sticky top-0 z-30 px-3 pt-3 sm:px-4">
-          <div className="edge-lit flex h-14 items-center gap-2 rounded-xl bg-panel/55 px-2.5 shadow-panel backdrop-blur-xl">
+          <div className="flex h-12 items-center gap-2 rounded-md border border-hairline bg-panel/85 px-2 shadow-panel backdrop-blur-xl">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
               aria-label="Open navigation"
-              className="grid h-9 w-9 shrink-0 place-items-center rounded-lg text-ink-tertiary transition-colors hover:bg-raised hover:text-ink lg:hidden"
+              className="grid h-8 w-8 shrink-0 place-items-center rounded-sm text-ink-tertiary transition-colors hover:bg-raised hover:text-ink lg:hidden"
             >
               <Menu className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -287,7 +287,7 @@ export function WorkspaceShell({
               type="button"
               onClick={() => setPaletteOpen(true)}
               aria-label="Search Patchwork (Command K)"
-              className="flex h-9 w-[150px] shrink-0 items-center gap-2 rounded-lg border border-hairline bg-canvas/50 px-2.5 text-left text-[12px] text-ink-tertiary transition-colors duration-150 hover:border-hairline-strong hover:text-ink sm:w-[220px] lg:w-[300px]"
+              className="flex h-8 w-[150px] shrink-0 items-center gap-2 rounded-sm border border-hairline bg-canvas/60 px-2.5 text-left text-[12px] text-ink-tertiary transition-colors duration-150 hover:border-hairline-strong hover:text-ink sm:w-[220px] lg:w-[300px]"
             >
               <Search className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span className="hidden truncate sm:block">Search…</span>
@@ -298,7 +298,7 @@ export function WorkspaceShell({
 
             <Link
               href="/tickets/new"
-              className="hidden h-9 shrink-0 items-center gap-2 rounded-lg bg-accent-fill px-3 text-[12px] font-semibold text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.2)] transition duration-150 hover:brightness-110 active:scale-95 sm:flex"
+              className="brass hidden h-8 shrink-0 items-center gap-2 rounded-sm px-3 text-[12px] font-semibold transition duration-150 hover:brightness-[1.06] active:translate-y-px sm:flex"
             >
               <Plus className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
               New intake
@@ -310,9 +310,9 @@ export function WorkspaceShell({
                 onClick={() => setProfileOpen((open) => !open)}
                 aria-label="Open profile menu"
                 aria-expanded={profileOpen}
-                className="flex h-9 items-center gap-2 rounded-lg border border-hairline bg-raised/70 pl-1 pr-2 transition-colors duration-150 hover:bg-raised"
+                className="flex h-8 items-center gap-2 rounded-sm border border-hairline-strong bg-raised pl-1 pr-2 transition-colors duration-150 hover:border-ink-faint"
               >
-                <span className="grid h-7 w-7 place-items-center rounded-md bg-accent-soft text-[10px] font-semibold text-accent-bright">
+                <span className="grid h-6 w-6 place-items-center rounded-sm bg-accent-soft text-[10px] font-semibold text-accent-bright">
                   {avatar}
                 </span>
                 <span className="hidden max-w-[120px] truncate text-[12px] text-ink lg:block">
@@ -331,7 +331,7 @@ export function WorkspaceShell({
                 <div
                   role="menu"
                   aria-label="Profile"
-                  className="absolute right-0 top-[calc(100%+8px)] z-40 w-64 overflow-hidden rounded-xl border border-hairline-strong bg-panel/95 shadow-float backdrop-blur-2xl"
+                  className="absolute right-0 top-[calc(100%+8px)] z-40 w-64 overflow-hidden rounded-md border border-hairline-strong bg-panel shadow-float"
                 >
                   <div className="border-b border-hairline px-3.5 py-3">
                     <p className="truncate text-[12px] font-medium text-ink">{displayName}</p>
@@ -344,7 +344,7 @@ export function WorkspaceShell({
                       href="/track"
                       role="menuitem"
                       onClick={() => setProfileOpen(false)}
-                      className="flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] text-ink-secondary transition-colors hover:bg-raised hover:text-ink"
+                      className="flex items-center gap-2.5 rounded-sm px-2.5 py-2 text-[12px] text-ink-secondary transition-colors hover:bg-raised hover:text-ink"
                     >
                       <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                       Public tracker
@@ -353,7 +353,7 @@ export function WorkspaceShell({
                       <button
                         type="submit"
                         role="menuitem"
-                        className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-left text-[12px] text-ink-secondary transition-colors hover:bg-raised hover:text-ink"
+                        className="flex w-full items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-[12px] text-ink-secondary transition-colors hover:bg-raised hover:text-ink"
                       >
                         <LogOut className="h-3.5 w-3.5" aria-hidden="true" />
                         Log out
@@ -369,7 +369,7 @@ export function WorkspaceShell({
         <main
           className={
             isMissionControl
-              ? "h-[calc(100dvh-80px)] overflow-hidden px-3 pb-3 sm:px-4 sm:pb-4"
+              ? "h-[calc(100dvh-68px)] overflow-hidden px-3 pb-3 sm:px-4 sm:pb-4"
               : "mx-auto w-full max-w-canvas px-4 pb-24 pt-6 sm:px-6"
           }
         >
@@ -390,7 +390,7 @@ export function WorkspaceShell({
               type="button"
               aria-label="Close navigation"
               onClick={() => setMobileOpen(false)}
-              className="absolute right-2 top-3 z-10 grid h-9 w-9 place-items-center rounded-lg text-ink-tertiary hover:bg-raised hover:text-ink"
+              className="absolute right-2 top-3 z-10 grid h-8 w-8 place-items-center rounded-sm text-ink-tertiary hover:bg-raised hover:text-ink"
             >
               <X className="h-4 w-4" aria-hidden="true" />
             </button>

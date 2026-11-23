@@ -34,13 +34,10 @@ export function Logo({
   className,
   href = "/",
   markOnly = false,
-  tone: _tone,
 }: {
   className?: string;
   href?: string;
   markOnly?: boolean;
-  /** Kept for call-site compatibility; the product has one dark surface now. */
-  tone?: "paper" | "night";
 }) {
   const content = (
     <>

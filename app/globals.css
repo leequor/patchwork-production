@@ -3,88 +3,77 @@
 @tailwind utilities;
 
 /**
- * Patchwork — design tokens and ground.
+ * Patchwork — ground, motion primitives and browser surfaces.
  *
- * Colours and type live in tailwind.config.ts. This file holds what utilities
- * cannot express: the layered ground, focus and selection, scrollbars, and the
- * three motion primitives the rebuilt surfaces share.
+ * Colour and type live in tailwind.config.ts. This file holds what utilities
+ * cannot express: the room the product sits in, focus and selection, the
+ * scrollbars, and the handful of motion primitives the surfaces share.
  */
 @layer base {
   :root {
     color-scheme: dark;
 
     /* Surfaces */
-    --canvas: #0a0a0a;
-    --panel: #0e0e10;
-    --raised: #151519;
-    --overlay: #1b1b21;
+    --canvas: #0c0c0b;
+    --panel: #131312;
+    --raised: #1a1a18;
+    --overlay: #22221f;
 
     /* Ink */
-    --ink: #f5f5f7;
-    --ink-secondary: #a3a3ac;
-    --ink-tertiary: #73737d;
-    --ink-faint: #4f4f58;
+    --ink: #efede7;
+    --ink-secondary: #b0ada4;
+    --ink-tertiary: #948f86;
+    --ink-faint: #868279;
 
-    /* Accent */
-    --accent: #6366f1;
-    --accent-bright: #818cf8;
-    --cyan: #22d3ee;
+    /* Line */
+    --line: rgba(237, 237, 230, 0.07);
+
+    /* Signals */
+    --accent: #d9a441;
+    --accent-bright: #efbc63;
+    --positive: #5fc492;
+    --negative: #ee6a5b;
 
     /* Motion */
-    --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
     --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-    --duration-fast: 140ms;
+    --duration-fast: 130ms;
     --duration-base: 220ms;
-    --duration-slow: 420ms;
+    --duration-slow: 480ms;
 
     /* Layout */
-    --sidebar-width: 264px;
-    --header-height: 64px;
-    --gutter: 24px;
+    --rail: 72px;
+    --header: 56px;
   }
 
   html {
     background-color: var(--canvas);
     -webkit-text-size-adjust: 100%;
+    scrollbar-color: #33332f transparent;
   }
 
   body {
     @apply bg-canvas text-ink antialiased;
     min-height: 100dvh;
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    font-feature-settings: "ss01", "cv11";
+    font-feature-settings: "ss01", "cv05";
 
-    /* The ground: one indigo wash at the top, one cyan breath to the right,
-       then a 24px dot mesh held still while content scrolls over it. */
+    /* The room: one bench lamp from above, and a vignette at the walls.
+       Nothing repeats, nothing tiles — there is no grid under this product. */
     background-image:
-      radial-gradient(80rem 40rem at 50% -18%, rgba(99, 102, 241, 0.16), transparent 68%),
-      radial-gradient(56rem 32rem at 106% -4%, rgba(34, 211, 238, 0.07), transparent 62%),
-      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.05) 1px, transparent 0);
-    background-size:
-      auto,
-      auto,
-      24px 24px;
+      radial-gradient(120% 70% at 50% -22%, rgba(217, 164, 65, 0.07), transparent 62%),
+      radial-gradient(90% 55% at 12% 0%, rgba(143, 166, 180, 0.045), transparent 58%),
+      radial-gradient(120% 90% at 50% 118%, rgba(0, 0, 0, 0.6), transparent 62%);
     background-attachment: fixed, fixed, fixed;
   }
 
-  /* Film grain. 3.5% over everything, behind anything that stacks above it. */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    opacity: 0.035;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
-  }
-
   ::selection {
-    background: var(--accent);
-    color: #ffffff;
+    background: #d9a441;
+    color: #14110a;
   }
 
   * {
-    border-color: #ffffff14;
+    border-color: var(--line);
   }
 
   a,
@@ -98,7 +87,7 @@
   :focus-visible {
     outline: 2px solid var(--accent-bright);
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 3px;
   }
 
   h1,
@@ -108,12 +97,24 @@
   h5,
   h6 {
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.022em;
     text-wrap: balance;
   }
 
+  p {
+    text-wrap: pretty;
+  }
+
+  input,
+  textarea,
+  select {
+    caret-color: var(--accent-bright);
+  }
+
   ::placeholder {
-    color: var(--ink-faint);
+    /* Placeholder text still has to be read: 4.6:1 on the recessed field. */
+    color: var(--ink-tertiary);
+    opacity: 1;
   }
 
   input:-webkit-autofill,
@@ -125,8 +126,8 @@
   }
 
   ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+    width: 11px;
+    height: 11px;
   }
 
   ::-webkit-scrollbar-track {
@@ -134,13 +135,17 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #26262d;
+    background: #2a2a26;
     border-radius: 9999px;
-    border: 2px solid var(--canvas);
+    border: 3px solid var(--canvas);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #3f3f46;
+    background: #3a3a34;
+  }
+
+  table {
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -152,14 +157,14 @@
   /* Display type: one face, tight tracking, leading under 1. */
   .display {
     font-weight: 600;
-    letter-spacing: -0.035em;
-    line-height: 0.98;
+    letter-spacing: -0.03em;
+    line-height: 0.96;
   }
 
   .display-tight {
     font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.08;
+    letter-spacing: -0.022em;
+    line-height: 1.1;
   }
 
   /* Every figure in the product is mono and tabular so columns line up. */
@@ -177,121 +182,100 @@
     color: var(--ink-tertiary);
   }
 
-  /* Opt-in mesh for a single section that needs its own ground. */
-  .dot-grid {
-    background-image: radial-gradient(
-      circle at 1px 1px,
-      rgba(255, 255, 255, 0.07) 1px,
-      transparent 0
-    );
-    background-size: 22px 22px;
-  }
-
   /* The queue feed fades at its own edges, not with an overlay bar. */
   .fade-y {
     -webkit-mask-image: linear-gradient(
       to bottom,
       transparent 0,
-      #000 14px,
-      #000 calc(100% - 14px),
+      #000 12px,
+      #000 calc(100% - 12px),
       transparent 100%
     );
     mask-image: linear-gradient(
       to bottom,
       transparent 0,
-      #000 14px,
-      #000 calc(100% - 14px),
+      #000 12px,
+      #000 calc(100% - 12px),
       transparent 100%
     );
   }
 
-  /* Halo behind the hero device. Radial only — no blur filter to pay for. */
-  .glow-accent {
-    background: radial-gradient(
-      closest-side,
-      rgba(99, 102, 241, 0.3) 0%,
-      rgba(34, 211, 238, 0.12) 52%,
-      transparent 78%
-    );
-  }
-
-  /* Emerald halo for a finished repair. */
-  .glow-ready {
-    background: radial-gradient(
-      closest-side,
-      rgba(52, 211, 153, 0.32) 0%,
-      rgba(16, 185, 129, 0.12) 52%,
-      transparent 78%
-    );
-  }
-
-  /* A 1px edge with light on top and shadow below: the glass bevel. */
+  /* A surface with one lit edge on top and one hairline all round. */
   .edge-lit {
-    position: relative;
-    border-color: transparent !important;
-  }
-
-  .edge-lit::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    padding: 1px;
-    background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.18) 0%,
-      rgba(255, 255, 255, 0.04) 42%,
-      rgba(0, 0, 0, 0.55) 100%
-    );
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-    mask-composite: exclude;
-    pointer-events: none;
-  }
-
-  /* Recessed field: the surface sits below the panel. */
-  .field-inset {
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5);
-  }
-
-  .field-inset:focus {
     box-shadow:
-      inset 0 2px 4px rgba(0, 0, 0, 0.5),
-      0 0 0 2px rgba(99, 102, 241, 0.45),
-      0 0 20px -2px rgba(99, 102, 241, 0.35);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.055),
+      0 0 0 1px rgba(237, 237, 230, 0.07);
   }
 
-  /* The bench scanner: one pass over the board while diagnosing. */
-  .animate-scan {
-    animation: scan 2.8s linear infinite;
+  .edge-lit-strong {
+    box-shadow:
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
+      0 0 0 1px rgba(237, 237, 230, 0.12);
   }
 
-  /* The gradient edge on a hovered or active row. */
-  .accent-underline {
-    box-shadow: inset 2px 0 0 0 var(--accent);
+  /* Recessed field: the surface sits below the panel, like a milled slot. */
+  .field-inset {
+    background-color: #0a0a09;
+    box-shadow:
+      inset 0 1px 2px rgba(0, 0, 0, 0.9),
+      inset 0 0 0 1px rgba(237, 237, 230, 0.08);
   }
 
-  .on-night {
-    color: var(--ink);
+  .field-inset:focus,
+  .field-inset:focus-within {
+    box-shadow:
+      inset 0 1px 2px rgba(0, 0, 0, 0.9),
+      inset 0 0 0 1px rgba(217, 164, 65, 0.5),
+      0 0 0 3px rgba(217, 164, 65, 0.12);
   }
 
   /* Press feedback on every control, pointer or keyboard. */
   .press {
     transition:
-      transform var(--duration-fast) var(--ease-spring),
-      background-color var(--duration-fast) var(--ease-spring),
-      border-color var(--duration-fast) var(--ease-spring);
+      transform var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
   }
 
   .press:active {
     transform: scale(0.985);
   }
+
+  /* The brass control itself: a metal face with an etched label. */
+  .brass {
+    background-image: linear-gradient(180deg, #e7b356 0%, #cf9832 100%);
+    color: #17120a;
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.42),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+      0 1px 2px rgba(0, 0, 0, 0.6);
+  }
+
+  .brass:hover {
+    background-image: linear-gradient(180deg, #f0bf65 0%, #d8a13b 100%);
+  }
+
+  /* A live indicator: a breathing dot that stops when motion is reduced. */
+  .live-dot {
+    animation: live 2.4s var(--ease-in-out) infinite;
+  }
+}
+
+@keyframes live {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 currentColor;
+  }
+  55% {
+    opacity: 0.72;
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0);
+  }
 }
 
 @media (prefers-reduced-motion: no-preference) {
   .rise {
-    animation: rise 520ms var(--ease-spring) both;
+    animation: rise 560ms var(--ease-out) both;
   }
 }
 
@@ -303,23 +287,6 @@
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes scan {
-  0% {
-    transform: translateY(-120%);
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(520%);
-    opacity: 0;
   }
 }
 

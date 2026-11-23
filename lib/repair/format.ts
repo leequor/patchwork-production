@@ -20,7 +20,7 @@ export const TICKET_STATUS_META: Record<
     label: "Intake",
     description: "Logged and waiting for a bench slot.",
     tone: "text-ink-secondary",
-    dot: "bg-raised",
+    dot: "bg-ink-faint",
   },
   diagnosing: {
     label: "Diagnosing",
@@ -49,8 +49,8 @@ export const TICKET_STATUS_META: Record<
   picked_up: {
     label: "Picked up",
     description: "Paid and collected.",
-    tone: "text-ink-secondary",
-    dot: "bg-raised/60",
+    tone: "text-ink-tertiary",
+    dot: "bg-ink-faint",
   },
   cancelled: {
     label: "Cancelled",
@@ -64,8 +64,8 @@ export const PRIORITY_META: Record<
   TicketPriority,
   { label: string; tone: string; dot: string; rank: number }
 > = {
-  low: { label: "Low", tone: "text-ink-secondary", dot: "bg-raised/60", rank: 0 },
-  normal: { label: "Normal", tone: "text-ink-secondary", dot: "bg-raised", rank: 1 },
+  low: { label: "Low", tone: "text-ink-tertiary", dot: "bg-ink-faint", rank: 0 },
+  normal: { label: "Normal", tone: "text-ink-secondary", dot: "bg-ink-tertiary", rank: 1 },
   high: { label: "High", tone: "text-warn", dot: "bg-warn", rank: 2 },
   urgent: { label: "Urgent", tone: "text-negative", dot: "bg-negative", rank: 3 },
 };
@@ -74,7 +74,7 @@ export const INVOICE_STATUS_META: Record<
   InvoiceStatus,
   { label: string; tone: string; dot: string }
 > = {
-  draft: { label: "Draft", tone: "text-ink-secondary", dot: "bg-raised/60" },
+  draft: { label: "Draft", tone: "text-ink-secondary", dot: "bg-ink-faint" },
   sent: { label: "Unpaid", tone: "text-warn", dot: "bg-warn" },
   paid: { label: "Paid", tone: "text-positive", dot: "bg-positive" },
   void: { label: "Void", tone: "text-negative", dot: "bg-negative" },

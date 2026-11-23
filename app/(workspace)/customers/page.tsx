@@ -46,7 +46,7 @@ export default async function CustomersPage({
           </label>
           <button
             type="submit"
-            className="inline-flex h-10 items-center justify-center rounded-lg bg-accent-fill px-3.5 font-sans text-[13px] font-semibold text-white transition-[filter,transform] duration-150 hover:brightness-110 active:scale-[0.98]"
+            className="brass inline-flex h-9 items-center justify-center rounded-sm px-3.5 font-sans text-[13px] font-semibold transition-[filter,transform] duration-150 hover:brightness-[1.06] active:translate-y-px"
           >
             Search
           </button>

@@ -12,7 +12,7 @@ type SupabaseHealth = {
 type Tone = "idle" | "ok" | "warn" | "error";
 
 const TONE_MARK: Record<Tone, string> = {
-  idle: "bg-ink-tertiary/50",
+  idle: "bg-ink-faint",
   ok: "bg-positive",
   warn: "bg-warn",
   error: "bg-negative",
@@ -25,16 +25,26 @@ const TONE_WORD: Record<Tone, string> = {
   error: "Down",
 };
 
-function Cell({ label, tone, value, detail }: { label: string; tone: Tone; value: string; detail: string }) {
+function Cell({
+  label,
+  tone,
+  value,
+  detail,
+}: {
+  label: string;
+  tone: Tone;
+  value: string;
+  detail: string;
+}) {
   return (
     <div>
-      <dt className="font-sans text-[13px] text-white/80">{label}</dt>
+      <dt className="font-sans text-[12px] text-ink-tertiary">{label}</dt>
       <dd className="mt-1 flex items-baseline gap-2">
-        <span className={`h-2 w-2 shrink-0 ${TONE_MARK[tone]}`} aria-hidden="true" />
-        <span className="display text-[20px] text-white">{TONE_WORD[tone]}</span>
+        <span className={`h-1.5 w-1.5 shrink-0 ${TONE_MARK[tone]}`} aria-hidden="true" />
+        <span className="font-sans text-[14px] font-medium text-ink">{TONE_WORD[tone]}</span>
       </dd>
-      <dd className="figure mt-0.5 text-[13px] text-white/80">
-        {value} <span className="font-sans">{detail}</span>
+      <dd className="mt-0.5 font-sans text-[12px] text-ink-tertiary">
+        <span className="figure text-ink-secondary">{value}</span> {detail}
       </dd>
     </div>
   );
@@ -92,16 +102,19 @@ export function ShiftBoard() {
   return (
     <section
       aria-labelledby="counter-board"
-      className="bg-accent px-5 py-5 text-white sm:px-8"
+      className="rounded-sm border border-hairline bg-sunken px-4 py-3.5"
     >
       <div className="flex items-baseline justify-between gap-4">
-        <h2 id="counter-board" className="font-sans text-[13px] font-semibold">
+        <h2
+          id="counter-board"
+          className="font-mono text-2xs uppercase tracking-[0.16em] text-ink-tertiary"
+        >
           Counter board
         </h2>
-        <p className="font-sans text-[13px] text-white/80">Read on load</p>
+        <p className="font-mono text-2xs uppercase tracking-[0.16em] text-ink-faint">Live</p>
       </div>
 
-      <dl className="mt-4 grid grid-cols-2 gap-x-6 gap-y-4">
+      <dl className="mt-3 grid grid-cols-2 gap-x-6 gap-y-3">
         <Cell
           label="Desk app"
           tone={appTone}
@@ -124,7 +137,7 @@ export function ShiftBoard() {
       </dl>
 
       {failed ? (
-        <p className="mt-4 font-sans text-[13px] leading-5 text-white/85">
+        <p className="mt-3 border-t border-hairline pt-3 font-sans text-[12px] leading-5 text-negative-ink">
           The health checks did not answer. Open system status before the first customer.
         </p>
       ) : null}

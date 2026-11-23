@@ -54,15 +54,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
   useEffect(() => {
     if (!open) return;
-    setQuery("");
-    setActive(0);
     const timer = window.setTimeout(() => inputRef.current?.focus(), 40);
     return () => window.clearTimeout(timer);
   }, [open]);
-
-  useEffect(() => {
-    setActive(0);
-  }, [query]);
 
   useEffect(() => {
     if (!open) return;
@@ -75,8 +69,16 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
 
   if (!open) return null;
 
-  const go = (href: string) => {
+  /* Closing clears the field in the handler, so the next open starts clean
+     without a state write from an effect. */
+  const close = () => {
+    setQuery("");
+    setActive(0);
     onClose();
+  };
+
+  const go = (href: string) => {
+    close();
     router.push(href);
   };
 
@@ -103,7 +105,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
       <button
         type="button"
         aria-label="Close search overlay"
-        onClick={onClose}
+        onClick={close}
         className="absolute inset-0 bg-canvas/70 backdrop-blur-sm"
       />
 
@@ -118,7 +120,10 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
           <input
             ref={inputRef}
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            onChange={(event) => {
+              setQuery(event.target.value);
+              setActive(0);
+            }}
             onKeyDown={onKeyDown}
             placeholder="Search tickets, customers, pages…"
             aria-label="Search Patchwork"

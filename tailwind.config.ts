@@ -1,12 +1,16 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Patchwork design tokens — "Modern Premium Tech".
+ * Patchwork design tokens — the bench-light world.
  *
- * Two rules govern this file:
+ * The product is a repair bench at night: warm graphite ground, bone ink, one
+ * brass accent taken from the bench lamp. Three rules govern this file:
+ *
  *   1. Surfaces separate by a step in tone, never by a heavier border.
- *   2. The accent gradient is reserved for primary actions and the hero glow.
- *      Everything else is ink on obsidian.
+ *   2. Colour is a signal, not a decoration. Brass marks the one primary action
+ *      and live state; moss and vermilion mark the only two states the shop has
+ *      to act on. Everything else is bone on graphite.
+ *   3. Geometry is tight and physical: controls 6px, panels 10px, no pills.
  */
 const config: Config = {
   content: [
@@ -17,45 +21,46 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        /* Ground */
-        canvas: "#0A0A0A",
-        sunken: "#070708",
-        panel: "#0E0E10",
-        raised: "#151519",
-        overlay: "#1B1B21",
+        /* Ground — warm graphite, the colour of a bench under a lamp. */
+        canvas: "#0C0C0B",
+        sunken: "#080807",
+        panel: "#131312",
+        raised: "#1A1A18",
+        overlay: "#22221F",
 
-        /* Lines */
-        hairline: "#FFFFFF14",
-        "hairline-strong": "#FFFFFF26",
+        /* Lines — a lit top edge, not a border. */
+        hairline: "#EDEDE60F",
+        "hairline-strong": "#EDEDE61F",
 
-        /* Type */
+        /* Type — bone and its steps down to quiet. */
         ink: {
-          DEFAULT: "#F5F5F7",
-          secondary: "#A3A3AC",
-          tertiary: "#73737D",
-          faint: "#4F4F58",
+          DEFAULT: "#EFEDE7",
+          secondary: "#B0ADA4",
+          tertiary: "#948F86",
+          faint: "#868279",
         },
 
-        /* Accent: electric indigo → cyan. */
+        /* Brass: the bench lamp. Primary action and live state only. */
         accent: {
-          DEFAULT: "#6366F1",
-          bright: "#818CF8",
-          deep: "#4F46E5",
-          cyan: "#22D3EE",
-          "cyan-deep": "#0E7490",
-          soft: "#6366F11F",
+          DEFAULT: "#D9A441",
+          bright: "#EFBC63",
+          deep: "#A87A22",
+          cyan: "#8FA6B4",
+          "cyan-deep": "#546770",
+          soft: "#D9A4411A",
         },
 
-        positive: { DEFAULT: "#34D399", soft: "#34D3991A", ink: "#6EE7B7" },
-        warn: { DEFAULT: "#FBBF24", soft: "#FBBF241A", ink: "#FCD34D" },
-        negative: { DEFAULT: "#F87171", soft: "#F871711A", ink: "#FCA5A5" },
-        info: { DEFAULT: "#60A5FA", soft: "#60A5FA1A", ink: "#93C5FD" },
+        /* Signals. Two alarms and a caution lamp; nothing else earns a hue. */
+        positive: { DEFAULT: "#5FC492", soft: "#5FC4921A", ink: "#8ADBB4" },
+        warn: { DEFAULT: "#D9A441", soft: "#D9A4411A", ink: "#EFBC63" },
+        negative: { DEFAULT: "#EE6A5B", soft: "#EE6A5B1A", ink: "#F5938A" },
+        info: { DEFAULT: "#8FA6B4", soft: "#8FA6B41A", ink: "#B4C6D1" },
       },
 
       fontFamily: {
         sans: [
           "var(--font-sans)",
-          "Geist",
+          "Instrument Sans",
           "ui-sans-serif",
           "system-ui",
           "-apple-system",
@@ -63,7 +68,7 @@ const config: Config = {
         ],
         mono: [
           "var(--font-mono)",
-          "Geist Mono",
+          "IBM Plex Mono",
           "ui-monospace",
           "SFMono-Regular",
           "monospace",
@@ -71,77 +76,73 @@ const config: Config = {
       },
 
       fontSize: {
-        "2xs": ["11px", { lineHeight: "14px", letterSpacing: "0.02em" }],
+        "2xs": ["11px", { lineHeight: "14px", letterSpacing: "0.04em" }],
         xs: ["12px", { lineHeight: "16px" }],
-        sm: ["13px", { lineHeight: "18px" }],
-        base: ["15px", { lineHeight: "23px" }],
+        sm: ["13px", { lineHeight: "19px" }],
+        base: ["15px", { lineHeight: "24px" }],
         lg: ["17px", { lineHeight: "26px" }],
         xl: ["20px", { lineHeight: "28px" }],
-        "2xl": ["24px", { lineHeight: "31px", letterSpacing: "-0.01em" }],
-        "3xl": ["30px", { lineHeight: "36px", letterSpacing: "-0.02em" }],
-        "4xl": ["38px", { lineHeight: "42px", letterSpacing: "-0.03em" }],
-        "5xl": ["48px", { lineHeight: "50px", letterSpacing: "-0.035em" }],
-        "6xl": ["60px", { lineHeight: "60px", letterSpacing: "-0.04em" }],
-        "7xl": ["76px", { lineHeight: "72px", letterSpacing: "-0.045em" }],
+        "2xl": ["24px", { lineHeight: "30px", letterSpacing: "-0.015em" }],
+        "3xl": ["30px", { lineHeight: "34px", letterSpacing: "-0.02em" }],
+        "4xl": ["38px", { lineHeight: "40px", letterSpacing: "-0.025em" }],
+        "5xl": ["48px", { lineHeight: "48px", letterSpacing: "-0.03em" }],
+        "6xl": ["60px", { lineHeight: "59px", letterSpacing: "-0.032em" }],
+        "7xl": ["76px", { lineHeight: "72px", letterSpacing: "-0.034em" }],
       },
 
       letterSpacing: {
-        tighter: "-0.045em",
-        tight: "-0.025em",
-        mono: "0.02em",
+        tighter: "-0.034em",
+        tight: "-0.022em",
+        mono: "0.04em",
       },
 
       borderRadius: {
         none: "0px",
-        sm: "6px",
-        DEFAULT: "10px",
-        md: "12px",
-        lg: "14px",
-        xl: "16px",
-        "2xl": "20px",
-        "3xl": "28px",
+        sm: "4px",
+        DEFAULT: "6px",
+        md: "8px",
+        lg: "10px",
+        xl: "12px",
+        "2xl": "14px",
+        "3xl": "18px",
         full: "9999px",
       },
 
       boxShadow: {
-        panel: "0 1px 0 0 rgba(255,255,255,0.05) inset, 0 24px 48px -24px rgba(0,0,0,0.9)",
-        lift: "0 18px 40px -22px rgba(0,0,0,0.9), 0 1px 0 0 rgba(255,255,255,0.06) inset",
-        float:
-          "0 40px 80px -32px rgba(0,0,0,0.95), 0 2px 0 0 rgba(255,255,255,0.05) inset",
-        glow: "0 0 56px -12px rgba(99,102,241,0.5)",
-        "inset-line": "inset 0 1px 0 0 rgba(255,255,255,0.06)",
+        /* Depth is a real offset plus a soft falloff, never a coloured halo. */
+        panel:
+          "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 18px 40px -28px rgba(0,0,0,0.95)",
+        lift: "0 14px 34px -22px rgba(0,0,0,0.95), 0 1px 0 0 rgba(255,255,255,0.05) inset",
+        float: "0 32px 70px -30px rgba(0,0,0,0.98), 0 1px 0 0 rgba(255,255,255,0.05) inset",
+        glow: "0 0 0 1px rgba(217,164,65,0.35), 0 10px 30px -16px rgba(217,164,65,0.35)",
+        "inset-line": "inset 0 1px 0 0 rgba(255,255,255,0.05)",
         focus:
-          "0 0 0 1px rgba(129,140,248,0.7), 0 0 0 4px rgba(99,102,241,0.18)",
+          "0 0 0 1px rgba(239,188,99,0.8), 0 0 0 4px rgba(217,164,65,0.16)",
       },
 
       backgroundImage: {
-        "accent-fill": "linear-gradient(100deg, #4F46E5 0%, #4338CA 52%, #0E7490 100%)",
-        "accent-lit": "linear-gradient(100deg, #6366F1 0%, #22D3EE 100%)",
+        /* Brass hardware: a metal face, not a decorative gradient. */
+        "accent-fill": "linear-gradient(180deg, #E5B055 0%, #CF9832 100%)",
+        "accent-lit": "linear-gradient(180deg, #EFBC63 0%, #C88F2B 100%)",
         "accent-wash":
-          "linear-gradient(100deg, rgba(99,102,241,0.18) 0%, rgba(34,211,238,0.10) 100%)",
+          "linear-gradient(180deg, rgba(217,164,65,0.14) 0%, rgba(217,164,65,0.03) 100%)",
         "panel-sheen":
-          "linear-gradient(180deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0) 100%)",
+          "linear-gradient(180deg, rgba(255,255,255,0.035) 0%, rgba(255,255,255,0) 100%)",
         "hairline-fade":
-          "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.14) 50%, transparent 100%)",
-        "dot-grid":
-          "radial-gradient(circle at 1px 1px, rgba(255,255,255,0.07) 1px, transparent 0)",
-      },
-
-      backgroundSize: {
-        "dot-grid": "22px 22px",
+          "linear-gradient(90deg, transparent 0%, rgba(237,237,230,0.14) 50%, transparent 100%)",
       },
 
       spacing: {
         "4.5": "18px",
         18: "72px",
-        sidebar: "264px",
-        header: "64px",
+        sidebar: "72px",
+        header: "56px",
         gutter: "24px",
       },
 
       maxWidth: {
         canvas: "1320px",
-        reading: "62ch",
+        reading: "64ch",
         form: "400px",
       },
 
@@ -158,18 +159,23 @@ const config: Config = {
 
       keyframes: {
         "fade-up": {
-          from: { opacity: "0", transform: "translateY(12px)" },
+          from: { opacity: "0", transform: "translateY(10px)" },
           to: { opacity: "1", transform: "translateY(0)" },
         },
-        "halo-breathe": {
-          "0%, 100%": { opacity: "0.55", transform: "scale(1)" },
-          "50%": { opacity: "0.8", transform: "scale(1.04)" },
+        "lamp-breathe": {
+          "0%, 100%": { opacity: "0.5" },
+          "50%": { opacity: "0.72" },
+        },
+        "trace-run": {
+          from: { strokeDashoffset: "220" },
+          to: { strokeDashoffset: "0" },
         },
       },
 
       animation: {
         "fade-up": "fade-up 520ms cubic-bezier(0.22, 1, 0.36, 1) both",
-        "halo-breathe": "halo-breathe 9s ease-in-out infinite",
+        "lamp-breathe": "lamp-breathe 11s ease-in-out infinite",
+        "trace-run": "trace-run 6s linear infinite",
       },
     },
   },

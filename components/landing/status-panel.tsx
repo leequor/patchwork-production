@@ -55,7 +55,7 @@ function StatusRow({
       </div>
       <span
         className={cn(
-          "inline-flex shrink-0 items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em]",
+          "inline-flex shrink-0 items-center gap-2 rounded-sm border border-hairline bg-raised px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em]",
           TONE[state],
         )}
       >
@@ -111,16 +111,16 @@ export function StatusPanel() {
       {error ? (
         <div
           role="alert"
-          className="edge-lit mb-3 rounded-xl border border-[#f43f5e]/25 bg-[#f43f5e]/[0.07] px-4 py-3 shadow-[0_0_45px_-20px_rgba(244,63,94,0.5)] backdrop-blur-xl"
+          className="mb-3 rounded-sm border border-negative/30 bg-negative-soft px-4 py-3"
         >
           <div className="flex items-start gap-3">
             <TriangleAlert
               aria-hidden="true"
-              className="mt-0.5 h-4 w-4 shrink-0 text-[#fb7185]"
+              className="mt-0.5 h-4 w-4 shrink-0 text-negative"
               strokeWidth={1.7}
             />
             <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-[#fda4af]">
+              <p className="font-sans text-[13px] font-semibold text-negative-ink">
                 Error: health check failed
               </p>
               <p className="mt-1 font-sans text-[14px] leading-5 text-ink">{error}</p>
@@ -129,7 +129,7 @@ export function StatusPanel() {
         </div>
       ) : null}
 
-      <div className="divide-y divide-white/[0.06] overflow-hidden rounded-xl border border-white/10 bg-black/25">
+      <div className="divide-y divide-hairline overflow-hidden rounded-sm border border-hairline bg-canvas/60">
         <StatusRow
           label="Next.js app"
           state={app ? "ok" : error ? "error" : "loading"}
@@ -167,7 +167,7 @@ export function StatusPanel() {
         />
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] text-ink-secondary">
+      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] text-ink-tertiary">
         <a className="transition-colors hover:text-ink" href="/api/health">
           /api/health
         </a>

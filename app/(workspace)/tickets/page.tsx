@@ -107,7 +107,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
           <div className="flex gap-2">
             <button
               type="submit"
-              className="inline-flex h-10 items-center justify-center rounded-lg bg-accent-fill px-3.5 font-sans text-[13px] font-semibold text-white transition-[filter,transform] duration-150 hover:brightness-110 active:scale-[0.98]"
+              className="brass inline-flex h-9 items-center justify-center rounded-sm px-3.5 font-sans text-[13px] font-semibold transition-[filter,transform] duration-150 hover:brightness-[1.06] active:translate-y-px"
             >
               Filter
             </button>
@@ -165,7 +165,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
               {tickets.map((ticket) => (
                 <MotionRow
                   key={ticket.id}
-                  className="group border-t border-hairline/70 transition-colors duration-150 hover:bg-white/[0.04]"
+                  className="group border-t border-hairline transition-colors duration-150 hover:bg-raised"
                 >
                   <td className="px-4 py-3 align-top">
                     <Link href={`/tickets/${ticket.id}`} className="block">

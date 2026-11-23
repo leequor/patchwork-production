@@ -25,11 +25,11 @@ export function FormField({
       .join(" ") || undefined;
 
   return (
-    <div className="space-y-1.5">
+    <div className="space-y-2">
       <div className="flex items-baseline justify-between gap-3">
         <label
           htmlFor={id}
-          className="font-sans text-[13px] font-semibold tracking-[0.01em] text-ink"
+          className="font-sans text-[13px] font-medium text-ink"
         >
           {label}
         </label>
@@ -46,9 +46,11 @@ export function FormField({
         aria-invalid={Boolean(error)}
         aria-describedby={describedBy}
         className={cn(
-          "field-inset h-11 w-full rounded-lg border border-hairline bg-raised px-3 font-sans text-[16px] text-ink",
-          "outline-none transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] placeholder:text-ink-secondary/60",
-          "hover:border-hairline-strong focus:border-accent focus-visible:outline-none",
+          "h-11 w-full rounded-sm border border-hairline-strong bg-[#0a0a09] px-3 font-sans text-[16px] text-ink",
+          "shadow-[inset_0_1px_2px_rgba(0,0,0,0.9)] outline-none",
+          "transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+          "placeholder:text-ink-tertiary hover:border-ink-faint",
+          "focus:border-accent/70 focus:shadow-[inset_0_1px_2px_rgba(0,0,0,0.9),0_0_0_3px_rgba(217,164,65,0.14)] focus-visible:outline-none",
           error ? "border-negative focus:border-negative" : null,
           className,
         )}

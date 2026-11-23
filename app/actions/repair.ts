@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@supabase/supabase-js";
 
 import { requireAdmin, requireStaff } from "@/lib/repair/session";
+import { formatMoney } from "@/lib/repair/format";
 import {
   isDeviceCategory,
   isTicketPriority,
@@ -441,62 +442,43 @@ export async function adjustStockAction(formData: FormData) {
 }
 
 /**
- * Reprice the shelf in one move: every part, one category, or only what is at
- * or under its reorder level. The database enforces the floor at cost, so an
- * aggressive cut can never sell a part below what it was bought for.
+ * One part's sell price, set by hand on the row it belongs to. A price is a
+ * number the shop owns, so it is edited here rather than inferred: the action
+ * stores exactly what was typed. Selling under cost is allowed — loss leaders
+ * exist — but the editor says so while the number is being typed.
  */
-export async function repricePartsAction(formData: FormData) {
+export async function updatePartPriceAction(formData: FormData) {
   await requireManager("/inventory");
 
-  const scope = readString(formData, "scope") || "all";
-  const category = readOptionalString(formData, "category");
-  const mode = readString(formData, "mode") || "percent";
-  const rawValue = readString(formData, "value");
-  const value = Number(rawValue);
+  const partId = readString(formData, "part_id");
+  const raw = readString(formData, "price");
+  if (!partId) failTo("/inventory", "That part is missing.");
 
-  if (!["all", "low_stock"].includes(scope)) failTo("/inventory", "Choose a valid scope.");
-  if (!["percent", "delta", "margin"].includes(mode)) {
-    failTo("/inventory", "Choose a valid pricing rule.");
+  const cents = parseMoneyToCents(raw);
+  if (cents === null || cents === 0) {
+    failTo("/inventory", "Enter a price, for example 79.00.");
   }
-  if (!rawValue || !Number.isFinite(value)) failTo("/inventory", "Enter a number to apply.");
-  if (mode === "percent" && Math.abs(value) > 50) {
-    failTo("/inventory", "A percent change has to stay within 50%.");
-  }
-  if (mode === "margin" && (value < 0 || value >= 90)) {
-    failTo("/inventory", "A margin target has to sit between 0% and 90%.");
-  }
-  if (mode === "delta" && Math.abs(value) > 1000) {
-    failTo("/inventory", "That price change is too large.");
-  }
+  if (cents > 100000000) failTo("/inventory", "That price is out of range.");
 
   const supabase = await client();
-  const { data, error } = await supabase.rpc("reprice_parts", {
-    p_scope: scope,
-    p_category: category ?? null,
-    p_mode: mode,
-    p_value: value,
-  });
+  const { data: part, error: readError } = await supabase
+    .from("parts")
+    .select("sku")
+    .eq("id", partId)
+    .maybeSingle();
+
+  if (readError) failTo("/inventory", readError.message);
+  if (!part) failTo("/inventory", "That part is no longer on the shelf.");
+
+  const { error } = await supabase
+    .from("parts")
+    .update({ price_cents: cents, updated_at: new Date().toISOString() })
+    .eq("id", partId);
 
   if (error) failTo("/inventory", error.message);
 
-  const row = Array.isArray(data) ? data[0] : data;
-  const updated = Number(row?.updated_count ?? 0);
-
   revalidatePath("/inventory");
-  revalidatePath("/tickets");
-  revalidatePath("/invoices");
-
-  if (updated === 0) {
-    redirect(messageUrl("/inventory", "notice", "No price needed to change."));
-  }
-
-  redirect(
-    messageUrl(
-      "/inventory",
-      "notice",
-      `Repriced ${updated} ${updated === 1 ? "part" : "parts"}${category ? ` in ${category}` : ""}.`,
-    ),
-  );
+  redirect(messageUrl("/inventory", "notice", `${part.sku} now sells for ${formatMoney(cents)}.`));
 }
 
 export async function updateRoleAction(formData: FormData) {

@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 
-import { addPartAction, adjustStockAction, repricePartsAction } from "@/app/actions/repair";
+import { addPartAction, adjustStockAction } from "@/app/actions/repair";
 import { FormField } from "@/components/ui/form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
+import { PriceEditor } from "@/components/workspace/price-editor";
 import { SelectField } from "@/components/workspace/form-controls";
 import { MotionItem } from "@/components/workspace/motion-row";
 import { StaggerGroup, StaggerItem } from "@/components/workspace/stagger";
@@ -31,35 +32,21 @@ const CATEGORIES = [
 export default async function InventoryPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; notice?: string; error?: string; new?: string; reprice?: string }>;
+  searchParams: Promise<{ q?: string; notice?: string; error?: string; new?: string }>;
 }) {
   const params = await searchParams;
   const [parts, staff] = await Promise.all([getInventory(params.q), getStaff()]);
   const canManage = staff?.role !== "user";
   const lowStock = parts.filter((part) => part.stock <= part.reorder_level);
   const stockValue = parts.reduce((total, part) => total + part.stock * part.cost_cents, 0);
-  const retailValue = parts.reduce((total, part) => total + part.stock * part.price_cents, 0);
   const openForm = params.new === "1" && canManage;
-  const openReprice = params.reprice === "1" && canManage;
 
   return (
     <div>
       <PageHeader
         title="Inventory"
         description="Parts on the shelf, reorder levels, and what each repair costs."
-        actions={
-          canManage ? (
-            <>
-              <Link
-                href={openReprice ? "/inventory" : "/inventory?reprice=1"}
-                className="inline-flex h-9 items-center rounded-sm border border-hairline-strong px-3.5 font-sans text-[13px] font-medium text-ink-secondary transition-colors hover:border-accent/60 hover:text-ink"
-              >
-                Reprice
-              </Link>
-              <PrimaryLink href="/inventory?new=1">Add part</PrimaryLink>
-            </>
-          ) : undefined
-        }
+        actions={canManage ? <PrimaryLink href="/inventory?new=1">Add part</PrimaryLink> : undefined}
       />
       <Feedback notice={params.notice} error={params.error} />
 
@@ -143,79 +130,6 @@ export default async function InventoryPage({
         </Panel>
       ) : null}
 
-      {openReprice ? (
-        <Panel className="mt-3 px-4 py-4">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <h2 className="text-[14px] font-semibold text-ink">Reprice the shelf</h2>
-              <p className="mt-0.5 max-w-[58ch] text-[13px] leading-5 text-ink-secondary">
-                One rule applied across a scope. No part is ever priced below what it cost: that
-                floor is enforced by the database, not by this form.
-              </p>
-            </div>
-            <Link href="/inventory" className="text-[13px] text-ink-secondary transition-colors hover:text-ink">
-              Close
-            </Link>
-          </div>
-
-          <div className="mt-3 grid gap-2 sm:grid-cols-3">
-            <div className="rounded-sm bg-raised px-3 py-2">
-              <p className="text-[12px] text-ink-secondary">Shelf at cost</p>
-              <p className="figure mt-0.5 text-[15px] font-semibold text-ink">{formatMoney(stockValue)}</p>
-            </div>
-            <div className="rounded-sm bg-raised px-3 py-2">
-              <p className="text-[12px] text-ink-secondary">Shelf at retail</p>
-              <p className="figure mt-0.5 text-[15px] font-semibold text-ink">{formatMoney(retailValue)}</p>
-            </div>
-            <div className="rounded-sm bg-raised px-3 py-2">
-              <p className="text-[12px] text-ink-secondary">Margin on the shelf</p>
-              <p className="figure mt-0.5 text-[15px] font-semibold text-accent-bright">
-                {retailValue > 0
-                  ? `${Math.round(((retailValue - stockValue) / retailValue) * 100)}%`
-                  : "—"}
-              </p>
-            </div>
-          </div>
-
-          <form action={repricePartsAction} className="mt-4 space-y-3">
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <SelectField id="scope" name="scope" label="Scope" defaultValue="all">
-                <option value="all">Every part</option>
-                <option value="low_stock">At or under reorder level</option>
-              </SelectField>
-              <SelectField id="reprice-category" name="category" label="Category" defaultValue="">
-                <option value="">All categories</option>
-                {CATEGORIES.map((category) => (
-                  <option key={category} value={category}>
-                    {category[0].toUpperCase() + category.slice(1)}
-                  </option>
-                ))}
-              </SelectField>
-              <SelectField id="mode" name="mode" label="Rule" defaultValue="percent">
-                <option value="percent">Change by percent</option>
-                <option value="delta">Change by amount</option>
-                <option value="margin">Set a margin target</option>
-              </SelectField>
-              <FormField
-                id="value"
-                name="value"
-                label="Value"
-                inputMode="decimal"
-                placeholder="e.g. 8"
-                required
-              />
-            </div>
-            <p className="text-[12px] leading-5 text-ink-tertiary">
-              Percent is a move against today&apos;s price, inside ±50%. Amount is dollars added or
-              taken off. Margin sets the sell price from cost, between 0% and 90%.
-            </p>
-            <div className="flex justify-end">
-              <SubmitButton pendingText="Repricing...">Apply to inventory</SubmitButton>
-            </div>
-          </form>
-        </Panel>
-      ) : null}
-
       <Panel className="mt-3">
         <form className="flex flex-wrap items-center gap-2 p-3">
           <label className="relative min-w-[220px] flex-1">
@@ -290,9 +204,20 @@ export default async function InventoryPage({
                     </div>
                   </div>
                   <p className="figure text-[13px] text-ink-secondary">{part.reorder_level}</p>
-                  <div>
-                    <p className="figure text-[13px] text-ink">{formatMoney(part.price_cents)}</p>
-                    <p className="text-[13px] text-ink-secondary">cost {formatMoney(part.cost_cents)}</p>
+                  <div className="min-w-0">
+                    {canManage ? (
+                      <PriceEditor
+                        partId={part.id}
+                        partName={part.name}
+                        priceCents={part.price_cents}
+                        costCents={part.cost_cents}
+                      />
+                    ) : (
+                      <>
+                        <p className="figure text-[13px] text-ink">{formatMoney(part.price_cents)}</p>
+                        <p className="text-[13px] text-ink-secondary">cost {formatMoney(part.cost_cents)}</p>
+                      </>
+                    )}
                   </div>
                   <div className="flex gap-1.5 lg:justify-end">
                     {canManage ? (

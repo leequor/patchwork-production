@@ -10,6 +10,7 @@ import { RelativeTime } from "@/components/ui/relative-time";
 import { StatusPill } from "@/components/workspace/ui";
 import { DEVICE_CATEGORY_LABELS, formatDate, TICKET_STATUS_META } from "@/lib/repair/format";
 import { getTrackedTicket } from "@/lib/repair/queries";
+import { getStaff } from "@/lib/repair/session";
 import type { TicketStatus } from "@/lib/repair/types";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +39,10 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
   const params = await searchParams;
   const code = params.code?.trim() ?? "";
   const hasQuery = Boolean(code);
-  const ticket = hasQuery ? await getTrackedTicket(code) : null;
+  const [ticket, staff] = await Promise.all([
+    hasQuery ? getTrackedTicket(code) : Promise.resolve(null),
+    getStaff(),
+  ]);
   const current = ticket ? railIndex(ticket.status) : -1;
   const closed = ticket ? ["picked_up", "cancelled"].includes(ticket.status) : false;
   const stage = ticket?.status ?? "intake";
@@ -47,7 +51,13 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
     <main className="min-h-[100dvh]">
       <div className="grain relative mx-auto w-full max-w-[1180px] px-5 pb-10 sm:px-8">
         <div aria-hidden="true" className="aurora pointer-events-none absolute -inset-x-16 -top-56 bottom-0 rounded-[50%] opacity-80" />
-        <SiteHeader className="pt-6 sm:pt-8" action={{ href: "/login", label: "Staff sign in" }} />
+        <SiteHeader
+          className="pt-6 sm:pt-8"
+          back={staff ? { href: "/", label: "Back to bench" } : undefined}
+          action={
+            staff ? { href: "/", label: "Open bench" } : { href: "/login", label: "Staff sign in" }
+          }
+        />
 
         <section className="relative pt-12 sm:pt-16">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-center lg:gap-14">
@@ -147,7 +157,15 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
                       {ticket.device.brand} {ticket.device.model}
                     </h2>
                   </div>
-                  <StatusPill status={ticket.status} />
+                  <div className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1">
+                    <StatusPill status={ticket.status} />
+                    <Link
+                      href="/track"
+                      className="font-sans text-[13px] text-ink-tertiary transition-colors hover:text-ink"
+                    >
+                      Track another code
+                    </Link>
+                  </div>
                 </div>
 
                 <p className="mt-2 font-sans text-[14px] text-ink-tertiary">

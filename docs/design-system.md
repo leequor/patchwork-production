@@ -209,19 +209,33 @@ over type. Five utilities carry it, all in `app/globals.css`:
 Rules that keep it from turning into decoration soup: one aurora per screen, ornaments never sit
 behind text, and no ornament is the only carrier of meaning.
 
-## Repricing inventory
+## Editing a price
 
-`reprice_parts` (migration `202611231200`) applies one pricing rule across a scope — every part, one
-category, or only what is at or under its reorder level — in three modes: percent move inside ±50%,
-a flat dollar delta, or a margin target from cost between 0% and 90%.
+Prices are set one part at a time, on the row the part lives on
+(`components/workspace/price-editor.tsx` + `updatePartPriceAction`). A shop
+changes a price because one thing moved — a supplier, a screen family — so a
+batch tool would be a control nobody asked for.
 
-Four guarantees, and only the last one is UI-enforced:
+- **Read state** matches the table: mono figure, cost underneath, a quiet
+  `Edit` that only asserts itself on hover or focus.
+- **Edit state** is a real field: 92 px, `field-inset`, autofocus, Escape
+  cancels, Enter saves.
+- The margin is stated live while typing, and a price under cost flips to
+  `warn` with the exact shortfall. Undercutting is allowed — loss leaders exist —
+  but it is never silent.
+- The action stores exactly what was typed; it does not infer or round.
 
-1. Managers and owners only, checked in the function from the JWT, not just in the action.
-2. **Never below cost.** `greatest(cost_cents, …)` is the floor, so a −50% sweep cannot sell at a
-   loss — verified: a part at 100¢ against a 300¢ cost comes back at 300¢.
-3. Cents stay integers; a row is only written when the price actually changes.
-4. The form rejects out-of-range input before the round trip, and the function rejects it again.
+## The way back
+
+`components/patchwork/back-link.tsx` is the one back control. It goes back
+through history when this tab has a same-origin referrer, and otherwise takes
+the caller's fallback route, so a direct visit never dead-ends. The public
+header renders it beside the mark, after a 1 px divider.
+
+Where it appears, and why not everywhere: the tracker and the status board are
+the only public pages you can arrive at from somewhere else. The workspace detail
+pages carry explicit parent links (`Back to tickets`) because their destination
+is knowable, and a history-aware control there would sometimes be wrong.
 
 ## Rejected looks
 

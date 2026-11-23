@@ -26,7 +26,8 @@ export default function StatusPage() {
   return (
     <main className="min-h-[100dvh]">
       <div className="mx-auto w-full max-w-[1040px] px-5 pb-10 sm:px-8">
-        <SiteHeader className="pt-6 sm:pt-8" action={{ href: "/", label: "Back to desk" }} />
+        <SiteHeader className="pt-6 sm:pt-8" back={{ href: "/track", label: "Back" }}
+          action={{ href: "/", label: "Back to desk" }} />
 
         <section className="pt-14 sm:pt-20">
           <h1 className="rise display max-w-[18ch] text-[clamp(40px,6vw,72px)] text-ink">

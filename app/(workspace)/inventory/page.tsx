@@ -37,7 +37,9 @@ export default async function InventoryPage({
 }) {
   const params = await searchParams;
   const [parts, staff] = await Promise.all([getInventory(params.q), getStaff()]);
-  const priceHistory = await getPartPriceHistory(parts.map((part) => part.id));
+  // The list of parts is the page; their ledger is a footnote. Never let the
+  // footnote stop the page from rendering.
+  const priceHistory = await getPartPriceHistory(parts.map((part) => part.id)).catch(() => []);
   const historyByPart = new Map<string, typeof priceHistory>();
   for (const event of priceHistory) {
     const list = historyByPart.get(event.part_id) ?? [];

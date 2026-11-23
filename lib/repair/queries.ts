@@ -53,6 +53,22 @@ function permissionDenied(error: { message?: string; code?: string }) {
   return error.code === "42501" || /permission denied/i.test(error.message ?? "");
 }
 
+/**
+ * The ledger is optional furniture, the price list is not.
+ *
+ * A deployment whose database predates the price-history migration would
+ * otherwise take the whole inventory page down over a missing table — the
+ * price list can be shown without a history of itself, and a page that loads
+ * without one is worth more than a page that explains why it cannot.
+ */
+function ledgerMissing(error: { message?: string; code?: string }) {
+  return (
+    error.code === "42P01" ||
+    error.code === "PGRST205" ||
+    /part_price_events/i.test(error.message ?? "")
+  );
+}
+
 function emptyDashboard(): DashboardData {
   return {
     counts: Object.fromEntries(TICKET_STATUSES.map((status) => [status, 0])) as Record<
@@ -352,7 +368,10 @@ export async function getPartPriceHistory(partIds: string[]): Promise<PartPriceE
     .order("created_at", { ascending: false })
     .limit(400);
 
-  if (error) fail(error.message);
+  if (error) {
+    if (ledgerMissing(error)) return [];
+    fail(error.message);
+  }
   return (data ?? []) as unknown as PartPriceEvent[];
 }
 

@@ -1,8 +1,8 @@
 # Design system
 
-Patchwork is a **bench-light** interface: a repair bench at night, warm graphite ground, bone ink,
-and one brass accent taken from the bench lamp. The product's own subject — a device opened into
-its parts — is the only picture in it, and it is rendered in real 3D rather than drawn.
+Patchwork is a **violet bench** interface: a repair bench at night, a violet-black ground with
+near-white ink, and one indigo accent that fades toward cyan. The product's own subject — a device
+opened into its parts — is the only picture in it, and it is rendered in real 3D rather than drawn.
 
 The world is chosen from the use scene: a technician works in a dim shop under a single lamp, and a
 customer opens the tracker on a phone in a dark room. Both want the same thing — legible figures and
@@ -12,8 +12,8 @@ one obvious action.
 
 1. **Surfaces separate by a step in tone, never by a heavier border.** `panel` → `raised` →
    `overlay`, with a single 1 px hairline where an edge must exist.
-2. **Colour is a signal, not decoration.** Brass marks the one primary action and live state. Moss
-   marks "ready / paid", vermilion marks "blocked / failed". Nothing else earns a hue.
+2. **Colour is a signal, not decoration.** The indigo marks the one primary action and live state.
+   Moss marks "ready / paid", vermilion marks "blocked / failed". Nothing else earns a hue.
 3. **Geometry is tight and physical.** Controls 6 px, panels 8–10 px, insets 6 px. Nothing is a pill.
 
 ## Colour
@@ -22,28 +22,28 @@ All tokens live in `tailwind.config.ts` and are mirrored as CSS variables in `ap
 
 | Token | Hex | Use |
 | --- | --- | --- |
-| `canvas` | `#0C0C0B` | Page ground. |
-| `sunken` | `#080807` | Insets, the counter board, fields. |
-| `panel` | `#131312` | Panels, the auth form column. |
-| `raised` | `#1A1A18` | Nested surfaces, secondary buttons, hover. |
-| `overlay` | `#22221F` | Popovers, active secondary state. |
-| `hairline` | `#EDEDE60F` | Panel edges and row rules. |
-| `hairline-strong` | `#EDEDE61F` | Control edges, focusable boundaries. |
-| `ink` | `#EFEDE7` | Primary text. |
-| `ink-secondary` | `#B0ADA4` | Body copy, descriptions. |
-| `ink-tertiary` | `#948F86` | Labels, metadata, help text. |
-| `ink-faint` | `#716D64` | Decorative marks and disabled state only. |
-| `accent` | `#D9A441` | The one primary action, live state, selected marker. |
-| `accent-bright` | `#EFBC63` | Hover, focus rings, active line. |
-| `accent-deep` | `#A87A22` | Pressed brass. |
-| `positive` | `#5FC492` | Ready, paid, connected. |
-| `warn` | `#D9A441` | Waiting on parts, unpaid, degraded. |
-| `negative` | `#EE6A5B` | Failed check, urgent, cancelled. |
-| `info` | `#8FA6B4` | On the bench, diagnosing. |
+| `canvas` | `#09080F` | Page ground. |
+| `sunken` | `#06050B` | Insets, the counter board, fields. |
+| `panel` | `#110F1C` | Panels, the auth form column. |
+| `raised` | `#18162A` | Nested surfaces, secondary buttons, hover. |
+| `overlay` | `#201D38` | Popovers, active secondary state. |
+| `hairline` | `#E7E3FF0F` | Panel edges and row rules. |
+| `hairline-strong` | `#E7E3FF1F` | Control edges, focusable boundaries. |
+| `ink` | `#F1EFFA` | Primary text. |
+| `ink-secondary` | `#B5B1CA` | Body copy, descriptions. |
+| `ink-tertiary` | `#928DA9` | Labels, metadata, help text. |
+| `ink-faint` | `#8C87A3` | Decorative marks and disabled state only. |
+| `accent` | `#6E5CF7` | The one primary action, live state, selected marker. |
+| `accent-bright` | `#9C8BFF` | Hover, focus rings, active line. |
+| `accent-deep` | `#4E3DE0` | Pressed primary. |
+| `positive` | `#4FD3A1` | Ready, paid, connected. |
+| `warn` | `#EDB24A` | Waiting on parts, unpaid, degraded. |
+| `negative` | `#F4685F` | Failed check, urgent, cancelled. |
+| `info` | `#7FB6F0` | On the bench, diagnosing. |
 
 Contrast floor: body and help text ≥ 4.5:1 on `canvas` and `panel`; placeholders are never lighter
-than `ink-tertiary`. Brass is only used as a *fill* behind near-black text (`#17120A`), never as a
-surface for white text.
+than `ink-tertiary`. The primary fill is a violet gradient (`#7C6AFF` → `#5A47E6`) carrying near-white
+text (`#F8F6FF`), which clears 6.5:1; it never carries dim ink.
 
 ### Status language
 
@@ -193,13 +193,46 @@ printed because this page is used by staff, not customers.
 - Never `transition: all`; name the properties.
 - `prefers-reduced-motion` removes travel, parallax and drift while keeping opacity and colour.
 
+## Ornament
+
+Violet is the brand, so it is allowed to exist as light — but as *light*, not as a gradient poured
+over type. Five utilities carry it, all in `app/globals.css`:
+
+| Utility | What it draws | Where it is allowed |
+| --- | --- | --- |
+| `.aurora` | Three soft radial blooms (violet, cyan, deep indigo), blurred. | Behind a hero or the bench panel. Never inside a card row. |
+| `.grain` | 3% SVG fractal-noise overlay in `soft-light`. | Over large dark fields, to stop gradient banding. |
+| `.hairline-glow` | One 1 px rule fading indigo → cyan across a panel's top edge. | Panel tops only. |
+| `.bench-ticks` | Two corner brackets, like a technical drawing. | Around the 3D plate. |
+| `.iris` | A violet spotlight under the device. | Behind the 3D, always. |
+
+Rules that keep it from turning into decoration soup: one aurora per screen, ornaments never sit
+behind text, and no ornament is the only carrier of meaning.
+
+## Repricing inventory
+
+`reprice_parts` (migration `202611231200`) applies one pricing rule across a scope — every part, one
+category, or only what is at or under its reorder level — in three modes: percent move inside ±50%,
+a flat dollar delta, or a margin target from cost between 0% and 90%.
+
+Four guarantees, and only the last one is UI-enforced:
+
+1. Managers and owners only, checked in the function from the JWT, not just in the action.
+2. **Never below cost.** `greatest(cost_cents, …)` is the floor, so a −50% sweep cannot sell at a
+   loss — verified: a part at 100¢ against a 300¢ cost comes back at 300¢.
+3. Cents stay integers; a row is only written when the price actually changes.
+4. The form rejects out-of-range input before the round trip, and the function rejects it again.
+
 ## Rejected looks
 
 Do not bring these back:
 
-- indigo → cyan gradients, gradient text, and a coloured glow behind every hero
-- glass cards, backdrop blur as decoration, and a dot-grid or grain overlay
+- gradient text, and a saturated colour poured behind every section
+- glass cards and backdrop blur as decoration
+- a dot grid as page structure
 - five-hue status rainbows where the colour is the only signal
+- warm graphite + brass (the bench-light pass) — replaced by the violet ground above
+- pill shapes, and 20 px radii on 32 px controls
 - sketch-style or line-art SVG standing in for a product picture
 - cream + clover green + coral + Fraunces
 - black + safety yellow + Bricolage + Space Mono

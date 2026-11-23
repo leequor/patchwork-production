@@ -189,7 +189,7 @@ export function MissionControl({
           </p>
           <Link
             href="/tickets/new"
-            className="brass inline-flex h-10 items-center gap-2 rounded-sm px-4 text-[13px] font-semibold transition hover:brightness-105"
+            className="primary inline-flex h-10 items-center gap-2 rounded-sm px-4 text-[13px] font-semibold transition hover:brightness-105"
           >
             New intake
           </Link>
@@ -367,7 +367,12 @@ export function MissionControl({
               </span>
             </div>
 
-            <div className="relative min-h-0 flex-1 overflow-hidden">
+            <div className="hairline-glow relative min-h-0 flex-1 overflow-hidden">
+              <div
+                aria-hidden="true"
+                className="aurora pointer-events-none absolute -inset-16 opacity-70"
+              />
+              <div className="iris" />
               <DeviceStageMount
                 status={selected.status}
                 form={formForCategory(selected.device.category)}
@@ -410,7 +415,7 @@ export function MissionControl({
             <div className="relative z-10 flex flex-wrap items-center gap-2 border-t border-hairline bg-panel px-4 py-3">
               <Link
                 href={`/tickets/${selected.id}`}
-                className="brass inline-flex h-8 items-center gap-2 rounded-sm px-3 text-[12px] font-semibold transition duration-150 hover:brightness-105 active:translate-y-px"
+                className="primary inline-flex h-8 items-center gap-2 rounded-sm px-3 text-[12px] font-semibold transition duration-150 hover:brightness-105 active:translate-y-px"
               >
                 <Wrench className="h-3.5 w-3.5" aria-hidden="true" />
                 Update status

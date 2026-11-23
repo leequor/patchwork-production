@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 import { DeviceStageMount } from "@/components/three/device-stage-mount";
-import { DEVICE_FORMS, type DeviceForm } from "@/lib/device-form";
+import { DEVICE_FORMS } from "@/lib/device-form";
 import { TICKET_STATUSES } from "@/lib/repair/types";
 
 export const dynamic = "force-dynamic";

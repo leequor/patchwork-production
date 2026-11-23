@@ -158,7 +158,7 @@ export function PrimaryLink({
       href={href}
       className={cn(
         LINK_BASE,
-        "brass hover:brightness-[1.06]",
+        "primary hover:brightness-[1.06]",
         className,
       )}
     >

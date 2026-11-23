@@ -440,6 +440,65 @@ export async function adjustStockAction(formData: FormData) {
   redirect(messageUrl("/inventory", "notice", "Stock updated."));
 }
 
+/**
+ * Reprice the shelf in one move: every part, one category, or only what is at
+ * or under its reorder level. The database enforces the floor at cost, so an
+ * aggressive cut can never sell a part below what it was bought for.
+ */
+export async function repricePartsAction(formData: FormData) {
+  await requireManager("/inventory");
+
+  const scope = readString(formData, "scope") || "all";
+  const category = readOptionalString(formData, "category");
+  const mode = readString(formData, "mode") || "percent";
+  const rawValue = readString(formData, "value");
+  const value = Number(rawValue);
+
+  if (!["all", "low_stock"].includes(scope)) failTo("/inventory", "Choose a valid scope.");
+  if (!["percent", "delta", "margin"].includes(mode)) {
+    failTo("/inventory", "Choose a valid pricing rule.");
+  }
+  if (!rawValue || !Number.isFinite(value)) failTo("/inventory", "Enter a number to apply.");
+  if (mode === "percent" && Math.abs(value) > 50) {
+    failTo("/inventory", "A percent change has to stay within 50%.");
+  }
+  if (mode === "margin" && (value < 0 || value >= 90)) {
+    failTo("/inventory", "A margin target has to sit between 0% and 90%.");
+  }
+  if (mode === "delta" && Math.abs(value) > 1000) {
+    failTo("/inventory", "That price change is too large.");
+  }
+
+  const supabase = await client();
+  const { data, error } = await supabase.rpc("reprice_parts", {
+    p_scope: scope,
+    p_category: category ?? null,
+    p_mode: mode,
+    p_value: value,
+  });
+
+  if (error) failTo("/inventory", error.message);
+
+  const row = Array.isArray(data) ? data[0] : data;
+  const updated = Number(row?.updated_count ?? 0);
+
+  revalidatePath("/inventory");
+  revalidatePath("/tickets");
+  revalidatePath("/invoices");
+
+  if (updated === 0) {
+    redirect(messageUrl("/inventory", "notice", "No price needed to change."));
+  }
+
+  redirect(
+    messageUrl(
+      "/inventory",
+      "notice",
+      `Repriced ${updated} ${updated === 1 ? "part" : "parts"}${category ? ` in ${category}` : ""}.`,
+    ),
+  );
+}
+
 export async function updateRoleAction(formData: FormData) {
   const actor = await requireAdmin();
   const profileId = readString(formData, "profile_id");

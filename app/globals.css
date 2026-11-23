@@ -14,25 +14,25 @@
     color-scheme: dark;
 
     /* Surfaces */
-    --canvas: #0c0c0b;
-    --panel: #131312;
-    --raised: #1a1a18;
-    --overlay: #22221f;
+    --canvas: #09080f;
+    --panel: #110f1c;
+    --raised: #18162a;
+    --overlay: #201d38;
 
     /* Ink */
-    --ink: #efede7;
-    --ink-secondary: #b0ada4;
-    --ink-tertiary: #948f86;
-    --ink-faint: #868279;
+    --ink: #f1effa;
+    --ink-secondary: #b5b1ca;
+    --ink-tertiary: #928da9;
+    --ink-faint: #8c87a3;
 
     /* Line */
-    --line: rgba(237, 237, 230, 0.07);
+    --line: rgba(231, 227, 255, 0.07);
 
     /* Signals */
-    --accent: #d9a441;
-    --accent-bright: #efbc63;
-    --positive: #5fc492;
-    --negative: #ee6a5b;
+    --accent: #6e5cf7;
+    --accent-bright: #9c8bff;
+    --positive: #4fd3a1;
+    --negative: #f4685f;
 
     /* Motion */
     --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -49,7 +49,7 @@
   html {
     background-color: var(--canvas);
     -webkit-text-size-adjust: 100%;
-    scrollbar-color: #33332f transparent;
+    scrollbar-color: #2b2740 transparent;
   }
 
   body {
@@ -58,18 +58,20 @@
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-feature-settings: "ss01", "cv05";
 
-    /* The room: one bench lamp from above, and a vignette at the walls.
-       Nothing repeats, nothing tiles — there is no grid under this product. */
+    /* The room: a violet lamp from above, a cyan spill at the far corner, and
+       a vignette at the walls. Nothing repeats, nothing tiles — there is no
+       grid under this product. */
     background-image:
-      radial-gradient(120% 70% at 50% -22%, rgba(217, 164, 65, 0.07), transparent 62%),
-      radial-gradient(90% 55% at 12% 0%, rgba(143, 166, 180, 0.045), transparent 58%),
-      radial-gradient(120% 90% at 50% 118%, rgba(0, 0, 0, 0.6), transparent 62%);
-    background-attachment: fixed, fixed, fixed;
+      radial-gradient(120% 72% at 50% -20%, rgba(110, 92, 247, 0.17), transparent 60%),
+      radial-gradient(85% 55% at 88% 2%, rgba(69, 211, 232, 0.07), transparent 62%),
+      radial-gradient(100% 60% at 6% 98%, rgba(110, 92, 247, 0.06), transparent 58%),
+      radial-gradient(130% 95% at 50% 122%, rgba(0, 0, 0, 0.72), transparent 60%);
+    background-attachment: fixed, fixed, fixed, fixed;
   }
 
   ::selection {
-    background: #d9a441;
-    color: #14110a;
+    background: #5644ea;
+    color: #f6f4ff;
   }
 
   * {
@@ -135,13 +137,13 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    background: #2a2a26;
+    background: #2b2740;
     border-radius: 9999px;
     border: 3px solid var(--canvas);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: #3a3a34;
+    background: #3d3760;
   }
 
   table {
@@ -203,30 +205,30 @@
   /* A surface with one lit edge on top and one hairline all round. */
   .edge-lit {
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.055),
-      0 0 0 1px rgba(237, 237, 230, 0.07);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.06),
+      0 0 0 1px rgba(231, 227, 255, 0.07);
   }
 
   .edge-lit-strong {
     box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-      0 0 0 1px rgba(237, 237, 230, 0.12);
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.09),
+      0 0 0 1px rgba(231, 227, 255, 0.13);
   }
 
   /* Recessed field: the surface sits below the panel, like a milled slot. */
   .field-inset {
-    background-color: #0a0a09;
+    background-color: #07060d;
     box-shadow:
       inset 0 1px 2px rgba(0, 0, 0, 0.9),
-      inset 0 0 0 1px rgba(237, 237, 230, 0.08);
+      inset 0 0 0 1px rgba(231, 227, 255, 0.08);
   }
 
   .field-inset:focus,
   .field-inset:focus-within {
     box-shadow:
       inset 0 1px 2px rgba(0, 0, 0, 0.9),
-      inset 0 0 0 1px rgba(217, 164, 65, 0.5),
-      0 0 0 3px rgba(217, 164, 65, 0.12);
+      inset 0 0 0 1px rgba(140, 122, 255, 0.6),
+      0 0 0 3px rgba(110, 92, 247, 0.16);
   }
 
   /* Press feedback on every control, pointer or keyboard. */
@@ -241,23 +243,112 @@
     transform: scale(0.985);
   }
 
-  /* The brass control itself: a metal face with an etched label. */
-  .brass {
-    background-image: linear-gradient(180deg, #e7b356 0%, #cf9832 100%);
-    color: #17120a;
+  /* The one primary control: an indigo face with a lit top edge. */
+  .primary {
+    background-image: linear-gradient(180deg, #7c6aff 0%, #5a47e6 100%);
+    color: #f8f6ff;
     box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.42),
-      inset 0 -1px 0 rgba(0, 0, 0, 0.22),
-      0 1px 2px rgba(0, 0, 0, 0.6);
+      inset 0 1px 0 rgba(255, 255, 255, 0.26),
+      inset 0 -1px 0 rgba(0, 0, 0, 0.28),
+      0 1px 2px rgba(0, 0, 0, 0.6),
+      0 8px 24px -12px rgba(110, 92, 247, 0.9);
   }
 
-  .brass:hover {
-    background-image: linear-gradient(180deg, #f0bf65 0%, #d8a13b 100%);
+  .primary:hover {
+    background-image: linear-gradient(180deg, #8c7bff 0%, #6652f2 100%);
   }
 
   /* A live indicator: a breathing dot that stops when motion is reduced. */
   .live-dot {
     animation: live 2.4s var(--ease-in-out) infinite;
+  }
+
+  /* ------------------------------------------------------------------ */
+  /* Ornament                                                            */
+  /* ------------------------------------------------------------------ */
+
+  /* Two soft blooms — the lamp above the bench and the spill it throws.
+     Sits behind content, never eats a pointer. */
+  .aurora {
+    position: absolute;
+    pointer-events: none;
+    background-image:
+      radial-gradient(60% 55% at 22% 8%, rgba(110, 92, 247, 0.28), transparent 68%),
+      radial-gradient(48% 42% at 86% 74%, rgba(69, 211, 232, 0.14), transparent 70%),
+      radial-gradient(70% 60% at 50% 108%, rgba(78, 61, 224, 0.16), transparent 70%);
+    filter: blur(6px);
+  }
+
+  /* Film grain over a dark field. 3% — enough to stop the gradient banding. */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.16;
+    mix-blend-mode: soft-light;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.55'/%3E%3C/svg%3E");
+  }
+
+  /* A hairline that fades indigo to cyan across a panel's top edge. */
+  .hairline-glow {
+    position: relative;
+  }
+
+  .hairline-glow::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background-image: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(110, 92, 247, 0.55) 28%,
+      rgba(69, 211, 232, 0.4) 62%,
+      transparent 100%
+    );
+    pointer-events: none;
+  }
+
+  /* Corner brackets, the way a technical drawing marks a plate. */
+  .bench-ticks {
+    position: relative;
+  }
+
+  .bench-ticks::before,
+  .bench-ticks::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    border-color: rgba(156, 139, 255, 0.42);
+    border-style: solid;
+  }
+
+  .bench-ticks::before {
+    top: 10px;
+    left: 10px;
+    border-width: 1px 0 0 1px;
+  }
+
+  .bench-ticks::after {
+    right: 10px;
+    bottom: 10px;
+    border-width: 0 1px 1px 0;
+  }
+
+  /* A quiet spotlight under the 3D, so the device sits in light. */
+  .iris {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: radial-gradient(
+      52% 46% at 50% 46%,
+      rgba(110, 92, 247, 0.16),
+      transparent 72%
+    );
   }
 }
 

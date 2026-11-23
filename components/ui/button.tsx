@@ -7,7 +7,7 @@ type ButtonSize = "sm" | "md" | "lg";
 
 const VARIANTS: Record<ButtonVariant, string> = {
   /* Brass hardware: a metal face with an etched label, not a coloured glow. */
-  primary: "brass hover:brightness-[1.06] active:brightness-95 disabled:opacity-55",
+  primary: "primary hover:brightness-[1.06] active:brightness-95 disabled:opacity-55",
   secondary:
     "border border-hairline-strong bg-raised text-ink hover:border-ink-faint hover:bg-overlay active:bg-overlay disabled:opacity-55",
   ghost: "bg-transparent text-ink-secondary hover:bg-raised hover:text-ink disabled:opacity-55",

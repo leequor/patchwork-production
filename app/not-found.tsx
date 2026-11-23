@@ -29,7 +29,7 @@ export default function NotFound() {
             <div className="rise mt-7 flex flex-wrap gap-2" style={{ animationDelay: "130ms" }}>
               <Link
                 href="/"
-                className="brass inline-flex h-10 items-center rounded-sm px-4 font-sans text-[14px] font-semibold transition-[filter] hover:brightness-105"
+                className="primary inline-flex h-10 items-center rounded-sm px-4 font-sans text-[14px] font-semibold transition-[filter] hover:brightness-105"
               >
                 Back to the desk
               </Link>

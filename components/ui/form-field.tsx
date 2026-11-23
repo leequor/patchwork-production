@@ -46,7 +46,7 @@ export function FormField({
         aria-invalid={Boolean(error)}
         aria-describedby={describedBy}
         className={cn(
-          "h-11 w-full rounded-sm border border-hairline-strong bg-[#0a0a09] px-3 font-sans text-[16px] text-ink",
+          "h-11 w-full rounded-sm border border-hairline-strong bg-[#07060d] px-3 font-sans text-[16px] text-ink",
           "shadow-[inset_0_1px_2px_rgba(0,0,0,0.9)] outline-none",
           "transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
           "placeholder:text-ink-tertiary hover:border-ink-faint",

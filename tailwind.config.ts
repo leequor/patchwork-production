@@ -1,15 +1,16 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Patchwork design tokens — the bench-light world.
+ * Patchwork design tokens — the violet bench.
  *
- * The product is a repair bench at night: warm graphite ground, bone ink, one
- * brass accent taken from the bench lamp. Three rules govern this file:
+ * The product is a repair bench at night, lit by a violet lamp: a cool ground
+ * with a violet cast, near-white ink, and one indigo accent that fades toward
+ * cyan. Three rules govern this file:
  *
  *   1. Surfaces separate by a step in tone, never by a heavier border.
- *   2. Colour is a signal, not a decoration. Brass marks the one primary action
- *      and live state; moss and vermilion mark the only two states the shop has
- *      to act on. Everything else is bone on graphite.
+ *   2. Colour is a signal, not a decoration. The indigo marks the one primary
+ *      action and live state; moss and vermilion mark the only two states the
+ *      shop has to act on. Everything else is ink on violet-black.
  *   3. Geometry is tight and physical: controls 6px, panels 10px, no pills.
  */
 const config: Config = {
@@ -21,40 +22,40 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        /* Ground — warm graphite, the colour of a bench under a lamp. */
-        canvas: "#0C0C0B",
-        sunken: "#080807",
-        panel: "#131312",
-        raised: "#1A1A18",
-        overlay: "#22221F",
+        /* Ground — a violet-black, the colour of a bench under a cool lamp. */
+        canvas: "#09080F",
+        sunken: "#06050B",
+        panel: "#110F1C",
+        raised: "#18162A",
+        overlay: "#201D38",
 
         /* Lines — a lit top edge, not a border. */
-        hairline: "#EDEDE60F",
-        "hairline-strong": "#EDEDE61F",
+        hairline: "#E7E3FF0F",
+        "hairline-strong": "#E7E3FF1F",
 
-        /* Type — bone and its steps down to quiet. */
+        /* Type — near-white with a violet cast, and its steps down to quiet. */
         ink: {
-          DEFAULT: "#EFEDE7",
-          secondary: "#B0ADA4",
-          tertiary: "#948F86",
-          faint: "#868279",
+          DEFAULT: "#F1EFFA",
+          secondary: "#B5B1CA",
+          tertiary: "#928DA9",
+          faint: "#8C87A3",
         },
 
-        /* Brass: the bench lamp. Primary action and live state only. */
+        /* Indigo: the bench lamp. Primary action and live state only. */
         accent: {
-          DEFAULT: "#D9A441",
-          bright: "#EFBC63",
-          deep: "#A87A22",
-          cyan: "#8FA6B4",
-          "cyan-deep": "#546770",
-          soft: "#D9A4411A",
+          DEFAULT: "#6E5CF7",
+          bright: "#9C8BFF",
+          deep: "#4E3DE0",
+          cyan: "#45D3E8",
+          "cyan-deep": "#12707E",
+          soft: "#6E5CF71F",
         },
 
         /* Signals. Two alarms and a caution lamp; nothing else earns a hue. */
-        positive: { DEFAULT: "#5FC492", soft: "#5FC4921A", ink: "#8ADBB4" },
-        warn: { DEFAULT: "#D9A441", soft: "#D9A4411A", ink: "#EFBC63" },
-        negative: { DEFAULT: "#EE6A5B", soft: "#EE6A5B1A", ink: "#F5938A" },
-        info: { DEFAULT: "#8FA6B4", soft: "#8FA6B41A", ink: "#B4C6D1" },
+        positive: { DEFAULT: "#4FD3A1", soft: "#4FD3A11A", ink: "#7FE8C2" },
+        warn: { DEFAULT: "#EDB24A", soft: "#EDB24A1A", ink: "#F7CB80" },
+        negative: { DEFAULT: "#F4685F", soft: "#F4685F1A", ink: "#F9938C" },
+        info: { DEFAULT: "#7FB6F0", soft: "#7FB6F01A", ink: "#A6CDF7" },
       },
 
       fontFamily: {

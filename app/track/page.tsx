@@ -45,10 +45,11 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
 
   return (
     <main className="min-h-[100dvh]">
-      <div className="mx-auto w-full max-w-[1180px] px-5 pb-10 sm:px-8">
+      <div className="grain relative mx-auto w-full max-w-[1180px] px-5 pb-10 sm:px-8">
+        <div aria-hidden="true" className="aurora pointer-events-none absolute -inset-x-16 -top-56 bottom-0 rounded-[50%] opacity-80" />
         <SiteHeader className="pt-6 sm:pt-8" action={{ href: "/login", label: "Staff sign in" }} />
 
-        <section className="pt-12 sm:pt-16">
+        <section className="relative pt-12 sm:pt-16">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:items-center lg:gap-14">
             <div>
               <h1 className="rise display max-w-[14ch] text-[clamp(42px,6.2vw,78px)] text-ink">
@@ -84,7 +85,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
                 />
                 <button
                   type="submit"
-                  className="brass group mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-sm font-sans text-[14px] font-semibold transition-[filter,transform] duration-150 active:translate-y-px"
+                  className="primary group mt-2 flex h-11 w-full items-center justify-center gap-2 rounded-sm font-sans text-[14px] font-semibold transition-[filter,transform] duration-150 active:translate-y-px"
                 >
                   Check status
                   <ArrowRight
@@ -109,17 +110,21 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
               className="rise relative -mx-5 sm:-mx-8 lg:mx-0"
               style={{ animationDelay: "190ms" }}
             >
-              <DeviceStageMount
-                status={stage}
-                form={formForCategory(ticket?.device.category ?? "phone")}
-                quality="high"
-                className="h-[340px] w-full sm:h-[420px] lg:h-[500px]"
-                caption={
-                  ticket
-                    ? `${TICKET_STATUS_META[ticket.status].label} · ${ticket.ticket_number}`
-                    : "Bench view · nothing open"
-                }
-              />
+              <div className="pointer-events-none absolute inset-x-6 inset-y-10 rounded-full bg-accent/12 blur-3xl" />
+              <div className="iris" />
+              <div className="bench-ticks relative">
+                <DeviceStageMount
+                  status={stage}
+                  form={formForCategory(ticket?.device.category ?? "phone")}
+                  quality="high"
+                  className="h-[340px] w-full sm:h-[420px] lg:h-[500px]"
+                  caption={
+                    ticket
+                      ? `${TICKET_STATUS_META[ticket.status].label} · ${ticket.ticket_number}`
+                      : "Bench view · nothing open"
+                  }
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -134,7 +139,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
 
           {ticket ? (
             <div className="grid gap-3 lg:grid-cols-[1.1fr_0.9fr]">
-              <section className="rounded-md bg-panel p-5 sm:p-7">
+              <section className="hairline-glow rounded-md bg-panel p-5 pt-6 sm:p-7 sm:pt-8">
                 <div className="flex flex-wrap items-start justify-between gap-x-4 gap-y-2">
                   <div className="min-w-0">
                     <p className="figure text-[13px] text-ink-tertiary">{ticket.ticket_number}</p>
@@ -196,7 +201,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
                 </p>
               </section>
 
-              <section className="rounded-md bg-panel p-5 sm:p-7">
+              <section className="hairline-glow rounded-md bg-panel p-5 pt-6 sm:p-7 sm:pt-8">
                 <h2 className="font-sans text-[15px] font-semibold text-ink">Timeline</h2>
                 <p className="mt-0.5 font-sans text-[13px] text-ink-tertiary">
                   Updates the bench shared with you.

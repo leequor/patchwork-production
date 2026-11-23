@@ -15,14 +15,21 @@ export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <main className="grid min-h-[100dvh] lg:grid-cols-[minmax(0,1fr)_minmax(392px,432px)]">
       <section className="relative flex flex-col px-5 pb-8 pt-6 sm:px-8 lg:px-12 lg:pb-10 lg:pt-9">
+        <div
+          aria-hidden="true"
+          className="aurora pointer-events-none absolute -inset-x-24 -top-56 bottom-0 rounded-[50%] opacity-90"
+        />
         <Logo />
 
         <div className="relative -mx-5 mt-4 flex min-h-[240px] flex-1 items-center sm:-mx-8 lg:mx-0 lg:mt-0">
-          <DeviceStageMount
-            status="in_repair"
-            quality="high"
-            className="h-[280px] w-full sm:h-[360px] lg:h-[440px]"
-          />
+          <div className="iris" />
+          <div className="bench-ticks relative w-full">
+            <DeviceStageMount
+              status="in_repair"
+              quality="high"
+              className="h-[280px] w-full sm:h-[360px] lg:h-[440px]"
+            />
+          </div>
         </div>
 
         <div className="mt-6 lg:mt-0">

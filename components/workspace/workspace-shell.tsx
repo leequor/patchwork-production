@@ -151,7 +151,7 @@ export function WorkspaceShell({
         <Link
           href="/tickets/new"
           onClick={onNavigate}
-          className="brass mt-4 flex h-9 items-center overflow-hidden rounded-sm text-[13px] font-semibold transition duration-150 hover:brightness-[1.06] active:translate-y-px"
+          className="primary mt-4 flex h-9 items-center overflow-hidden rounded-sm text-[13px] font-semibold transition duration-150 hover:brightness-[1.06] active:translate-y-px"
         >
           <span className="grid h-9 w-12 shrink-0 place-items-center">
             <Plus className="h-4 w-4" strokeWidth={2.2} aria-hidden="true" />
@@ -298,7 +298,7 @@ export function WorkspaceShell({
 
             <Link
               href="/tickets/new"
-              className="brass hidden h-8 shrink-0 items-center gap-2 rounded-sm px-3 text-[12px] font-semibold transition duration-150 hover:brightness-[1.06] active:translate-y-px sm:flex"
+              className="primary hidden h-8 shrink-0 items-center gap-2 rounded-sm px-3 text-[12px] font-semibold transition duration-150 hover:brightness-[1.06] active:translate-y-px sm:flex"
             >
               <Plus className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
               New intake

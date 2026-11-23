@@ -285,7 +285,7 @@ function radialTexture(red: number, green: number, blue: number, alpha: number) 
 /** A small procedural studio so metal and glass have something to reflect. */
 function environmentTexture(renderer: THREE.WebGLRenderer) {
   const envScene = new THREE.Scene();
-  envScene.background = new THREE.Color(0x0c0c0b);
+  envScene.background = new THREE.Color(0x09080f);
 
   const panel = (
     color: number,
@@ -363,7 +363,7 @@ export default function DeviceStage({
     renderer.setClearAlpha(0);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, quality === "high" ? 2 : 1.5));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.62;
+    renderer.toneMappingExposure = 1.7;
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     host.appendChild(renderer.domElement);
     renderer.domElement.style.display = "block";
@@ -383,32 +383,32 @@ export default function DeviceStage({
     scene.environment = environmentTexture(renderer);
     scene.environmentIntensity = 1.5;
 
-    /* The bench lamp, a cool rim from behind, and a little bounce. */
-    const lamp = new THREE.SpotLight(0xffdca8, 3200, 260, Math.PI / 4.4, 0.72, 1.35);
+    /* The bench lamp, a violet rim from behind, and a little cool bounce. */
+    const lamp = new THREE.SpotLight(0xffd9a8, 3000, 260, Math.PI / 4.4, 0.72, 1.35);
     lamp.position.set(-16, 28, 26);
     lamp.target.position.set(0, 0, 0);
     scene.add(lamp);
     scene.add(lamp.target);
 
-    const key = new THREE.DirectionalLight(0xf4f7ff, 2.5);
+    const key = new THREE.DirectionalLight(0xf0efff, 2.4);
     key.position.set(16, 20, 28);
     scene.add(key);
 
-    const rim = new THREE.DirectionalLight(0xcfe2ee, 3.6);
+    const rim = new THREE.DirectionalLight(0x8f7dff, 3.8);
     rim.position.set(-24, 8, -20);
     scene.add(rim);
 
-    const fill = new THREE.DirectionalLight(0xfff1da, 1.9);
+    const fill = new THREE.DirectionalLight(0xcfd2ff, 2.15);
     fill.position.set(20, -14, 16);
     scene.add(fill);
 
-    scene.add(new THREE.HemisphereLight(0x4a4a42, 0x141412, 1.4));
+    scene.add(new THREE.HemisphereLight(0x2c2450, 0x0b0916, 1.5));
 
     /* Bench surface: the lamp pool, and the device's own contact shadow. */
     const pool = new THREE.Mesh(
       new THREE.PlaneGeometry(54, 54),
       new THREE.MeshBasicMaterial({
-        map: radialTexture(217, 164, 65, 0.6) ?? undefined,
+        map: radialTexture(110, 92, 247, 0.65) ?? undefined,
         transparent: true,
         depthWrite: false,
         blending: THREE.AdditiveBlending,
@@ -897,7 +897,7 @@ export default function DeviceStage({
     const scanBar = new THREE.Mesh(
       new THREE.BoxGeometry(4.7, 0.045, 0.02),
       new THREE.MeshBasicMaterial({
-        color: 0xefbc63,
+        color: 0x9c8bff,
         transparent: true,
         opacity: 0,
         blending: THREE.AdditiveBlending,

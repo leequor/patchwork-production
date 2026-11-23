@@ -39,7 +39,7 @@ export default function RegisterPage() {
 
         <Link
           href="/login"
-          className="brass inline-flex h-10 w-full items-center justify-center rounded-sm font-sans text-[14px] font-semibold transition-[filter] hover:brightness-[1.06]"
+          className="primary inline-flex h-10 w-full items-center justify-center rounded-sm font-sans text-[14px] font-semibold transition-[filter] hover:brightness-[1.06]"
         >
           Back to sign in
         </Link>

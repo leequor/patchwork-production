@@ -22,20 +22,24 @@ export function AuthShell({ children }: { children: ReactNode }) {
   return (
     <main className="grid min-h-[100dvh] lg:grid-cols-[minmax(0,1fr)_minmax(392px,432px)]">
       <section className="relative isolate flex min-h-[66svh] flex-col overflow-hidden px-5 pb-8 pt-6 sm:px-8 lg:min-h-0 lg:px-12 lg:pb-10 lg:pt-9">
-        <RepairTree className="absolute inset-0 -z-20" />
+        <RepairTree className="absolute inset-0 -z-20 [filter:brightness(1.14)_saturate(1.05)]" />
         <ReactiveGrid className="pointer-events-none absolute inset-0 -z-10" />
 
+        {/* Ground, not a blanket. The old plate was three full-width gradients,
+            which is why the tree read as a texture instead of a tree: every
+            pixel of it was dimmed. Now the darkness is a corner — where the
+            words are — and everything above and to the right keeps its light. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(9,8,15,0.9)_0%,rgba(9,8,15,0.55)_14%,transparent_30%)]"
+          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_bottom,rgba(9,8,15,0.82)_0%,rgba(9,8,15,0.45)_12%,transparent_26%)]"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_right,rgba(9,8,15,0.92)_0%,rgba(9,8,15,0.78)_38%,rgba(9,8,15,0.32)_72%,transparent_100%)]"
+          className="pointer-events-none absolute inset-0 -z-10 bg-[radial-gradient(125%_92%_at_0%_100%,rgba(9,8,15,0.94)_0%,rgba(9,8,15,0.86)_34%,rgba(9,8,15,0.52)_58%,rgba(9,8,15,0.14)_80%,transparent_94%)]"
         />
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10 bg-[linear-gradient(to_top,rgba(9,8,15,0.94)_0%,rgba(9,8,15,0.7)_26%,rgba(9,8,15,0.24)_52%,transparent_76%)]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[38%] bg-[linear-gradient(to_top,rgba(9,8,15,0.88)_0%,rgba(9,8,15,0.42)_34%,transparent_78%)]"
         />
 
         <div className="relative z-10">

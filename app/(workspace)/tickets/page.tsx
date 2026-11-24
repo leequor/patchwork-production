@@ -135,7 +135,11 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
             />
           </div>
         ) : (
-          <table className="w-full border-collapse text-left">
+          /* A table on a phone must not push the whole page sideways. It scrolls
+             inside its own panel instead, and the widest column - "updated" -
+             only appears when there is room for it. */
+          <div className="-mx-px overflow-x-auto">
+          <table className="w-full min-w-[420px] border-collapse text-left">
             <thead>
               <tr className="font-sans text-[13px] text-ink-secondary">
                 <th scope="col" className="px-4 pb-2 font-normal">
@@ -156,7 +160,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
                 <th scope="col" className="hidden px-2 pb-2 font-normal lg:table-cell">
                   Technician
                 </th>
-                <th scope="col" className="px-4 pb-2 text-right font-normal">
+                <th scope="col" className="hidden px-4 pb-2 text-right font-normal sm:table-cell">
                   Updated
                 </th>
               </tr>
@@ -203,7 +207,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
                       {ticket.assignee?.full_name || <span className="text-ink-secondary">Unassigned</span>}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right align-top">
+                  <td className="hidden px-4 py-3 text-right align-top sm:table-cell">
                     <RelativeTime
                       value={ticket.updated_at}
                       className="figure text-[13px] text-ink-secondary"
@@ -213,6 +217,7 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </Panel>
 

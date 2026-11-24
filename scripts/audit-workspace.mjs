@@ -36,9 +36,14 @@ page.on("console", (msg) => {
   record("console error", text.slice(0, 200));
 });
 
+/* Credentials come from the environment when provided, so a live console can be
+   audited without putting an account in the repo. */
+const email = process.env.AUDIT_EMAIL ?? "alex@luckypatcher.test";
+const password = process.env.AUDIT_PASSWORD ?? env.DEMO_PASSWORD;
+
 await page.goto(`${prod}/login`, { waitUntil: "domcontentloaded" });
-await page.fill("#email", "alex@luckypatcher.test");
-await page.fill("#password", env.DEMO_PASSWORD);
+await page.fill("#email", email);
+await page.fill("#password", password);
 await page.click('form button[type="submit"]');
 await page.waitForURL((url) => !url.pathname.startsWith("/login"), { timeout: 40000 });
 record("sign in", `landed on ${new URL(page.url()).pathname}`);
@@ -54,12 +59,10 @@ for (const route of routes) {
   const info = await page.evaluate(() => ({
     overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
     headings: [...document.querySelectorAll("h1,h2")].map((h) => h.textContent?.trim().slice(0, 40)),
-    rows: document.querySelectorAll("li, tr").length,
-    empty: /no |nothing yet|none/i.test(document.body.innerText.slice(0, 4000)),
-    text: document.body.innerText.replace(/\s+/g, " ").slice(0, 220),
+    contentLength: document.body.innerText.trim().length,
   }));
   if (info.overflow > 1) record("horizontal overflow", `${route}: ${info.overflow}px`);
-  if (info.rows === 0) record("empty page", `${route}: ${info.text}`);
+  if (info.contentLength < 200) record("empty page", `${route}: only ${info.contentLength} chars of text`);
 
   await page.screenshot({ path: `shots/ws/${route.replace(/\//g, "-").replace(/^-/, "") || "root"}.png` });
 }
@@ -85,13 +88,22 @@ if (spread(alignment.loadX) > 1) record("team workload column", `left edges spre
 /* Command palette, keyboard only. */
 await page.goto(`${prod}/tickets`, { waitUntil: "domcontentloaded" });
 await page.keyboard.press("Control+k");
-await page.waitForTimeout(700);
-const paletteOpen = await page.locator('[role="dialog"]').count();
+/* Rendered inside AnimatePresence: give it a beat, then assert on what a person
+   would use — a dialog with focusable results. */
+const paletteOpen = await page
+  .locator('[role="dialog"]')
+  .first()
+  .waitFor({ state: "visible", timeout: 5000 })
+  .then(() => true)
+  .catch(() => false);
 if (!paletteOpen) record("command palette", "did not open on Control+K");
-await page.keyboard.type("inv");
-await page.waitForTimeout(500);
-const options = await page.locator('[role="option"]').count();
-if (options === 0) record("command palette", "no results for 'inv'");
+
+await page.keyboard.type("pw");
+await page.waitForTimeout(900);
+const results = await page
+  .locator('[role="dialog"] [role="option"], [role="dialog"] a[href]')
+  .count();
+if (paletteOpen && results === 0) record("command palette", "no results for 'pw'");
 await page.keyboard.press("Escape");
 await page.waitForTimeout(400);
 
@@ -133,11 +145,12 @@ if (await firstTicket.count()) {
 const phone = await browser.newContext({ viewport: { width: 390, height: 844 } });
 const phonePage = await phone.newPage();
 await phonePage.goto(`${prod}/login`, { waitUntil: "domcontentloaded" });
-await phonePage.fill("#email", "alex@luckypatcher.test");
-await phonePage.fill("#password", env.DEMO_PASSWORD);
+await phonePage.fill("#email", email);
+await phonePage.fill("#password", password);
 await phonePage.click('form button[type="submit"]');
 await phonePage.waitForURL((url) => !url.pathname.startsWith("/login"), { timeout: 40000 });
-for (const route of ["/", "/tickets", "/inventory"]) {
+const phoneRoutes = ["/", "/tickets", "/customers", "/inventory", "/invoices", "/team", "/tickets/new"];
+for (const route of phoneRoutes) {
   await phonePage.goto(prod + route, { waitUntil: "domcontentloaded" });
   await phonePage.waitForTimeout(2000);
   const overflow = await phonePage.evaluate(

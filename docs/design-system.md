@@ -226,6 +226,10 @@ Three attempts, and what each one taught:
 | Generated still, `mix-blend-mode: screen` | Read as zoomed | A square render cropped into a wide frame loses its composition |
 | Wide render with its own motion | Matches the reference | Canopy, crop and petals are already composed for the frame |
 
+The same footage is the **front door**: `AuthShell` puts it behind the sign-in plate at full bleed,
+with the logo, headline and links over it. The shopfront and the front door should be the same
+building — a form floating on a flat panel is a different, smaller place.
+
 The scrims do the legibility work, never opacity on the artwork alone:
 
 - top band (128px) so nav links never land on a blossom;
@@ -271,6 +275,11 @@ Things worth keeping:
   it reads as a sticker.
 - **Every layer stops on a hidden tab**, and all three are inert under
   `prefers-reduced-motion` — no loop, no listeners, just the artwork.
+
+The dust is mounted **once, in `app/layout.tsx`**, at `z-[45]` and `pointer-events-none`, above the
+content rather than behind it. That is deliberate: dust is the air in the room, so a workspace panel
+or a form card must not hide it. The grid is per-page, because a grid is a drawing and only some pages
+are drawn on.
 
 Measured, not asserted: `scripts/measure-follow.mjs` parks the pointer on a fixed
 probe and compares mean luminance there with the pointer at the opposite corner.

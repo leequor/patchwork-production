@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 
 import { RepairTree } from "@/components/landing/repair-tree";
-import { PointerDust } from "@/components/patchwork/pointer-dust";
 import { ReactiveGrid } from "@/components/patchwork/reactive-grid";
 import { SiteFooter, SiteHeader } from "@/components/patchwork/site-frame";
 import { SystemAlert } from "@/components/patchwork/system-alert";
@@ -111,8 +110,6 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
           className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[linear-gradient(to_bottom,rgba(9,8,15,0.95),rgba(9,8,15,0.55)_58%,transparent)]"
           aria-hidden="true"
         />
-
-        <PointerDust className="pointer-events-none absolute inset-0 h-full w-full" />
 
         <div className="relative mx-auto flex w-full max-w-[1180px] flex-1 flex-col px-5 sm:px-8">
           <SiteHeader

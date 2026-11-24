@@ -219,7 +219,7 @@ export function MissionControl({
         ))}
       </div>
 
-      <div className="flex min-h-0 flex-1 overflow-hidden rounded-md border border-hairline bg-panel">
+      <div className="flex min-h-0 flex-1 overflow-hidden rounded-lg bg-panel ring-1 ring-inset ring-white/[0.05]">
         {/* The queue */}
         <motion.aside
           initial={reduced ? false : { opacity: 0, y: 10 }}
@@ -351,18 +351,18 @@ export function MissionControl({
             </header>
 
             <div className="flex flex-wrap gap-2 px-5 pt-3 lg:hidden">
-              <span className="inline-flex items-center gap-2 rounded-sm border border-hairline bg-panel px-2.5 py-1 text-[11px] text-ink-secondary">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#0b0916]/72 px-2.5 py-1 text-[11px] text-ink-secondary ring-1 ring-inset ring-white/[0.07] backdrop-blur-md">
                 <span className={cn("h-1.5 w-1.5 rounded-full", TICKET_STATUS_META[selected.status].dot)} />
                 {TICKET_STATUS_META[selected.status].label}
               </span>
-              <span className="inline-flex items-center gap-2 rounded-sm border border-hairline bg-panel px-2.5 py-1 text-[11px] text-ink-secondary">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#0b0916]/72 px-2.5 py-1 text-[11px] text-ink-secondary ring-1 ring-inset ring-white/[0.07] backdrop-blur-md">
                 {selected.assignee?.full_name ?? "Unassigned"}
               </span>
-              <span className="inline-flex items-center gap-2 rounded-sm border border-hairline bg-panel px-2.5 py-1 text-[11px] text-ink-secondary">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#0b0916]/72 px-2.5 py-1 text-[11px] text-ink-secondary ring-1 ring-inset ring-white/[0.07] backdrop-blur-md">
                 <span className={cn("h-1.5 w-1.5 rounded-full", PRIORITY_META[selected.priority].dot)} />
                 {PRIORITY_META[selected.priority].label}
               </span>
-              <span className="inline-flex items-center gap-2 rounded-sm border border-hairline bg-panel px-2.5 py-1 font-mono text-[11px] text-ink-secondary">
+              <span className="inline-flex items-center gap-2 rounded-full bg-[#0b0916]/72 px-2.5 py-1 font-mono text-[11px] text-ink-secondary ring-1 ring-inset ring-white/[0.07] backdrop-blur-md">
                 {selected.estimate_cents > 0 ? formatMoney(selected.estimate_cents) : "No estimate"}
               </span>
             </div>

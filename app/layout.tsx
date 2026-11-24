@@ -4,6 +4,7 @@ import { IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 import { APP_DESCRIPTION, APP_NAME, getSiteUrl } from "@/lib/config";
 
 import { AmbientField } from "@/components/patchwork/ambient-field";
+import { PointerDust } from "@/components/patchwork/pointer-dust";
 
 import "./globals.css";
 
@@ -60,6 +61,13 @@ export default function RootLayout({
     >
       <body>
         <AmbientField />
+        {/*
+          Dust, over every page and every panel. It sits above the content on
+          purpose: it is the air in the room, so a workspace panel must not hide
+          it. `pointer-events-none` keeps it out of the way of clicks, and its
+          opacity keeps it out of the way of reading.
+        */}
+        <PointerDust className="pointer-events-none fixed inset-0 z-[45] h-full w-full opacity-80" />
         {children}
       </body>
     </html>

@@ -265,8 +265,10 @@ export function WorkspaceShell({
       </motion.aside>
 
       <div className="lg:pl-[72px]">
-        <header className="sticky top-0 z-30 px-3 pt-3 sm:px-4">
-          <div className="flex h-12 items-center gap-2 rounded-md border border-hairline bg-panel/85 px-2 shadow-panel backdrop-blur-xl">
+        {/* A floating bar, not a boxed one: no panel edge anywhere, and the only
+            line on it is a rule that fades at both ends. */}
+        <header className="sticky top-0 z-30 bg-[linear-gradient(to_bottom,rgba(9,8,15,0.92),rgba(9,8,15,0.72)_62%,transparent)] px-4 pb-2 pt-3 backdrop-blur-xl sm:px-6">
+          <div className="flex h-12 items-center gap-2">
             <button
               type="button"
               onClick={() => setMobileOpen(true)}
@@ -277,28 +279,28 @@ export function WorkspaceShell({
             </button>
 
             <div className="min-w-0 flex-1 pl-1">
-              <p className="truncate text-[13px] font-semibold text-ink">{section.label}</p>
-              <p className="hidden truncate text-[11px] text-ink-tertiary sm:block">
-                {section.short}
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-tertiary">
+                {section.label}
               </p>
+              <p className="truncate text-[13px] font-medium text-ink">{section.short}</p>
             </div>
 
             <button
               type="button"
               onClick={() => setPaletteOpen(true)}
               aria-label="Search Patchwork (Command K)"
-              className="flex h-8 w-[150px] shrink-0 items-center gap-2 rounded-sm border border-hairline bg-canvas/60 px-2.5 text-left text-[12px] text-ink-tertiary transition-colors duration-150 hover:border-hairline-strong hover:text-ink sm:w-[220px] lg:w-[300px]"
+              className="flex h-8 w-[150px] shrink-0 items-center gap-2 rounded-full bg-white/[0.03] px-3 text-left text-[12px] text-ink-tertiary ring-1 ring-inset ring-white/[0.07] transition-colors duration-150 hover:ring-white/[0.16] hover:text-ink sm:w-[220px] lg:w-[300px]"
             >
               <Search className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
               <span className="hidden truncate sm:block">Search…</span>
-              <kbd className="ml-auto hidden rounded border border-hairline bg-raised px-1.5 py-0.5 font-mono text-[10px] text-ink-faint sm:block">
+              <kbd className="ml-auto hidden rounded bg-white/[0.05] px-1.5 py-0.5 font-mono text-[10px] text-ink-faint sm:block">
                 ⌘K
               </kbd>
             </button>
 
             <Link
               href="/tickets/new"
-              className="primary hidden h-8 shrink-0 items-center gap-2 rounded-sm px-3 text-[12px] font-semibold transition duration-150 hover:brightness-[1.06] active:translate-y-px sm:flex"
+              className="primary hidden h-8 shrink-0 items-center gap-2 rounded-full px-3.5 text-[12px] font-semibold transition duration-150 hover:brightness-[1.06] active:translate-y-px sm:flex"
             >
               <Plus className="h-3.5 w-3.5" strokeWidth={2.2} aria-hidden="true" />
               New intake
@@ -310,9 +312,9 @@ export function WorkspaceShell({
                 onClick={() => setProfileOpen((open) => !open)}
                 aria-label="Open profile menu"
                 aria-expanded={profileOpen}
-                className="flex h-8 items-center gap-2 rounded-sm border border-hairline-strong bg-raised pl-1 pr-2 transition-colors duration-150 hover:border-ink-faint"
+                className="flex h-8 items-center gap-2 rounded-full bg-white/[0.03] pl-1 pr-2 ring-1 ring-inset ring-white/[0.07] transition-colors duration-150 hover:ring-white/[0.16]"
               >
-                <span className="grid h-6 w-6 place-items-center rounded-sm bg-accent-soft text-[10px] font-semibold text-accent-bright">
+                <span className="grid h-6 w-6 place-items-center rounded-full bg-accent-soft text-[10px] font-semibold text-accent-bright">
                   {avatar}
                 </span>
                 <span className="hidden max-w-[120px] truncate text-[12px] text-ink lg:block">
@@ -331,14 +333,18 @@ export function WorkspaceShell({
                 <div
                   role="menu"
                   aria-label="Profile"
-                  className="absolute right-0 top-[calc(100%+8px)] z-40 w-64 overflow-hidden rounded-md border border-hairline-strong bg-panel shadow-float"
+                  className="absolute right-0 top-[calc(100%+8px)] z-40 w-64 overflow-hidden rounded-xl bg-panel/95 shadow-float ring-1 ring-inset ring-white/[0.08] backdrop-blur-xl"
                 >
-                  <div className="border-b border-hairline px-3.5 py-3">
+                  <div className="px-3.5 py-3">
                     <p className="truncate text-[12px] font-medium text-ink">{displayName}</p>
                     <p className="mt-0.5 truncate text-[11px] text-ink-tertiary">
                       {ROLE_LABELS[user.role]} · {user.email}
                     </p>
                   </div>
+                  <div
+                    aria-hidden="true"
+                    className="mx-3.5 h-px bg-[linear-gradient(to_right,rgba(241,239,250,0.12),transparent)]"
+                  />
                   <div className="p-1.5">
                     <Link
                       href="/track"
@@ -364,6 +370,11 @@ export function WorkspaceShell({
               ) : null}
             </div>
           </div>
+
+          <div
+            aria-hidden="true"
+            className="mt-2 h-px bg-[linear-gradient(to_right,transparent,rgba(241,239,250,0.10)_6%,rgba(241,239,250,0.10)_78%,transparent)]"
+          />
         </header>
 
         <main

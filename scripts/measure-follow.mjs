@@ -18,7 +18,8 @@ const POSITIONS = [
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
-await page.goto("http://127.0.0.1:3102/track", { waitUntil: "networkidle" });
+const route = process.argv[2] ?? "/track";
+await page.goto(`http://127.0.0.1:3102${route}`, { waitUntil: "networkidle" });
 await page.waitForTimeout(2000);
 
 const readings = [];

@@ -168,6 +168,46 @@
     line-height: 1.1;
   }
 
+  /* Hero type: the weight is the whole trick. At 90px a 600 face shouts and
+     crowds the artwork; regular weight with tight tracking reads composed, and
+     lets the tree be the loud thing on the page. */
+  .display-hero {
+    font-weight: 400;
+    letter-spacing: -0.032em;
+    line-height: 0.94;
+  }
+
+  /* The tiny label above a headline: a dash, then the truth in mono. */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;
+    font-size: 11px;
+    line-height: 1;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-tertiary);
+  }
+
+  .eyebrow::before {
+    content: "";
+    width: 32px;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.7;
+  }
+
+  /* A blueprint grid, faded at the edges. Sits under hero artwork only. */
+  .grid-field {
+    background-image:
+      linear-gradient(to right, rgba(241, 239, 250, 0.035) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(241, 239, 250, 0.035) 1px, transparent 1px);
+    background-size: 132px 132px;
+    -webkit-mask-image: radial-gradient(115% 95% at 32% 28%, #000 26%, transparent 84%);
+    mask-image: radial-gradient(115% 95% at 32% 28%, #000 26%, transparent 84%);
+  }
+
   /* Every figure in the product is mono and tabular so columns line up. */
   .figure {
     font-family: var(--font-mono), ui-monospace, SFMono-Regular, monospace;

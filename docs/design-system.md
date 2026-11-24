@@ -193,6 +193,46 @@ printed because this page is used by staff, not customers.
 - Never `transition: all`; name the properties.
 - `prefers-reduced-motion` removes travel, parallax and drift while keeping opacity and colour.
 
+## The landing page
+
+The public page has one composition, and everything else defers to it: type on the left, art on
+the right, nothing in a card unless it is a control.
+
+| Piece | Rule |
+| --- | --- |
+| Nav | Borderless, floating over the art. Mark left, three links centre, one near-white pill right. |
+| Eyebrow | `.eyebrow` — mono, 0.2em tracking, a 32px dash, `--ink-tertiary`. One per section. |
+| Headline | `.display-hero` — **weight 400**, −0.032em, 0.94 leading, `clamp(44px, 6.6vw, 92px)`. |
+| Body | 17px / 1.6 in `--ink-secondary`, max 44ch. Never on top of artwork. |
+| Facts | Three columns, mono numerals, a hairline above that spans the container. |
+| Sections | One oversized `h2`, a right-hand note, then a single bordered grid split by hairlines. |
+| Footer | Large wordmark, one blurb, three link columns, a quiet bottom bar. |
+
+The weight is the whole trick. At 90px a 600 face shouts and crowds the artwork; regular weight
+with tight tracking reads composed and lets the illustration be the loud thing.
+
+### The repair tree
+
+`components/landing/repair-tree.tsx` grows a blossom tree from a seeded L-system and draws it to a
+canvas: violet trunk brightening to lilac at the tips, blossom added with `lighter` compositing so it
+blooms, and a slow fall of glowing petals.
+
+- Drawn **once** to an offscreen canvas per resize; only petals animate, so a full-screen hero costs
+  one `drawImage` per frame. DPR capped at 2.
+- The tree is decorative: `aria-hidden`, and the headline carries the meaning.
+- `prefers-reduced-motion`: still tree, no petals, no loop.
+
+### Never put type on artwork
+
+Two rules, learned the hard way on this page:
+
+1. **A scrim, not hope.** A horizontal `canvas → canvas/90 → transparent` gradient over the art's
+   left side, extended past the section and masked vertically, so the headline's last line lands on
+   clean ground and the section boundary never draws a line across the page.
+2. **Clip nothing at a section edge.** If the art's layers are clipped by `overflow-hidden` at the
+   package boundary, an opaque floor gradient on top hides the ambient field in a band — and a band
+   is a seam. Let the layers overrun the section and fade on their own instead.
+
 ## Ornament
 
 Violet is the brand, so it is allowed to exist as light — but as *light*, not as a gradient poured

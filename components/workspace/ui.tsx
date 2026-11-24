@@ -110,7 +110,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-sm border border-dashed border-hairline-strong bg-canvas/50 px-6 py-10">
+    <div className="rounded-sm border border-dashed border-white/[0.12] bg-canvas/50 px-6 py-10">
       <p className="font-sans text-[15px] font-semibold text-ink">{title}</p>
       <p className="mt-1.5 max-w-[52ch] font-sans text-[14px] leading-6 text-ink-secondary">{body}</p>
       {action ? <div className="mt-4">{action}</div> : null}
@@ -135,7 +135,7 @@ export function SecondaryLink({
       href={href}
       className={cn(
         LINK_BASE,
-        "border border-hairline-strong bg-raised text-ink hover:border-ink-faint hover:bg-overlay",
+        "bg-raised ring-1 ring-inset ring-white/[0.08] text-ink hover:ring-white/[0.16] hover:bg-overlay",
         className,
       )}
     >

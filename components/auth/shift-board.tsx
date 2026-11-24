@@ -102,7 +102,7 @@ export function ShiftBoard() {
   return (
     <section
       aria-labelledby="counter-board"
-      className="rounded-sm border border-hairline bg-sunken px-4 py-3.5"
+      className="rounded-sm bg-sunken px-4 py-3.5 ring-1 ring-inset ring-white/[0.06]"
     >
       <div className="flex items-baseline justify-between gap-4">
         <h2

@@ -41,7 +41,7 @@ export default async function CustomersPage({
               name="q"
               defaultValue={params.q}
               placeholder="Search name, email, phone, or company"
-              className="h-10 w-full rounded-lg border border-hairline bg-raised px-2.5 font-sans text-[13px] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/70 hover:border-hairline-strong focus:border-accent focus:ring-2 focus:ring-accent/40"
+              className="h-10 w-full rounded-lg bg-raised ring-1 ring-inset ring-white/[0.07] px-2.5 font-sans text-[13px] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/70 hover:border-hairline-strong focus:border-accent focus:ring-2 focus:ring-accent/40"
             />
           </label>
           <button

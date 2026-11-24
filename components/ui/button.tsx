@@ -9,7 +9,7 @@ const VARIANTS: Record<ButtonVariant, string> = {
   /* Brass hardware: a metal face with an etched label, not a coloured glow. */
   primary: "primary hover:brightness-[1.06] active:brightness-95 disabled:opacity-55",
   secondary:
-    "border border-hairline-strong bg-raised text-ink hover:border-ink-faint hover:bg-overlay active:bg-overlay disabled:opacity-55",
+    "bg-raised ring-1 ring-inset ring-white/[0.08] text-ink hover:ring-white/[0.16] hover:bg-overlay active:bg-overlay disabled:opacity-55",
   ghost: "bg-transparent text-ink-secondary hover:bg-raised hover:text-ink disabled:opacity-55",
   quiet: "bg-transparent text-ink-tertiary hover:text-ink disabled:opacity-55",
 };

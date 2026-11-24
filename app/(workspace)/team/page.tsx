@@ -89,7 +89,7 @@ export default async function TeamPage({
                           id={`role-${member.id}`}
                           name="role"
                           defaultValue={member.role}
-                          className="h-7 rounded border border-hairline bg-canvas px-1.5 text-[13px] text-ink outline-none focus:border-accent"
+                          className="h-7 rounded bg-canvas ring-1 ring-inset ring-white/[0.06] px-1.5 text-[13px] text-ink outline-none focus:border-accent"
                         >
                           {isOwner ? <option value="superadmin">Owner</option> : null}
                           <option value="admin">Manager</option>

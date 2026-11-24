@@ -45,11 +45,11 @@ function FloatPill({
   return (
     <div
       className={cn(
-        "absolute hidden items-center gap-2.5 rounded-sm border border-hairline bg-panel/85 py-1.5 pl-1.5 pr-3.5 lg:flex",
+        "absolute hidden items-center gap-2.5 rounded-sm bg-panel/85 ring-1 ring-inset ring-white/[0.06] py-1.5 pl-1.5 pr-3.5 lg:flex",
         className,
       )}
     >
-      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-sm border border-hairline bg-raised">
+      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-sm bg-raised ring-1 ring-inset ring-white/[0.07]">
         {mark}
       </span>
       <span className="flex flex-col leading-tight">
@@ -182,7 +182,7 @@ export function MissionControl({
     return (
       <section className="flex h-full min-h-0 flex-col">
         <h1 className="sr-only">Mission control</h1>
-        <div className="flex flex-1 flex-col items-center justify-center gap-4 rounded-2xl border border-hairline bg-panel/40 p-8 text-center">
+        <div className="flex flex-1 flex-col items-center justify-center gap-4 rounded-2xl bg-panel/40 ring-1 ring-inset ring-white/[0.06] p-8 text-center">
           <h2 className="display text-[28px] text-ink">The bench is clear</h2>
           <p className="max-w-[46ch] text-[13px] leading-6 text-ink-secondary">
             No devices are waiting. Take the first intake and it lands in the live queue immediately.
@@ -202,7 +202,7 @@ export function MissionControl({
     <section className="flex h-full min-h-0 flex-col">
       <h1 className="sr-only">Mission control</h1>
 
-      <div className="mb-3 flex gap-1 rounded-sm border border-hairline bg-panel p-1 lg:hidden">
+      <div className="mb-3 flex gap-1 rounded-sm bg-panel ring-1 ring-inset ring-white/[0.06] p-1 lg:hidden">
         {(["queue", "bench"] as const).map((view) => (
           <button
             key={view}
@@ -230,11 +230,15 @@ export function MissionControl({
             mobileView === "queue" ? "flex w-full" : "hidden",
           )}
         >
-          <div className="grid grid-cols-3 divide-x divide-hairline border-b border-hairline">
+          <div className="grid grid-cols-3 gap-px">
             <Stat label="Open" value={String(openCount)} />
             <Stat label="Ready" value={String(readyCount)} tone="text-positive" />
             <Stat label="MTD" value={formatCompactMoney(revenueMtd)} />
           </div>
+          <div
+            aria-hidden="true"
+            className="h-px bg-[linear-gradient(to_right,rgba(241,239,250,0.10),rgba(241,239,250,0.05)_60%,transparent)]"
+          />
 
           <div className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-2.5">
             <div className="flex items-center gap-2">
@@ -343,7 +347,7 @@ export function MissionControl({
 
               <Link
                 href={`/tickets/${selected.id}`}
-                className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-sm border border-hairline-strong bg-raised px-2.5 text-[12px] font-medium text-ink transition-colors hover:border-ink-faint hover:bg-overlay"
+                className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-sm bg-raised ring-1 ring-inset ring-white/[0.08] px-2.5 text-[12px] font-medium text-ink transition-colors hover:ring-white/[0.16] hover:bg-overlay"
               >
                 Open ticket
                 <ArrowUpRight className="h-3.5 w-3.5" aria-hidden="true" />
@@ -418,14 +422,14 @@ export function MissionControl({
               </Link>
               <Link
                 href={`/tickets/${selected.id}`}
-                className="inline-flex h-8 items-center gap-2 rounded-sm border border-hairline-strong bg-raised px-3 text-[12px] font-medium text-ink transition-colors hover:border-ink-faint hover:bg-overlay"
+                className="inline-flex h-8 items-center gap-2 rounded-sm bg-raised ring-1 ring-inset ring-white/[0.08] px-3 text-[12px] font-medium text-ink transition-colors hover:ring-white/[0.16] hover:bg-overlay"
               >
                 <Boxes className="h-3.5 w-3.5" aria-hidden="true" />
                 Add part
               </Link>
               <Link
                 href={`/tickets/${selected.id}`}
-                className="inline-flex h-8 items-center gap-2 rounded-sm border border-hairline-strong bg-raised px-3 text-[12px] font-medium text-ink transition-colors hover:border-ink-faint hover:bg-overlay"
+                className="inline-flex h-8 items-center gap-2 rounded-sm bg-raised ring-1 ring-inset ring-white/[0.08] px-3 text-[12px] font-medium text-ink transition-colors hover:ring-white/[0.16] hover:bg-overlay"
               >
                 <Receipt className="h-3.5 w-3.5" aria-hidden="true" />
                 Create invoice

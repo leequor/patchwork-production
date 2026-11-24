@@ -148,7 +148,7 @@ export default async function InventoryPage({
               name="q"
               defaultValue={params.q}
               placeholder="Search part, SKU, category, supplier"
-              className="h-8 w-full rounded-lg border border-hairline bg-canvas px-2.5 text-[13px] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/60 focus:border-accent focus:ring-2 focus:ring-accent/40"
+              className="h-8 w-full rounded-lg bg-canvas ring-1 ring-inset ring-white/[0.06] px-2.5 text-[13px] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/60 focus:border-accent focus:ring-2 focus:ring-accent/40"
             />
           </label>
           <button
@@ -239,7 +239,7 @@ export default async function InventoryPage({
                           <button
                             type="submit"
                             disabled={part.stock === 0}
-                            className="grid h-7 w-7 place-items-center rounded-lg border border-hairline text-[13.5px] text-ink-secondary transition-colors hover:border-negative/40 hover:text-negative disabled:opacity-30"
+                            className="grid h-7 w-7 place-items-center rounded-lg ring-1 ring-inset ring-white/[0.09] text-[13.5px] text-ink-secondary transition-colors hover:bg-negative/10 hover:text-negative disabled:opacity-30"
                             aria-label={`Remove one ${part.name}`}
                           >
                             −
@@ -250,7 +250,7 @@ export default async function InventoryPage({
                           <input type="hidden" name="delta" value="1" />
                           <button
                             type="submit"
-                            className="grid h-7 w-7 place-items-center rounded-lg border border-hairline text-[13.5px] text-ink-secondary transition-colors hover:border-positive/40 hover:text-positive"
+                            className="grid h-7 w-7 place-items-center rounded-lg ring-1 ring-inset ring-white/[0.09] text-[13.5px] text-ink-secondary transition-colors hover:bg-positive/10 hover:text-positive"
                             aria-label={`Add one ${part.name}`}
                           >
                             +

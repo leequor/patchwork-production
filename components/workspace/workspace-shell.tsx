@@ -209,7 +209,7 @@ export function WorkspaceShell({
             </RailLabel>
           </Link>
 
-          <div className="mt-2 flex items-center overflow-hidden rounded-sm border border-hairline bg-panel">
+          <div className="mt-2 flex items-center overflow-hidden rounded-sm bg-panel ring-1 ring-inset ring-white/[0.06]">
             <span className="grid h-12 w-12 shrink-0 place-items-center">
               <span className="grid h-8 w-8 place-items-center rounded-lg bg-accent-soft text-[11px] font-semibold text-accent-bright">
                 {avatar}

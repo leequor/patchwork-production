@@ -113,7 +113,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
         role="dialog"
         aria-modal="true"
         aria-label="Search Patchwork"
-        className="relative w-full max-w-[560px] overflow-hidden rounded-2xl border border-hairline-strong bg-panel/95 shadow-float backdrop-blur-2xl"
+        className="relative w-full max-w-[560px] overflow-hidden rounded-2xl bg-panel/95 ring-1 ring-inset ring-white/[0.08] shadow-float backdrop-blur-2xl"
       >
         <div className="flex items-center gap-3 border-b border-hairline px-4">
           <Search className="h-4 w-4 shrink-0 text-ink-tertiary" aria-hidden="true" />
@@ -129,7 +129,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             aria-label="Search Patchwork"
             className="h-14 min-w-0 flex-1 bg-transparent text-[15px] text-ink outline-none placeholder:text-ink-faint"
           />
-          <kbd className="rounded border border-hairline bg-raised px-1.5 py-0.5 font-mono text-[10px] text-ink-faint">
+          <kbd className="rounded bg-raised ring-1 ring-inset ring-white/[0.07] px-1.5 py-0.5 font-mono text-[10px] text-ink-faint">
             ESC
           </kbd>
         </div>
@@ -152,7 +152,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                 >
                   <span
                     className={cn(
-                      "grid h-7 w-7 shrink-0 place-items-center rounded-md border border-hairline",
+                      "grid h-7 w-7 shrink-0 place-items-center rounded-md bg-white/[0.04] ring-1 ring-inset ring-white/[0.07]",
                       index === active
                         ? "border-accent/40 bg-accent-soft text-accent-bright"
                         : "text-ink-tertiary",

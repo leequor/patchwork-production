@@ -74,40 +74,51 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
 
   return (
     <main className="relative min-h-[100dvh] overflow-x-clip">
-      {/* The room: a blueprint grid under a tree that is lit from within. */}
-      <section className="relative pb-6 sm:pb-8">
-        <div className="grid-field pointer-events-none absolute inset-x-0 top-0 bottom-[-9rem]" aria-hidden="true" />
-
+      {/* The room: the tree fills the whole frame, canopy bleeding off the top
+          and the trunk rooting at the floor, exactly the way a full-bleed
+          artwork works. Everything else is scrim and quiet, so the light can be
+          the loud thing. */}
+      <section className="relative flex min-h-[100svh] flex-col pb-6 sm:pb-8">
         <div
-          className="pointer-events-none absolute right-[-16%] top-0 h-[56%] w-[112%] [mask-image:linear-gradient(to_bottom,#000_64%,transparent_100%)] sm:top-0 sm:h-[94%] sm:w-[64%] sm:right-[-8%] lg:right-[-6%] lg:h-full lg:w-[48%]"
+          className="pointer-events-none absolute inset-x-0 top-0 bottom-[-9rem] [mask-image:linear-gradient(to_bottom,transparent,#000_7%,#000_66%,transparent_86%)]"
           aria-hidden="true"
         >
-          <RepairTree className="h-full w-full [mask-image:radial-gradient(64%_70%_at_64%_44%,#000_26%,transparent_100%)]" />
+          <RepairTree className="h-full w-full" />
         </div>
 
-        {/* On a phone the copy runs the full width, so the art gets its own
-            soft floor rather than sitting behind the paragraph. */}
+        <div className="grid-field pointer-events-none absolute inset-x-0 top-0 bottom-[-9rem]" aria-hidden="true" />
+
+        {/* Two scrims, not one: the floor keeps the facts legible, the wall keeps
+            the headline legible. Both stay weak enough that canopy and petals
+            still read across the middle of the frame. */}
         <div
-          className="pointer-events-none absolute inset-x-0 top-[34%] h-[42%] bg-gradient-to-b from-transparent via-canvas/70 to-canvas sm:hidden"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_38%,rgba(9,8,15,0.8)_66%,rgba(9,8,15,0.58)_88%,transparent_100%)]"
+          aria-hidden="true"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(9,8,15,0.95)_0%,rgba(9,8,15,0.8)_34%,rgba(9,8,15,0.3)_60%,transparent_82%)]"
           aria-hidden="true"
         />
 
-        {/* The scrim: the head of the page stays dark so the headline never
-            sits on a blossom. It fades out before the tree's trunk. */}
         <div
-          className="pointer-events-none absolute inset-y-0 -bottom-36 left-0 w-full bg-gradient-to-r from-canvas via-canvas/90 to-transparent [mask-image:linear-gradient(to_bottom,#000_86%,transparent)] sm:w-[76%] lg:w-[70%]"
+          className="pointer-events-none absolute inset-x-0 top-[26%] h-[46%] bg-[linear-gradient(to_bottom,transparent,rgba(9,8,15,0.62)_48%,rgba(9,8,15,0.92))] sm:hidden"
           aria-hidden="true"
         />
 
-        <div className="relative mx-auto w-full max-w-[1180px] px-5 sm:px-8">
+        <div
+          className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[linear-gradient(to_bottom,rgba(9,8,15,0.95),rgba(9,8,15,0.55)_58%,transparent)]"
+          aria-hidden="true"
+        />
+
+        <div className="relative mx-auto flex w-full max-w-[1180px] flex-1 flex-col px-5 sm:px-8">
           <SiteHeader
             className="pt-6 sm:pt-8"
             back={staff ? { href: "/", label: "Back to bench" } : undefined}
             action={{ href: staff ? "/" : "/login", label: staff ? "Open bench" : "Staff sign in" }}
           />
 
-          <div className="pt-16 sm:pt-24 lg:pt-28">
-            <p className="eyebrow rise text-ink-secondary">
+          <div className="pt-16 sm:pt-[16vh] lg:pt-[18vh]">
+            <p className="eyebrow rise">
               <span className="sm:hidden">Repair operations</span>
               <span className="hidden sm:inline">Repair operations · live from the bench</span>
             </p>
@@ -148,7 +159,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
                 />
                 <button
                   type="submit"
-                  className="primary group flex h-11 shrink-0 items-center gap-2 rounded-full px-5 font-sans text-[14px] font-semibold transition-[filter,transform] duration-150 active:translate-y-px"
+                  className="primary group flex h-11 shrink-0 items-center gap-2 rounded-full px-5 font-sans text-[14px] font-semibold shadow-[0_10px_30px_-12px_rgba(0,0,0,0.9)] ring-1 ring-white/10 transition-[filter,transform] duration-150 active:translate-y-px"
                 >
                   Check status
                   <ArrowRight
@@ -160,14 +171,14 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
               </div>
               <p
                 id="tracking-code-help"
-                className="mt-3 pl-5 font-sans text-[13px] leading-5 text-ink-secondary"
+                className="mt-3 max-w-[42ch] pl-5 font-sans text-[13px] leading-5 text-ink-secondary"
               >
                 Printed on the receipt next to the PW- ticket number. It is not the ticket number
                 itself.
               </p>
             </form>
 
-            <div className="rise mt-14 max-w-[620px] border-t border-hairline/70 pt-7 sm:mt-24">
+            <div className="rise mt-auto max-w-[620px] border-t border-hairline/70 pt-7">
               <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:gap-x-6">
               {FACTS.map((fact, index) => (
                 <div key={fact.unit} style={{ animationDelay: `${190 + index * 40}ms` }}>
@@ -320,7 +331,13 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
         ) : null}
 
         {/* Three phases instead of six stages: what a customer actually needs. */}
-        <section id="stages" className="pt-10 sm:pt-14">
+        <section id="stages" className="relative pt-10 sm:pt-14">
+          {/* The hero ends on its darkest note; this hands the eye back into the
+              room instead of starting the next section at full glow. */}
+          <div
+            className="pointer-events-none absolute inset-x-0 -top-[8vh] h-[16vh] bg-[linear-gradient(to_bottom,transparent,rgba(9,8,15,0.85)_55%,transparent)] sm:-top-[10vh] sm:h-[20vh]"
+            aria-hidden="true"
+          />
           <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
             <div>
               <p className="eyebrow">The bench, stage by stage</p>

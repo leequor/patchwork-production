@@ -173,17 +173,14 @@ export function RepairTree({ className }: { className?: string }) {
 
   return (
     <div className={className} aria-hidden="true">
-      <div
-        ref={artRef}
-        className="tree-art absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent,#000_10%,#000_74%,transparent)]"
-      >
+      <div ref={artRef} className="tree-art absolute inset-x-0 -top-[14%] h-[130%]">
         <Image
           src="/art/repair-tree.jpg"
           alt=""
           fill
           priority
           sizes="(max-width: 640px) 110vw, (max-width: 1024px) 78vw, 58vw"
-          className="object-contain object-bottom [mix-blend-mode:screen]"
+          className="object-cover object-[62%_40%] [mix-blend-mode:screen] sm:object-[58%_38%]"
         />
       </div>
 

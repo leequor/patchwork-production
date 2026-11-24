@@ -73,7 +73,11 @@ export default async function CustomersPage({
             />
           </div>
         ) : (
-          <table className="w-full border-collapse text-left">
+          /* Same rule as the queue: a table may scroll inside its panel, never
+             push the page sideways. The ticket count is the first thing to go
+             when the screen is narrow. */
+          <div className="-mx-px overflow-x-auto">
+          <table className="w-full min-w-[440px] border-collapse text-left">
             <thead>
               <tr className="font-sans text-[13px] text-ink-secondary">
                 <th scope="col" className="px-4 pb-2 font-normal">
@@ -88,7 +92,7 @@ export default async function CustomersPage({
                 <th scope="col" className="px-2 pb-2 text-right font-normal">
                   Open
                 </th>
-                <th scope="col" className="px-4 pb-2 text-right font-normal">
+                <th scope="col" className="hidden px-4 pb-2 text-right font-normal sm:table-cell">
                   All tickets
                 </th>
               </tr>
@@ -129,13 +133,14 @@ export default async function CustomersPage({
                   <td className="px-2 py-3 text-right">
                     <span className="figure text-[14px] text-ink">{customer.open_count}</span>
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="hidden px-4 py-3 text-right sm:table-cell">
                     <span className="figure text-[13px] text-ink-secondary">{customer.ticket_count}</span>
                   </td>
                 </MotionRow>
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </Panel>
 

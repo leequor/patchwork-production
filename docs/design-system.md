@@ -252,25 +252,36 @@ sit behind text, and no ornament is the only carrier of meaning.
 
 ### The background follows the pointer — on purpose, and cheaply
 
-The field is three drifting lights plus one near light. Each drifting light also shifts with the
-pointer by its own amount (12–260 px), which reads as parallax depth: the far lamp barely moves, the
-cyan spill swings. The near light tracks the pointer directly, damped at 5.5/s — light on a wall, not
-a cursor.
+Three responses, one gesture. They are layers, not one big effect, because each
+answers a different question: where is the light (orbs), where is the surface
+(grid), where is the hand (dust).
 
-How it stays cheap, and why it is written the way it is:
+| Layer | File | What moves | Cost |
+| --- | --- | --- | --- |
+| Orbs | `ambient-field.tsx` | 4 blurred fields, parallax by depth | transform only |
+| Grid | `reactive-grid.tsx` | same grid, lit through a pointer mask, shifted 14px against the hand | one CSS variable pair per frame |
+| Dust | `pointer-dust.tsx` | ~110 motes, pulled within 300px, pushed away when the hand moves fast | one canvas, dots ≤ 18px |
 
-- Each field is a pre-softened `radial-gradient` on a composited layer, moved with `transform` only.
-  No `filter: blur()`, no animated `background-position`, no repaint.
-- One `requestAnimationFrame` loop writes to the DOM directly; React never re-renders on pointer move.
-- Damping is `1 − exp(−k·dt)`, so the motion is identical at 60 Hz and 144 Hz.
-- The loop stops on `visibilitychange` and never starts under `prefers-reduced-motion`.
-- On `(pointer: coarse)` the pointer terms drop to 45% and the listener is not attached at all.
+Things worth keeping:
 
-**The stacking trap worth remembering:** the field lives at `-z-10` inside `<body>`. That only works
-if `<body>` has no background of its own — a negative-z child paints *under* its parent's background.
-So the base colour and the fixed gradients live on `<html>`, `body` is transparent, and the vignette
-that belongs in front of the light is a layer inside `AmbientField`. Moving body's background back
-would silently hide the whole field: the page would simply look flat, with no error anywhere.
+- **The dust has a wake.** Motes within the radius are pushed *outward* by pointer
+  speed. This is what makes it feel like air rather than a follower.
+- **Brightness is distance**, so the field has a centre without drawing one.
+- **The grid moves against the pointer**, 14px, which reads as depth; moving with
+  it reads as a sticker.
+- **Every layer stops on a hidden tab**, and all three are inert under
+  `prefers-reduced-motion` — no loop, no listeners, just the artwork.
+
+Measured, not asserted: `scripts/measure-follow.mjs` parks the pointer on a fixed
+probe and compares mean luminance there with the pointer at the opposite corner.
+Current reading: **+39%** (25.5 → 35.5) at the probe.
+
+### Hairlines never end mid-air
+
+A 1px `border-top` stops dead and reads as a cut. Dividers are gradient rules that
+fade to transparent (`h-px` + `linear-gradient(to right, …0.16, …0.07 54%, transparent)`),
+and controls use one inset ring instead of a border plus an inner button ring —
+two adjacent strokes on a pill always look like an overlap.
 
 ## Editing a price
 

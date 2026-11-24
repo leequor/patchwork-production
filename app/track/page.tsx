@@ -3,6 +3,8 @@ import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 
 import { RepairTree } from "@/components/landing/repair-tree";
+import { PointerDust } from "@/components/patchwork/pointer-dust";
+import { ReactiveGrid } from "@/components/patchwork/reactive-grid";
 import { SiteFooter, SiteHeader } from "@/components/patchwork/site-frame";
 import { SystemAlert } from "@/components/patchwork/system-alert";
 import { DeviceStageMount } from "@/components/three/device-stage-mount";
@@ -86,7 +88,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
           <RepairTree className="h-full w-full" />
         </div>
 
-        <div className="grid-field pointer-events-none absolute inset-x-0 top-0 bottom-[-9rem]" aria-hidden="true" />
+        <ReactiveGrid className="pointer-events-none absolute inset-x-0 top-0 bottom-[-9rem]" />
 
         {/* Two scrims, not one: the floor keeps the facts legible, the wall keeps
             the headline legible. Both stay weak enough that canopy and petals
@@ -109,6 +111,8 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
           className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-[linear-gradient(to_bottom,rgba(9,8,15,0.95),rgba(9,8,15,0.55)_58%,transparent)]"
           aria-hidden="true"
         />
+
+        <PointerDust className="pointer-events-none absolute inset-0 h-full w-full" />
 
         <div className="relative mx-auto flex w-full max-w-[1180px] flex-1 flex-col px-5 sm:px-8">
           <SiteHeader
@@ -145,7 +149,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
               <label htmlFor="code" className="sr-only">
                 Tracking code
               </label>
-              <div className="flex items-center gap-2 rounded-full border border-hairline-strong bg-panel/70 p-1.5 pl-4 backdrop-blur-md transition-colors duration-200 focus-within:border-accent/60 sm:pl-5">
+              <div className="flex items-center gap-2 rounded-full bg-[#0b0916]/72 p-1.5 pl-4 ring-1 ring-inset ring-white/[0.08] backdrop-blur-md transition-[box-shadow] duration-200 focus-within:ring-white/[0.22] sm:pl-5">
                 <input
                   id="code"
                   name="code"
@@ -159,7 +163,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
                 />
                 <button
                   type="submit"
-                  className="primary group flex h-11 shrink-0 items-center gap-2 rounded-full px-5 font-sans text-[14px] font-semibold shadow-[0_10px_30px_-12px_rgba(0,0,0,0.9)] ring-1 ring-white/10 transition-[filter,transform] duration-150 active:translate-y-px"
+                  className="primary group flex h-11 shrink-0 items-center gap-2 rounded-full px-5 font-sans text-[14px] font-semibold transition-[filter,transform] duration-150 active:translate-y-px"
                 >
                   Check status
                   <ArrowRight
@@ -178,8 +182,9 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
               </p>
             </form>
 
-            <div className="rise mt-auto max-w-[620px] pt-12">
-              <div className="border-t border-hairline/70 pt-7">
+            <div className="rise mt-auto pt-12">
+              <div aria-hidden="true" className="h-px w-full bg-[linear-gradient(to_right,rgba(241,239,250,0.16),rgba(241,239,250,0.07)_54%,transparent)]" />
+              <div className="max-w-[620px] pt-7">
               <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:gap-x-6">
               {FACTS.map((fact, index) => (
                 <div key={fact.unit} style={{ animationDelay: `${190 + index * 40}ms` }}>
@@ -354,11 +359,11 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
             ) : null}
           </div>
 
-          <div className="mt-10 grid overflow-hidden rounded-md border border-hairline/80 sm:grid-cols-3">
+          <div className="mt-10 grid overflow-hidden rounded-lg border border-white/[0.09] sm:grid-cols-3">
             {PHASES.map((phase) => (
               <div
                 key={phase.number}
-                className="border-b border-hairline/80 bg-panel/40 p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:p-7 sm:last:border-r-0"
+                className="border-b border-white/[0.07] bg-white/[0.015] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:p-7 sm:last:border-r-0"
               >
                 <p className="figure text-[12px] text-ink-faint">{phase.number}</p>
                 <h3 className="mt-3 font-sans text-[17px] font-medium text-ink">{phase.title}</h3>

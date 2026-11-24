@@ -3,6 +3,8 @@ import { describe, expect, it, vi } from "vitest";
 
 vi.mock("@/lib/repair/queries", () => ({
   getTrackedTicket: vi.fn(),
+  isRecordsUnavailable: (error: unknown) =>
+    /records|fetch failed|etimedout/i.test(String((error as Error)?.message ?? error)),
 }));
 
 import TrackPage from "@/app/track/page";
@@ -50,6 +52,30 @@ describe("TrackPage", () => {
     expect(screen.getAllByText("In repair").length).toBeGreaterThan(0);
     expect(screen.getByText("Status moved to in repair.")).toBeInTheDocument();
     expect(screen.getByText(/Hi Maya/)).toBeInTheDocument();
+  });
+
+  it("says the records are unreachable instead of blaming the code", async () => {
+    vi.mocked(getTrackedTicket).mockRejectedValue(new Error("fetch failed"));
+    const spy = vi.spyOn(console, "error").mockImplementation(() => {});
+
+    render(
+      await TrackPage({
+        searchParams: Promise.resolve({ code: "ABCDEFGHIJ" }),
+      }),
+    );
+
+    const alert = screen.getByRole("alert");
+    expect(alert).toHaveTextContent("Records are unreachable");
+    expect(alert).not.toHaveTextContent("No ticket matched that code");
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it("still surfaces a real fault rather than hiding it", async () => {
+    vi.mocked(getTrackedTicket).mockRejectedValue(new Error('column "x" does not exist'));
+    await expect(
+      TrackPage({ searchParams: Promise.resolve({ code: "ABCDEFGHIJ" }) }),
+    ).rejects.toThrow('column "x" does not exist');
   });
 
   it("explains a failed lookup", async () => {

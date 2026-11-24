@@ -50,23 +50,22 @@
     background-color: var(--canvas);
     -webkit-text-size-adjust: 100%;
     scrollbar-color: #2b2740 transparent;
+
+    /* The room's fixed floor. Painted here, on the root, so the moving light
+       field in <AmbientField> can sit above it: a negative-z child of <body>
+       paints under body's own background, which is why body is transparent. */
+    background-image:
+      radial-gradient(120% 70% at 50% -18%, rgba(110, 92, 247, 0.09), transparent 62%),
+      radial-gradient(130% 95% at 50% 122%, rgba(0, 0, 0, 0.6), transparent 66%);
+    background-attachment: fixed, fixed;
   }
 
   body {
-    @apply bg-canvas text-ink antialiased;
+    @apply text-ink antialiased;
     min-height: 100dvh;
     font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
     font-feature-settings: "ss01", "cv05";
-
-    /* The room: a violet lamp from above, a cyan spill at the far corner, and
-       a vignette at the walls. Nothing repeats, nothing tiles — there is no
-       grid under this product. */
-    background-image:
-      radial-gradient(120% 72% at 50% -20%, rgba(110, 92, 247, 0.17), transparent 60%),
-      radial-gradient(85% 55% at 88% 2%, rgba(69, 211, 232, 0.07), transparent 62%),
-      radial-gradient(100% 60% at 6% 98%, rgba(110, 92, 247, 0.06), transparent 58%),
-      radial-gradient(130% 95% at 50% 122%, rgba(0, 0, 0, 0.72), transparent 60%);
-    background-attachment: fixed, fixed, fixed, fixed;
+    background-color: transparent;
   }
 
   ::selection {
@@ -269,16 +268,6 @@
 
   /* Two soft blooms — the lamp above the bench and the spill it throws.
      Sits behind content, never eats a pointer. */
-  .aurora {
-    position: absolute;
-    pointer-events: none;
-    background-image:
-      radial-gradient(60% 55% at 22% 8%, rgba(110, 92, 247, 0.28), transparent 68%),
-      radial-gradient(48% 42% at 86% 74%, rgba(69, 211, 232, 0.14), transparent 70%),
-      radial-gradient(70% 60% at 50% 108%, rgba(78, 61, 224, 0.16), transparent 70%);
-    filter: blur(6px);
-  }
-
   /* Film grain over a dark field. 3% — enough to stop the gradient banding. */
   .grain::after {
     content: "";

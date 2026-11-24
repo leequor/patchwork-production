@@ -3,6 +3,8 @@ import { IBM_Plex_Mono, Instrument_Sans } from "next/font/google";
 
 import { APP_DESCRIPTION, APP_NAME, getSiteUrl } from "@/lib/config";
 
+import { AmbientField } from "@/components/patchwork/ambient-field";
+
 import "./globals.css";
 
 /**
@@ -41,7 +43,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0C0C0B",
+  themeColor: "#09080F",
   colorScheme: "dark",
 };
 
@@ -56,7 +58,10 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${sans.variable} ${mono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        <AmbientField />
+        {children}
+      </body>
     </html>
   );
 }

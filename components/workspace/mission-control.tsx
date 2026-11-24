@@ -368,10 +368,6 @@ export function MissionControl({
             </div>
 
             <div className="hairline-glow relative min-h-0 flex-1 overflow-hidden">
-              <div
-                aria-hidden="true"
-                className="aurora pointer-events-none absolute -inset-16 opacity-70"
-              />
               <div className="iris" />
               <DeviceStageMount
                 status={selected.status}

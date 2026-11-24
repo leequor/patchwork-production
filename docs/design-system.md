@@ -196,18 +196,41 @@ printed because this page is used by staff, not customers.
 ## Ornament
 
 Violet is the brand, so it is allowed to exist as light — but as *light*, not as a gradient poured
-over type. Five utilities carry it, all in `app/globals.css`:
+over type. The room itself is drawn by `components/patchwork/ambient-field.tsx`, mounted once in
+`app/layout.tsx`, and the rest are small utilities in `app/globals.css`:
 
-| Utility | What it draws | Where it is allowed |
+| Element | What it draws | Where it is allowed |
 | --- | --- | --- |
-| `.aurora` | Three soft radial blooms (violet, cyan, deep indigo), blurred. | Behind a hero or the bench panel. Never inside a card row. |
+| `<AmbientField>` | Four light fields: violet lamp, cyan spill, indigo floor, plus a near light that answers the pointer. | Once, behind everything, from the root layout. Never per page. |
 | `.grain` | 3% SVG fractal-noise overlay in `soft-light`. | Over large dark fields, to stop gradient banding. |
 | `.hairline-glow` | One 1 px rule fading indigo → cyan across a panel's top edge. | Panel tops only. |
 | `.bench-ticks` | Two corner brackets, like a technical drawing. | Around the 3D plate. |
 | `.iris` | A violet spotlight under the device. | Behind the 3D, always. |
 
-Rules that keep it from turning into decoration soup: one aurora per screen, ornaments never sit
-behind text, and no ornament is the only carrier of meaning.
+Rules that keep it from turning into decoration soup: one ambient field per screen, ornaments never
+sit behind text, and no ornament is the only carrier of meaning.
+
+### The background follows the pointer — on purpose, and cheaply
+
+The field is three drifting lights plus one near light. Each drifting light also shifts with the
+pointer by its own amount (12–260 px), which reads as parallax depth: the far lamp barely moves, the
+cyan spill swings. The near light tracks the pointer directly, damped at 5.5/s — light on a wall, not
+a cursor.
+
+How it stays cheap, and why it is written the way it is:
+
+- Each field is a pre-softened `radial-gradient` on a composited layer, moved with `transform` only.
+  No `filter: blur()`, no animated `background-position`, no repaint.
+- One `requestAnimationFrame` loop writes to the DOM directly; React never re-renders on pointer move.
+- Damping is `1 − exp(−k·dt)`, so the motion is identical at 60 Hz and 144 Hz.
+- The loop stops on `visibilitychange` and never starts under `prefers-reduced-motion`.
+- On `(pointer: coarse)` the pointer terms drop to 45% and the listener is not attached at all.
+
+**The stacking trap worth remembering:** the field lives at `-z-10` inside `<body>`. That only works
+if `<body>` has no background of its own — a negative-z child paints *under* its parent's background.
+So the base colour and the fixed gradients live on `<html>`, `body` is transparent, and the vignette
+that belongs in front of the light is a layer inside `AmbientField`. Moving body's background back
+would silently hide the whole field: the page would simply look flat, with no error anywhere.
 
 ## Editing a price
 

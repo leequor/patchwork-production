@@ -50,7 +50,6 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
   return (
     <main className="min-h-[100dvh]">
       <div className="grain relative mx-auto w-full max-w-[1180px] px-5 pb-10 sm:px-8">
-        <div aria-hidden="true" className="aurora pointer-events-none absolute -inset-x-16 -top-56 bottom-0 rounded-[50%] opacity-80" />
         <SiteHeader
           className="pt-6 sm:pt-8"
           back={staff ? { href: "/", label: "Back to bench" } : undefined}

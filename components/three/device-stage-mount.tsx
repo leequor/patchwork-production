@@ -64,33 +64,36 @@ export function DeviceStageMount({
 
   return (
     <div className={cn("relative isolate overflow-hidden", className)}>
-      {/* The bench surface: lamp pool, vignette, and nothing drawn on it. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(62% 50% at 52% 42%, rgba(217,164,65,0.155) 0%, rgba(217,164,65,0.045) 44%, rgba(12,12,11,0) 72%)",
-        }}
-      />
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "radial-gradient(80% 72% at 50% 112%, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0) 60%)",
-        }}
-      />
+      {/* The bench surface, masked at the edges so the panel has no rectangle:
+          the light and the device dissolve into the room around them. */}
+      <div className="bench-fade relative h-full w-full">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(58% 48% at 52% 42%, rgba(110,92,247,0.2) 0%, rgba(110,92,247,0.06) 46%, rgba(9,8,15,0) 74%)",
+          }}
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(78% 68% at 50% 108%, rgba(6,4,14,0.55) 0%, rgba(6,4,14,0) 62%)",
+          }}
+        />
 
-      <div ref={hostRef} className="relative h-full w-full">
-        {ready ? (
-          <DeviceStage
-            status={status}
-            form={form}
-            quality={reduced ? "low" : quality}
-            label={caption ?? "Bench view of the device in this repair"}
-          />
-        ) : null}
+        <div ref={hostRef} className="relative h-full w-full">
+          {ready ? (
+            <DeviceStage
+              status={status}
+              form={form}
+              quality={reduced ? "low" : quality}
+              label={caption ?? "Bench view of the device in this repair"}
+            />
+          ) : null}
+        </div>
       </div>
 
       {caption ? (

@@ -363,6 +363,36 @@ the only public pages you can arrive at from somewhere else. The workspace detai
 pages carry explicit parent links (`Back to tickets`) because their destination
 is knowable, and a history-aware control there would sometimes be wrong.
 
+## Auditing the site
+
+Four scripts, all kept in the repo because "I checked it" is not evidence:
+
+| Script | What it settles |
+| --- | --- |
+| `scripts/audit-site.mjs` | every route at 390/820/1440: status, console, page errors, failed requests, broken images, overflow; then every internal link resolves |
+| `scripts/audit-flows.mjs` | the public forms and the keyboard: empty submits, junk input, wrong password, the reveal toggle, palette, phone drawer |
+| `scripts/audit-detail.mjs` | DOM hygiene (duplicate ids, heading order, one `h1`), alt text, 24px tap targets, iOS 16px inputs, visible focus rings, production headers, robots/sitemap |
+| `scripts/audit-workspace.mjs` | the staff console against a live deployment, read-only — it never submits a mutation |
+
+Run them against a local server and against `https://patchwork-production.vercel.app`.
+The deployment is the only place some behaviours exist: the design-preview routes return 404 there
+by design, so the scripts skip those checks rather than report them as failures.
+
+### Where "records unreachable" is not "no repair found"
+
+`lib/repair/queries.ts` exports `RecordsUnavailableError` and `isRecordsUnavailable`. A remote failure
+arrives as `fetch failed` / `ETIMEDOUT` / `ENOTFOUND`, which is indistinguishable from a real exception
+unless it is classified. The tracker catches only that class: it tells the customer the records cannot
+be reached and that nothing was lost. Everything else still throws, so a genuine bug reaches
+`app/error.tsx` instead of hiding behind friendly copy.
+
+### Security headers, and the one deliberately missing
+
+`next.config.ts` sets `nosniff`, `X-Frame-Options: DENY`, a referrer policy, a permissions policy and
+COOP. There is **no** CSP: getting one wrong silently breaks Supabase auth and Next's inline styles,
+which is a worse failure than the class of attack it prevents on a shop desk. If it is ever added it
+must be tested deployment-first, not in a build.
+
 ## Rejected looks
 
 Do not bring these back:

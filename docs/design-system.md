@@ -213,25 +213,23 @@ with tight tracking reads composed and lets the illustration be the loud thing.
 
 ### The repair tree
 
-`components/landing/repair-tree.tsx` grows a blossom tree from a seeded L-system and draws it to a
-canvas: violet trunk brightening to lilac at the tips, blossom added with `lighter` compositing so it
-blooms, and a slow fall of glowing petals.
+`components/landing/repair-tree.tsx` composites a rendered blossom tree
+(`public/art/repair-tree.jpg`) over the page with `mix-blend-mode: screen`, so its black background
+contributes nothing and only the light remains. Nothing is cut out and no alpha channel is needed.
 
-- Drawn **once** to an offscreen canvas per resize; only petals animate, so a full-screen hero costs
-  one `drawImage` per frame. DPR capped at 2.
-- The tree is decorative: `aria-hidden`, and the headline carries the meaning.
-- `prefers-reduced-motion`: still tree, no petals, no loop.
+Why a render and not geometry: a blossom canopy is a **lighting** problem before it is a modelling
+problem. The first version was a canvas L-system drawing its own branches — it read as smoke, because
+soft blooms without real bounce light always do.
 
-### Never put type on artwork
+Motion is layered on top of the still art:
 
-Two rules, learned the hard way on this page:
+- `.tree-art` breathes on a 26s cycle (scale 1 → 1.02, ±1.1°), so the canopy is never frozen.
+- A canvas of ~60 petals falls through the foreground on its own phases, blended additively.
+- Pointer parallax moves the art 22px and the petals 10px — different amounts read as depth.
+- `prefers-reduced-motion` disables the sway, the petals and the parallax: the tree is still a tree.
 
-1. **A scrim, not hope.** A horizontal `canvas → canvas/90 → transparent` gradient over the art's
-   left side, extended past the section and masked vertically, so the headline's last line lands on
-   clean ground and the section boundary never draws a line across the page.
-2. **Clip nothing at a section edge.** If the art's layers are clipped by `overflow-hidden` at the
-   package boundary, an opaque floor gradient on top hides the ambient field in a band — and a band
-   is a seam. Let the layers overrun the section and fade on their own instead.
+The art is masked at top and bottom, and a violet floor sits *under* it so the black parts of the
+render composite onto brand light rather than the ambient cyan spill.
 
 ## Ornament
 

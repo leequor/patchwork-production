@@ -79,7 +79,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
         <div className="grid-field pointer-events-none absolute inset-x-0 top-0 bottom-[-9rem]" aria-hidden="true" />
 
         <div
-          className="pointer-events-none absolute right-[-14%] top-0 h-[54%] w-[104%] opacity-80 [mask-image:linear-gradient(to_bottom,#000_62%,transparent_100%)] sm:top-0 sm:h-[94%] sm:w-[70%] sm:opacity-100 sm:right-[-6%] lg:right-[-3%] lg:w-[52%]"
+          className="pointer-events-none absolute right-[-16%] top-0 h-[56%] w-[112%] [mask-image:linear-gradient(to_bottom,#000_64%,transparent_100%)] sm:top-0 sm:h-[94%] sm:w-[64%] sm:right-[-8%] lg:right-[-6%] lg:h-full lg:w-[48%]"
           aria-hidden="true"
         >
           <RepairTree className="h-full w-full [mask-image:radial-gradient(64%_70%_at_64%_44%,#000_26%,transparent_100%)]" />
@@ -95,7 +95,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
         {/* The scrim: the head of the page stays dark so the headline never
             sits on a blossom. It fades out before the tree's trunk. */}
         <div
-          className="pointer-events-none absolute inset-y-0 -bottom-36 left-0 w-full bg-gradient-to-r from-canvas via-canvas/90 to-transparent [mask-image:linear-gradient(to_bottom,#000_86%,transparent)] sm:w-[76%] lg:w-[66%]"
+          className="pointer-events-none absolute inset-y-0 -bottom-36 left-0 w-full bg-gradient-to-r from-canvas via-canvas/90 to-transparent [mask-image:linear-gradient(to_bottom,#000_86%,transparent)] sm:w-[76%] lg:w-[70%]"
           aria-hidden="true"
         />
 
@@ -107,13 +107,13 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
           />
 
           <div className="pt-16 sm:pt-24 lg:pt-28">
-            <p className="eyebrow rise">
+            <p className="eyebrow rise text-ink-secondary">
               <span className="sm:hidden">Repair operations</span>
               <span className="hidden sm:inline">Repair operations · live from the bench</span>
             </p>
 
-            <h1 className="rise display-hero mt-6 max-w-[12ch] text-[clamp(44px,6.6vw,92px)] text-ink">
-              Bring it back to life.
+            <h1 className="rise display-hero mt-6 max-w-[13ch] text-[clamp(44px,6.2vw,84px)] text-ink">
+              Where is my repair?
             </h1>
 
             <p
@@ -160,29 +160,29 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
               </div>
               <p
                 id="tracking-code-help"
-                className="mt-3 pl-5 font-sans text-[13px] leading-5 text-ink-tertiary"
+                className="mt-3 pl-5 font-sans text-[13px] leading-5 text-ink-secondary"
               >
                 Printed on the receipt next to the PW- ticket number. It is not the ticket number
                 itself.
               </p>
             </form>
 
-            <div className="rise mt-14 border-t border-hairline/70 pt-7 sm:mt-24">
-              <dl className="grid max-w-[760px] grid-cols-3 gap-x-4 gap-y-6 sm:gap-x-6">
+            <div className="rise mt-14 max-w-[620px] border-t border-hairline/70 pt-7 sm:mt-24">
+              <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:gap-x-6">
               {FACTS.map((fact, index) => (
                 <div key={fact.unit} style={{ animationDelay: `${190 + index * 40}ms` }}>
-                  <dd className="display-hero text-[clamp(22px,3.2vw,38px)] text-ink">
+                  <p className="display-hero text-[clamp(24px,3.2vw,40px)] text-ink">
                     {fact.value}
-                    <span className="ml-1.5 font-sans text-[13px] font-normal tracking-normal text-ink-tertiary">
-                      {fact.unit}
-                    </span>
-                  </dd>
-                  <dt className="mt-1.5 font-sans text-[13px] leading-5 text-ink-tertiary">
+                  </p>
+                  <p className="mt-2 font-mono text-2xs uppercase tracking-[0.18em] text-ink-tertiary">
+                    {fact.unit}
+                  </p>
+                  <p className="mt-1 font-sans text-[13px] leading-5 text-ink-tertiary">
                     {fact.note}
-                  </dt>
+                  </p>
                   </div>
                 ))}
-              </dl>
+              </div>
             </div>
           </div>
         </div>

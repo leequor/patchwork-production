@@ -30,7 +30,7 @@ describe("TrackPage", () => {
   it("renders the tracking form before a lookup", async () => {
     render(await TrackPage({ searchParams: Promise.resolve({}) }));
 
-    expect(screen.getByRole("heading", { name: "Bring it back to life." })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: "Where is my repair?" })).toBeInTheDocument();
     expect(screen.getByLabelText("Tracking code")).toBeInTheDocument();
     expect(screen.queryByLabelText("Email or phone")).not.toBeInTheDocument();
     expect(screen.getByRole("heading", { name: "Intake. Diagnose. Repair." })).toBeInTheDocument();

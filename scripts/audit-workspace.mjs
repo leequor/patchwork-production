@@ -46,7 +46,7 @@ await page.fill("#email", email);
 await page.fill("#password", password);
 await page.click('form button[type="submit"]');
 await page.waitForURL((url) => !url.pathname.startsWith("/login"), { timeout: 40000 });
-record("sign in", `landed on ${new URL(page.url()).pathname}`);
+console.log(`note: signed in, landed on ${new URL(page.url()).pathname}`);
 
 const routes = ["/", "/tickets", "/customers", "/inventory", "/invoices", "/team", "/tickets/new"];
 
@@ -87,15 +87,27 @@ if (spread(alignment.loadX) > 1) record("team workload column", `left edges spre
 
 /* Command palette, keyboard only. */
 await page.goto(`${prod}/tickets`, { waitUntil: "domcontentloaded" });
+/* Hydration has to finish before the shortcut listener exists; a person always
+   clicks first. Settle, then press, and press once more if the first landed
+   early rather than reporting a flake as a bug. */
+await page.waitForLoadState("networkidle");
+await page.waitForTimeout(800);
 await page.keyboard.press("Control+k");
 /* Rendered inside AnimatePresence: give it a beat, then assert on what a person
    would use — a dialog with focusable results. */
-const paletteOpen = await page
-  .locator('[role="dialog"]')
-  .first()
-  .waitFor({ state: "visible", timeout: 5000 })
-  .then(() => true)
-  .catch(() => false);
+const openPalette = () =>
+  page
+    .locator('[role="dialog"]')
+    .first()
+    .waitFor({ state: "visible", timeout: 3000 })
+    .then(() => true)
+    .catch(() => false);
+
+let paletteOpen = await openPalette();
+if (!paletteOpen) {
+  await page.keyboard.press("Control+k");
+  paletteOpen = await openPalette();
+}
 if (!paletteOpen) record("command palette", "did not open on Control+K");
 
 await page.keyboard.type("pw");

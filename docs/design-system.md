@@ -213,23 +213,25 @@ with tight tracking reads composed and lets the illustration be the loud thing.
 
 ### The repair tree
 
-`components/landing/repair-tree.tsx` composites a rendered blossom tree
-(`public/art/repair-tree.jpg`) over the page with `mix-blend-mode: screen`, so its black background
-contributes nothing and only the light remains. Nothing is cut out and no alpha channel is needed.
+`components/landing/repair-tree.tsx` renders a looping 8s bloom video at full bleed
+(`public/art/hero-sakura.mp4` — 1920×1080, audio stripped, 3 MB), with a still of the same tree
+(`public/art/sakura-tree.png`) under `prefers-reduced-motion`. The art is masked at the bottom so it
+dissolves into the next section instead of ending on a line.
 
-Why a render and not geometry: a blossom canopy is a **lighting** problem before it is a modelling
-problem. The first version was a canvas L-system drawing its own branches — it read as smoke, because
-soft blooms without real bounce light always do.
+Three attempts, and what each one taught:
 
-Motion is layered on top of the still art:
+| Attempt | Result | Lesson |
+| --- | --- | --- |
+| Canvas L-system, drawn branches | Read as smoke | Soft blooms without bounce light always do |
+| Generated still, `mix-blend-mode: screen` | Read as zoomed | A square render cropped into a wide frame loses its composition |
+| Wide render with its own motion | Matches the reference | Canopy, crop and petals are already composed for the frame |
 
-- `.tree-art` breathes on a 26s cycle (scale 1 → 1.02, ±1.1°), so the canopy is never frozen.
-- A canvas of ~60 petals falls through the foreground on its own phases, blended additively.
-- Pointer parallax moves the art 22px and the petals 10px — different amounts read as depth.
-- `prefers-reduced-motion` disables the sway, the petals and the parallax: the tree is still a tree.
+The scrims do the legibility work, never opacity on the artwork alone:
 
-The art is masked at top and bottom, and a violet floor sits *under* it so the black parts of the
-render composite onto brand light rather than the ambient cyan spill.
+- top band (128px) so nav links never land on a blossom;
+- wall `0.9 → 0.62 → 0.18 → transparent` so copy has ground but petals still read mid-frame;
+- floor that **fades out**, plus a matching hand-off at the top of the next section, because an
+  opaque floor hides the ambient field and draws a step across the page.
 
 ## Ornament
 

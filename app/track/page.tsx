@@ -80,7 +80,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
           the loud thing. */}
       <section className="relative flex min-h-[100svh] flex-col pb-6 sm:pb-8">
         <div
-          className="pointer-events-none absolute inset-x-0 top-0 bottom-[-9rem] [mask-image:linear-gradient(to_bottom,transparent,#000_7%,#000_66%,transparent_86%)]"
+          className="pointer-events-none absolute inset-x-0 top-0 -bottom-[9rem] opacity-90 [mask-image:linear-gradient(to_bottom,#000_0%,#000_76%,transparent_92%)]"
           aria-hidden="true"
         >
           <RepairTree className="h-full w-full" />
@@ -96,12 +96,12 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
           aria-hidden="true"
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(9,8,15,0.95)_0%,rgba(9,8,15,0.8)_34%,rgba(9,8,15,0.3)_60%,transparent_82%)]"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_right,rgba(9,8,15,0.9)_0%,rgba(9,8,15,0.62)_30%,rgba(9,8,15,0.18)_58%,transparent_80%)]"
           aria-hidden="true"
         />
 
         <div
-          className="pointer-events-none absolute inset-x-0 top-[26%] h-[46%] bg-[linear-gradient(to_bottom,transparent,rgba(9,8,15,0.62)_48%,rgba(9,8,15,0.92))] sm:hidden"
+          className="pointer-events-none absolute inset-x-0 top-[20%] h-[54%] bg-[linear-gradient(to_bottom,transparent,rgba(9,8,15,0.72)_42%,rgba(9,8,15,0.95)_78%,#09080f)] sm:hidden"
           aria-hidden="true"
         />
 
@@ -128,7 +128,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
             </h1>
 
             <p
-              className="rise mt-6 max-w-[44ch] font-sans text-[17px] leading-[1.6] text-ink-secondary"
+              className="rise mt-6 max-w-[32ch] font-sans text-[17px] leading-[1.6] text-ink-secondary sm:max-w-[44ch]"
               style={{ animationDelay: "70ms" }}
             >
               Ten characters from your intake receipt, and you can watch the bench work — no
@@ -178,7 +178,8 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
               </p>
             </form>
 
-            <div className="rise mt-auto max-w-[620px] border-t border-hairline/70 pt-7">
+            <div className="rise mt-auto max-w-[620px] pt-12">
+              <div className="border-t border-hairline/70 pt-7">
               <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:gap-x-6">
               {FACTS.map((fact, index) => (
                 <div key={fact.unit} style={{ animationDelay: `${190 + index * 40}ms` }}>
@@ -193,6 +194,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
                   </p>
                   </div>
                 ))}
+                </div>
               </div>
             </div>
           </div>

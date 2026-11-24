@@ -198,37 +198,11 @@
     opacity: 0.7;
   }
 
-  /* The rendered tree: a slow sway so the canopy is never perfectly frozen. */
-  .tree-art {
-    transform: translate3d(var(--px, 0px), var(--py, 0px), 0) rotate(-1.1deg);
-    animation: tree-breathe 26s ease-in-out infinite;
-    will-change: transform;
-  }
-
-  @keyframes tree-breathe {
-    0%,
-    100% {
-      scale: 1;
-      rotate: -1.1deg;
-    }
-    50% {
-      scale: 1.02;
-      rotate: 0.9deg;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tree-art {
-      animation: none;
-      transform: none;
-    }
-  }
-
   /* A blueprint grid, faded at the edges. Sits under hero artwork only. */
   .grid-field {
     background-image:
-      linear-gradient(to right, rgba(241, 239, 250, 0.035) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(241, 239, 250, 0.035) 1px, transparent 1px);
+      linear-gradient(to right, rgba(241, 239, 250, 0.022) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(241, 239, 250, 0.022) 1px, transparent 1px);
     background-size: 132px 132px;
     -webkit-mask-image: radial-gradient(115% 95% at 32% 28%, #000 26%, transparent 84%);
     mask-image: radial-gradient(115% 95% at 32% 28%, #000 26%, transparent 84%);

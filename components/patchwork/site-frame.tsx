@@ -52,7 +52,7 @@ export function SiteHeader({
           <Link
             key={item.href}
             href={item.href}
-            className="font-sans text-[14px] text-ink-secondary transition-colors duration-150 hover:text-ink"
+            className="tap font-sans text-[14px] text-ink-secondary transition-colors duration-150 hover:text-ink"
           >
             {item.label}
           </Link>
@@ -62,7 +62,7 @@ export function SiteHeader({
       <div className="flex shrink-0 items-center gap-4">
         <Link
           href="/login"
-          className="hidden font-sans text-[14px] text-ink-secondary transition-colors hover:text-ink sm:block"
+          className="tap hidden font-sans text-[14px] text-ink-secondary transition-colors hover:text-ink sm:block"
         >
           Sign in
         </Link>
@@ -125,7 +125,7 @@ export function SiteFooter({ className }: { className?: string }) {
                 <li key={link.label}>
                   <Link
                     href={link.href}
-                    className="font-sans text-[14px] text-ink-tertiary transition-colors duration-150 hover:text-ink"
+                    className="tap font-sans text-[14px] text-ink-tertiary transition-colors duration-150 hover:text-ink"
                   >
                     {link.label}
                   </Link>

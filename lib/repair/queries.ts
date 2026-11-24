@@ -49,6 +49,31 @@ function fail(message: string): never {
   throw new Error(message);
 }
 
+/**
+ * "I could not reach the records" is a different fact from "the records say no".
+ *
+ * Remote failures arrive as bare `fetch failed` / `ETIMEDOUT` / `ENOTFOUND`,
+ * which a page cannot tell apart from a real exception. Classifying them here
+ * lets a public page say something honest — "we cannot reach the records right
+ * now" — instead of either lying ("no repair with that code") or crashing.
+ */
+export class RecordsUnavailableError extends Error {
+  constructor(cause?: unknown) {
+    super("The records service is unreachable.");
+    this.name = "RecordsUnavailableError";
+    this.cause = cause;
+  }
+}
+
+const UNREACHABLE =
+  /fetch failed|ETIMEDOUT|ECONNREFUSED|ECONNRESET|ENOTFOUND|EAI_AGAIN|socket hang up|network/i;
+
+export function isRecordsUnavailable(error: unknown): boolean {
+  if (error instanceof RecordsUnavailableError) return true;
+  const message = error instanceof Error ? error.message : String(error);
+  return UNREACHABLE.test(message);
+}
+
 function permissionDenied(error: { message?: string; code?: string }) {
   return error.code === "42501" || /permission denied/i.test(error.message ?? "");
 }
@@ -427,11 +452,19 @@ export async function getCustomerOptions(): Promise<CustomerOption[]> {
 export const getTrackedTicket = cache(
   async (code: string): Promise<TrackedTicket | null> => {
     const supabase = await createSupabaseServerClient();
-    const { data, error } = await supabase.rpc("track_ticket", {
-      p_code: code,
-    });
 
-    if (error) fail(error.message);
+    let result;
+    try {
+      result = await supabase.rpc("track_ticket", { p_code: code });
+    } catch (error) {
+      throw new RecordsUnavailableError(error);
+    }
+
+    const { data, error } = result;
+    if (error) {
+      if (UNREACHABLE.test(error.message)) throw new RecordsUnavailableError(error);
+      fail(error.message);
+    }
     return (data as TrackedTicket | null) ?? null;
   },
 );

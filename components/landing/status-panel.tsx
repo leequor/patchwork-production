@@ -168,10 +168,10 @@ export function StatusPanel() {
       </div>
 
       <div className="mt-4 flex flex-wrap gap-x-5 gap-y-2 font-mono text-[11px] text-ink-tertiary">
-        <a className="transition-colors hover:text-ink" href="/api/health">
+        <a className="tap transition-colors hover:text-ink" href="/api/health">
           /api/health
         </a>
-        <a className="transition-colors hover:text-ink" href="/api/health/supabase">
+        <a className="tap transition-colors hover:text-ink" href="/api/health/supabase">
           /api/health/supabase
         </a>
       </div>

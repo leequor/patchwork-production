@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title: "Forgot password",
 };
 
-const linkClass = "font-sans font-semibold text-ink underline underline-offset-4 hover:text-accent";
+const linkClass = "tap font-sans font-semibold text-ink underline underline-offset-4 hover:text-accent";
 
 export default function ForgotPasswordPage() {
   return (

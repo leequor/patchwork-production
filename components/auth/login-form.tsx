@@ -48,7 +48,7 @@ export function LoginForm({
         placeholder="Your password"
         autoComplete="current-password"
         labelExtra={
-          <Link href="/forgot-password" className="hover:underline">
+          <Link href="/forgot-password" className="tap hover:underline">
             Forgot password?
           </Link>
         }

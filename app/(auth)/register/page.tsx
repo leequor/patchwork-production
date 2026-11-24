@@ -2,14 +2,32 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { AuthCard } from "@/components/auth/auth-card";
+import { RegisterForm } from "@/components/auth/register-form";
 
 export const metadata: Metadata = {
   title: "Staff access",
 };
 
-const linkClass = "font-sans font-semibold text-ink underline underline-offset-4 hover:text-accent";
+const linkClass = "tap font-sans font-semibold text-ink underline underline-offset-4 hover:text-accent";
 
 export default function RegisterPage() {
+  /* The escape hatch has to be wired to something: `registerAction` already
+     refuses unless this flag is set, and until now nothing rendered the form at
+     all, so the flag could never do what it promises. */
+  const openSignup = process.env.NEXT_PUBLIC_ALLOW_STAFF_SIGNUP === "true";
+
+  if (openSignup) {
+    return (
+      <AuthCard
+        title="Create a staff account"
+        description="Open registration is on for this deployment. Owners can close it again from the environment."
+        footer={<p>Accounts created here are technicians until an owner changes the role.</p>}
+      >
+        <RegisterForm />
+      </AuthCard>
+    );
+  }
+
   return (
     <AuthCard
       title="Invite-only staff access"

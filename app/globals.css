@@ -263,6 +263,15 @@
       0 0 0 3px rgba(110, 92, 247, 0.16);
   }
 
+  /* Inline text links are 18px tall at 14px type. WCAG 2.2 asks for 24px, and a
+     phone thumb asks for more. Padding, not size, so the rhythm is unchanged. */
+  .tap {
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding-block: 2px;
+  }
+
   /* Press feedback on every control, pointer or keyboard. */
   .press {
     transition:

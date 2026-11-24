@@ -11,7 +11,7 @@ import { formForCategory } from "@/lib/device-form";
 import { RelativeTime } from "@/components/ui/relative-time";
 import { StatusPill } from "@/components/workspace/ui";
 import { DEVICE_CATEGORY_LABELS, formatDate, TICKET_STATUS_META } from "@/lib/repair/format";
-import { getTrackedTicket } from "@/lib/repair/queries";
+import { getTrackedTicket, isRecordsUnavailable } from "@/lib/repair/queries";
 import { getStaff } from "@/lib/repair/session";
 import type { TicketStatus } from "@/lib/repair/types";
 import { cn } from "@/lib/utils";
@@ -65,10 +65,25 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
   const params = await searchParams;
   const code = params.code?.trim() ?? "";
   const hasQuery = Boolean(code);
-  const [ticket, staff] = await Promise.all([
-    hasQuery ? getTrackedTicket(code) : Promise.resolve(null),
-    getStaff(),
-  ]);
+
+  /* A tracker that dies on a bad code is a tracker nobody trusts. If the records
+     are unreachable the customer gets the truth — "we cannot check right now" —
+     not a lie ("no repair with that code") and not a stack trace. */
+  let ticket = null;
+  let staff = null;
+  let recordsDown = false;
+
+  try {
+    [ticket, staff] = await Promise.all([
+      hasQuery ? getTrackedTicket(code) : Promise.resolve(null),
+      getStaff(),
+    ]);
+  } catch (error) {
+    if (!isRecordsUnavailable(error)) throw error;
+    recordsDown = true;
+    console.error("[track] records unreachable:", error);
+  }
+
   const current = ticket ? railIndex(ticket.status) : -1;
   const closed = ticket ? ["picked_up", "cancelled"].includes(ticket.status) : false;
   const stage = ticket?.status ?? "intake";
@@ -156,7 +171,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
                   autoComplete="off"
                   spellCheck={false}
                   required
-                  className="h-11 min-w-0 flex-1 bg-transparent font-mono text-[14px] uppercase tracking-[0.12em] text-ink outline-none placeholder:text-ink-faint sm:text-[15px] sm:tracking-[0.2em]"
+                  className="h-11 min-w-0 flex-1 bg-transparent font-mono text-[16px] uppercase tracking-[0.12em] text-ink outline-none placeholder:text-ink-faint sm:tracking-[0.2em]"
                 />
                 <button
                   type="submit"
@@ -204,7 +219,15 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
       </section>
 
       <div className="relative mx-auto w-full max-w-[1180px] px-5 sm:px-8">
-        {params.error || (hasQuery && !ticket) ? (
+        {recordsDown ? (
+          <div className="pb-2">
+            <SystemAlert title="Records are unreachable">
+              We cannot check ticket status this minute — the desk&rsquo;s database is not
+              answering. Nothing was lost: your repair is on the bench and the record is safe. Try
+              again in a moment, or ask at the counter and we will read it from the desk screen.
+            </SystemAlert>
+          </div>
+        ) : params.error || (hasQuery && !ticket) ? (
           <SystemAlert title={params.error ? "Request failed" : "No match"}>
             {params.error ||
               "No ticket matched that code. Check the ten characters on the receipt."}

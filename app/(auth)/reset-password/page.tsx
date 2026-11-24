@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 const linkClass =
-  "font-sans font-semibold text-ink underline underline-offset-4 transition-colors hover:text-accent";
+  "tap font-sans font-semibold text-ink underline underline-offset-4 transition-colors hover:text-accent";
 const codeClass = "figure rounded-sm bg-overlay px-1.5 py-0.5 text-[13px] text-ink";
 
 export default async function ResetPasswordPage() {

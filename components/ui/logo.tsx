@@ -100,13 +100,13 @@ export function Logo({
   );
 
   if (!href) {
-    return <div className={cn("flex items-center gap-2.5", className)}>{content}</div>;
+    return <div className={cn("tap flex items-center gap-2.5", className)}>{content}</div>;
   }
 
   return (
     <Link
       href={href}
-      className={cn("flex items-center gap-2.5", className)}
+      className={cn("tap flex items-center gap-2.5", className)}
       aria-label={`${APP_NAME} home`}
     >
       {content}

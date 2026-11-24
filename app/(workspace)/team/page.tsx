@@ -51,7 +51,7 @@ export default async function TeamPage({
               return (
                 <li
                   key={member.id}
-                  className="grid gap-2 px-3 py-2.5 sm:grid-cols-[1.3fr_0.7fr_0.9fr_auto] sm:items-center sm:gap-3"
+                  className="grid gap-2 px-3 py-2.5 sm:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)_minmax(0,0.9fr)_11rem] sm:items-start sm:gap-3"
                 >
                   <span className="flex min-w-0 items-center gap-2.5">
                     <span className="grid h-8 w-8 shrink-0 place-items-center rounded bg-overlay text-[13px] font-semibold text-ink">
@@ -70,15 +70,17 @@ export default async function TeamPage({
                     </span>
                   </span>
 
-                  <span className="text-[13px] text-ink-secondary">{ROLE_LABELS[member.role]}</span>
+                  <span className="text-[13px] leading-[1.45] text-ink-secondary">
+                    {ROLE_LABELS[member.role]}
+                  </span>
 
-                  <span className="text-[13px] text-ink-secondary">
+                  <span className="text-[13px] leading-[1.45] text-ink-secondary">
                     <span className="figure text-[13px] text-ink">{memberLoad?.open ?? 0}</span> open ·{" "}
                     <span className="figure text-[13px] text-ink">{memberLoad?.active ?? 0}</span>{" "}
                     in repair
                   </span>
 
-                  <span>
+                  <span className="sm:self-center">
                     {canEditMember ? (
                       <form action={updateRoleAction} className="flex items-center gap-1.5">
                         <input type="hidden" name="profile_id" value={member.id} />

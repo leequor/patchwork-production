@@ -59,14 +59,14 @@ export function AuthShell({ children }: { children: ReactNode }) {
           >
             <Link
               href="/track"
-              className="font-sans text-[13px] font-medium text-ink transition-colors hover:text-accent-bright"
+              className="tap font-sans text-[13px] font-medium text-ink transition-colors hover:text-accent-bright"
             >
               Track a repair
             </Link>
             <span aria-hidden="true" className="h-3 w-px bg-white/12" />
             <Link
               href="/status"
-              className="font-sans text-[13px] text-ink-tertiary transition-colors hover:text-ink"
+              className="tap font-sans text-[13px] text-ink-tertiary transition-colors hover:text-ink"
             >
               System status
             </Link>

@@ -6,6 +6,7 @@ import { useActionState, useState } from "react";
 import { loginAction } from "@/app/actions/auth";
 import { Alert } from "@/components/ui/alert";
 import { FormField } from "@/components/ui/form-field";
+import { PasswordField } from "@/components/ui/password-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { initialAuthState } from "@/lib/auth/types";
 
@@ -40,10 +41,9 @@ export function LoginForm({
         required
       />
 
-      <FormField
+      <PasswordField
         id="password"
         name="password"
-        type="password"
         label="Password"
         placeholder="Your password"
         autoComplete="current-password"

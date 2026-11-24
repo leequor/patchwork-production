@@ -4,7 +4,7 @@ import { useActionState } from "react";
 
 import { resetPasswordAction } from "@/app/actions/auth";
 import { Alert } from "@/components/ui/alert";
-import { FormField } from "@/components/ui/form-field";
+import { PasswordField } from "@/components/ui/password-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { initialAuthState } from "@/lib/auth/types";
 
@@ -15,10 +15,9 @@ export function ResetPasswordForm() {
     <form action={formAction} className="space-y-5" noValidate>
       {state.status === "error" ? <Alert tone="error">{state.message}</Alert> : null}
 
-      <FormField
+      <PasswordField
         id="password"
         name="password"
-        type="password"
         label="New password"
         hint="At least 6 characters"
         placeholder="Enter a new password"
@@ -27,10 +26,9 @@ export function ResetPasswordForm() {
         required
       />
 
-      <FormField
+      <PasswordField
         id="confirmPassword"
         name="confirmPassword"
-        type="password"
         label="Confirm new password"
         placeholder="Type it again"
         autoComplete="new-password"

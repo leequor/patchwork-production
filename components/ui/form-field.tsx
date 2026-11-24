@@ -8,6 +8,8 @@ export type FormFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   hint?: string;
   error?: string;
   labelExtra?: ReactNode;
+  /** Sits inside the field's right edge — a reveal toggle, a unit, an icon. */
+  trailing?: ReactNode;
 };
 
 export function FormField({
@@ -16,6 +18,7 @@ export function FormField({
   hint,
   error,
   labelExtra,
+  trailing,
   className,
   ...inputProps
 }: FormFieldProps) {
@@ -41,21 +44,27 @@ export function FormField({
           </span>
         ) : null}
       </div>
-      <input
-        id={id}
-        aria-invalid={Boolean(error)}
-        aria-describedby={describedBy}
-        className={cn(
-          "h-11 w-full rounded-sm border border-hairline-strong bg-[#07060d] px-3 font-sans text-[16px] text-ink",
-          "shadow-[inset_0_1px_2px_rgba(0,0,0,0.9)] outline-none",
-          "transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
-          "placeholder:text-ink-tertiary hover:border-ink-faint",
-          "focus:border-accent/70 focus:shadow-[inset_0_1px_2px_rgba(0,0,0,0.9),0_0_0_3px_rgba(217,164,65,0.14)] focus-visible:outline-none",
-          error ? "border-negative focus:border-negative" : null,
-          className,
-        )}
-        {...inputProps}
-      />
+      <div className="relative">
+        <input
+          id={id}
+          aria-invalid={Boolean(error)}
+          aria-describedby={describedBy}
+          className={cn(
+            "h-11 w-full rounded-sm border border-hairline-strong bg-[#07060d] px-3 font-sans text-[16px] text-ink",
+            "shadow-[inset_0_1px_2px_rgba(0,0,0,0.9)] outline-none",
+            "transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.22,1,0.36,1)]",
+            "placeholder:text-ink-tertiary hover:border-ink-faint",
+            "focus:border-accent/70 focus:shadow-[inset_0_1px_2px_rgba(0,0,0,0.9),0_0_0_3px_rgba(110,92,247,0.20)] focus-visible:outline-none",
+            error ? "border-negative focus:border-negative" : null,
+            trailing ? "pr-11" : null,
+            className,
+          )}
+          {...inputProps}
+        />
+        {trailing ? (
+          <span className="absolute inset-y-0 right-1 flex items-center">{trailing}</span>
+        ) : null}
+      </div>
       {hint && labelExtra ? (
         <p id={`${id}-hint`} className="font-sans text-[13px] leading-5 text-ink-secondary">
           {hint}

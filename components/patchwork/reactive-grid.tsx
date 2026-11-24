@@ -85,7 +85,7 @@ export function ReactiveGrid({ className }: { className?: string }) {
       {/* The drawing, at rest. */}
       <div
         className="absolute inset-0"
-        style={{ backgroundImage: lines(0.04), backgroundSize: "132px 132px" }}
+        style={{ backgroundImage: lines(0.03), backgroundSize: "132px 132px" }}
       />
 
       {/* The same drawing, lit where the hand is, and shifted a few pixels
@@ -93,7 +93,7 @@ export function ReactiveGrid({ className }: { className?: string }) {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage: lines(0.17),
+          backgroundImage: lines(0.10),
           backgroundSize: "132px 132px",
           transform: "translate3d(var(--gdx, 0px), var(--gdy, 0px), 0)",
           WebkitMaskImage:

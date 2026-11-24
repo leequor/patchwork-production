@@ -5,6 +5,7 @@ import { useActionState } from "react";
 import { registerAction } from "@/app/actions/auth";
 import { Alert } from "@/components/ui/alert";
 import { FormField } from "@/components/ui/form-field";
+import { PasswordField } from "@/components/ui/password-field";
 import { SubmitButton } from "@/components/ui/submit-button";
 import { initialAuthState } from "@/lib/auth/types";
 
@@ -38,10 +39,9 @@ export function RegisterForm() {
         required
       />
 
-      <FormField
+      <PasswordField
         id="password"
         name="password"
-        type="password"
         label="Password"
         hint="At least 6 characters"
         placeholder="Create a password"

@@ -99,8 +99,8 @@ export function PointerDust({ className }: { className?: string }) {
 
       /* The gathering itself: a very soft violet pool the motes sit in. */
       const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, 360);
-      halo.addColorStop(0, "rgba(122, 106, 255, 0.14)");
-      halo.addColorStop(0.5, "rgba(96, 84, 220, 0.055)");
+      halo.addColorStop(0, "rgba(122, 106, 255, 0.055)");
+      halo.addColorStop(0.5, "rgba(96, 84, 220, 0.022)");
       halo.addColorStop(1, "rgba(96, 84, 220, 0)");
       ctx.fillStyle = halo;
       ctx.beginPath();
@@ -138,7 +138,7 @@ export function PointerDust({ className }: { className?: string }) {
         if (mote.y > height + 20) mote.y = -20;
 
         const near = distance < RADIUS ? 1 - distance / RADIUS : 0;
-        const alpha = 0.18 + near * 0.8;
+        const alpha = 0.09 + near * 0.34;
         const glow = ctx.createRadialGradient(mote.x, mote.y, 0, mote.x, mote.y, mote.size * 7);
         glow.addColorStop(
           0,

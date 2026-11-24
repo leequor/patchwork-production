@@ -67,7 +67,7 @@ export default function RootLayout({
           it. `pointer-events-none` keeps it out of the way of clicks, and its
           opacity keeps it out of the way of reading.
         */}
-        <PointerDust className="pointer-events-none fixed inset-0 z-[45] h-full w-full opacity-80" />
+        <PointerDust className="pointer-events-none fixed inset-0 z-[45] h-full w-full opacity-55" />
         {children}
       </body>
     </html>

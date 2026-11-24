@@ -285,6 +285,32 @@ Measured, not asserted: `scripts/measure-follow.mjs` parks the pointer on a fixe
 probe and compares mean luminance there with the pointer at the opposite corner.
 Current reading: **+39%** (25.5 → 35.5) at the probe.
 
+### The mark: two pieces, one seam
+
+`components/ui/logo.tsx` is a square made of two equal pieces of cloth, a seam in the page's ground
+colour, and thread along the seam. Four decisions, each load-bearing at 16px:
+
+| Decision | Why |
+| --- | --- |
+| Equal pieces, true diagonal | An asymmetric corner patch reads as a folded page; a symmetric split survives rasterisation |
+| Bright lavender vs deep indigo | Two *values*, not two tints — the split has to hold at 16px |
+| Seam is a ground-coloured stroke | Keeps the silhouette solid while still separating the pieces |
+| Thread on the dark half only | Pale dashes on pale lavender vanish; on indigo they read |
+
+The previous mark (a device with its corner sewn back on) was rejected on rasterised pixels, not on
+the vector: at 16px the patch and the stitches both disappeared. Candidates were judged from an 8×
+nearest-neighbour blow-up of the real 16px raster (`shots/logo-candidates.html`), never from the SVG.
+
+### Reading a password
+
+`components/ui/password-field.tsx` wraps `FormField` with a reveal toggle in the field's `trailing`
+slot. The eye is **always** there rather than appearing after a failed attempt: typing blind on a
+phone keyboard is the most common way a first sign-in fails, and it fails silently.
+
+The control is a real button — `type="button"` so it cannot submit, `aria-pressed`, and a label that
+swaps between "Show password" and "Hide password". Focus order puts it after the field and before
+submit, which is where the hand reaches when it realises it cannot see what it typed.
+
 ### Hairlines never end mid-air
 
 A 1px `border-top` stops dead and reads as a cut. Dividers are gradient rules that

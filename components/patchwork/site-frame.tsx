@@ -23,12 +23,15 @@ const NAV = [
 export function SiteHeader({
   action,
   back,
+  showSignIn = true,
   className,
 }: {
   /** The single right-hand control for this page. */
   action?: { href: string; label: string };
   /** The way out. Falls back to history when the caller has no route to offer. */
   back?: { href: string; label: string };
+  /** Hide when the primary action already takes the visitor to sign in. */
+  showSignIn?: boolean;
   className?: string;
 }) {
   return (
@@ -60,12 +63,14 @@ export function SiteHeader({
       </nav>
 
       <div className="flex shrink-0 items-center gap-4">
-        <Link
-          href="/login"
-          className="tap hidden font-sans text-[14px] text-ink-secondary transition-colors hover:text-ink sm:block"
-        >
-          Sign in
-        </Link>
+        {showSignIn ? (
+          <Link
+            href="/login"
+            className="tap hidden font-sans text-[14px] text-ink-secondary transition-colors hover:text-ink sm:block"
+          >
+            Sign in
+          </Link>
+        ) : null}
         <Link
           href={action?.href ?? "/track"}
           className="inline-flex h-9 items-center rounded-full bg-ink px-4 font-sans text-[13px] font-medium text-canvas transition-transform duration-150 hover:-translate-y-px active:translate-y-0"

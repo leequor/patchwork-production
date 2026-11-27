@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { inviteStaffAction, updateRoleAction } from "@/app/actions/repair";
 import { FormField } from "@/components/ui/form-field";
 import { SubmitButton } from "@/components/ui/submit-button";
-import { SelectField } from "@/components/workspace/form-controls";
+import { SelectControl, SelectField } from "@/components/workspace/form-controls";
 import { Feedback, PageHeader, Panel, PanelHeader } from "@/components/workspace/ui";
 import { ROLE_LABELS } from "@/lib/repair/format";
 import { getDashboardData, getStaffProfiles } from "@/lib/repair/queries";
@@ -87,19 +87,20 @@ export default async function TeamPage({
                         <label className="sr-only" htmlFor={`role-${member.id}`}>
                           Role for {member.full_name || member.email}
                         </label>
-                        <select
+                        <SelectControl
                           id={`role-${member.id}`}
                           name="role"
                           defaultValue={member.role}
-                          className="h-7 rounded bg-canvas ring-1 ring-inset ring-white/[0.06] px-1.5 text-[13px] text-ink outline-none focus:border-accent"
+                          wrapperClassName="w-28 shrink-0"
+                          className="h-9 rounded bg-canvas pl-2 pr-7 text-[13px]"
                         >
                           {isOwner ? <option value="superadmin">Owner</option> : null}
                           <option value="admin">Manager</option>
                           <option value="user">Technician</option>
-                        </select>
+                        </SelectControl>
                         <button
                           type="submit"
-                          className="h-7 rounded px-2 text-[13px] text-ink-secondary transition-colors hover:bg-overlay hover:text-ink"
+                          className="h-9 shrink-0 rounded px-2 text-[13px] text-ink-secondary transition-colors hover:bg-overlay hover:text-ink"
                         >
                           Save
                         </button>

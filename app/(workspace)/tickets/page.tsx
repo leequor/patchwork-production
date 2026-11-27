@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { MotionRow } from "@/components/workspace/motion-row";
+import { SelectControl } from "@/components/workspace/form-controls";
 import {
   EmptyState,
   Feedback,
@@ -29,8 +30,8 @@ type SearchParams = Promise<{
   error?: string;
 }>;
 
-const FILTER =
-  "h-10 w-full rounded-lg bg-raised ring-1 ring-inset ring-white/[0.07] px-2.5 font-sans text-[13px] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/70 hover:border-hairline-strong focus:border-accent focus:ring-2 focus:ring-accent/40";
+const FILTER_INPUT =
+  "field-inset h-11 w-full rounded border border-hairline px-3 font-sans text-[16px] text-ink outline-none transition-[border-color,box-shadow] duration-150 placeholder:text-ink-secondary/70 hover:border-hairline-strong focus-visible:border-accent-bright focus-visible:outline-none";
 
 export default async function TicketsPage({ searchParams }: { searchParams: SearchParams }) {
   const params = await searchParams;
@@ -68,53 +69,53 @@ export default async function TicketsPage({ searchParams }: { searchParams: Sear
               name="q"
               defaultValue={params.q}
               placeholder="Ticket, customer, phone, device"
-              className={FILTER}
+              className={FILTER_INPUT}
             />
           </label>
           <label>
             <span className="sr-only">Status</span>
-            <select name="status" defaultValue={params.status ?? "all"} className={FILTER}>
+            <SelectControl name="status" defaultValue={params.status ?? "all"}>
               <option value="all">All statuses</option>
               {TICKET_STATUSES.map((status) => (
                 <option key={status} value={status}>
                   {TICKET_STATUS_META[status].label}
                 </option>
               ))}
-            </select>
+            </SelectControl>
           </label>
           <label>
             <span className="sr-only">Priority</span>
-            <select name="priority" defaultValue={params.priority ?? "all"} className={FILTER}>
+            <SelectControl name="priority" defaultValue={params.priority ?? "all"}>
               <option value="all">All priorities</option>
               {TICKET_PRIORITIES.map((priority) => (
                 <option key={priority} value={priority}>
                   {PRIORITY_META[priority].label}
                 </option>
               ))}
-            </select>
+            </SelectControl>
           </label>
           <label>
             <span className="sr-only">Technician</span>
-            <select name="assigned" defaultValue={params.assigned ?? "all"} className={FILTER}>
+            <SelectControl name="assigned" defaultValue={params.assigned ?? "all"}>
               <option value="all">Any technician</option>
               {staff.map((member) => (
                 <option key={member.id} value={member.id}>
                   {member.full_name || member.email}
                 </option>
               ))}
-            </select>
+            </SelectControl>
           </label>
           <div className="flex gap-2">
             <button
               type="submit"
-              className="primary inline-flex h-9 items-center justify-center rounded-sm px-3.5 font-sans text-[13px] font-semibold transition-[filter,transform] duration-150 hover:brightness-[1.06] active:translate-y-px"
+              className="primary inline-flex h-11 items-center justify-center rounded-sm px-4 font-sans text-[14px] font-semibold transition-[filter,transform] duration-150 hover:brightness-[1.06] active:translate-y-px"
             >
               Filter
             </button>
             {active ? (
               <Link
                 href="/tickets"
-                className="inline-flex h-10 items-center justify-center rounded-lg px-2.5 font-sans text-[13px] text-ink-secondary transition-colors hover:text-ink"
+                className="inline-flex h-11 items-center justify-center rounded px-2.5 font-sans text-[14px] text-ink-secondary transition-colors hover:text-ink"
               >
                 Clear
               </Link>

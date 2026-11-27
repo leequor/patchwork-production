@@ -8,16 +8,16 @@ import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
  * Dust that notices you.
  *
  * A near field of motes over the hero: each one drifts on its own slow sway, and
- * anything within 260px of the pointer is pulled gently toward it, then damped
+ * anything within 300px of the pointer is pulled gently toward it, then damped
  * back into the drift. The radius matters more than the force — you want dust
  * disturbed by a hand, not particles chasing a cursor.
  *
  * Brightness is a function of distance, so the field has a soft centre that
  * follows the hand. Additive blending keeps it as light rather than dots.
  *
- * Performance: one canvas, dots only, no gradients larger than 14px radius, and
- * the loop stops when the tab is hidden. `prefers-reduced-motion` never starts
- * it — the hero still has the artwork, it simply has no dust.
+ * Performance: one canvas, two cached glow sprites, and one pointer halo per
+ * frame. The loop stops when the tab is hidden; reduced motion leaves the field
+ * still, and touch devices keep only the slow drift.
  */
 
 type Mote = {
@@ -56,8 +56,33 @@ export function PointerDust({ className }: { className?: string }) {
     /* Where the hand was last frame, so a fast pass can leave a wake. */
     const previousHand = { x: 0.5, y: 0.5 };
     let handSpeed = 0;
+    let pointerActive = false;
+    const coarsePointer = window.matchMedia("(pointer: coarse)").matches;
+
+    const makeGlow = (color: string) => {
+      const size = 48;
+      const sprite = document.createElement("canvas");
+      sprite.width = size;
+      sprite.height = size;
+      const spriteContext = sprite.getContext("2d");
+      if (!spriteContext) return sprite;
+
+      const glow = spriteContext.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
+      glow.addColorStop(0, `rgba(${color}, 0.92)`);
+      glow.addColorStop(0.28, `rgba(${color}, 0.32)`);
+      glow.addColorStop(0.72, `rgba(${color}, 0.035)`);
+      glow.addColorStop(1, "rgba(110, 92, 247, 0)");
+      spriteContext.fillStyle = glow;
+      spriteContext.fillRect(0, 0, size, size);
+      return sprite;
+    };
+
+    const violetGlow = makeGlow("206, 190, 255");
+    const coolGlow = makeGlow("69, 211, 232");
 
     const seed = () => {
+      const oldWidth = width;
+      const oldHeight = height;
       width = canvas.clientWidth;
       height = canvas.clientHeight;
       if (!width || !height) return;
@@ -65,12 +90,21 @@ export function PointerDust({ className }: { className?: string }) {
       canvas.width = Math.round(width * dpr);
       canvas.height = Math.round(height * dpr);
 
-      motes = Array.from({ length: Math.round(Math.min(110, width / 16)) }, () => ({
+      if (motes.length && oldWidth && oldHeight) {
+        for (const mote of motes) {
+          mote.x = (mote.x / oldWidth) * width;
+          mote.y = (mote.y / oldHeight) * height;
+        }
+        return;
+      }
+
+      const count = Math.round(Math.min(72, Math.max(18, width / 20)));
+      motes = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 6,
         vy: (Math.random() - 0.5) * 6,
-        size: 1.1 + Math.random() * 2.6,
+        size: 0.8 + Math.random() * 1.6,
         cool: Math.random() > 0.74,
         phase: Math.random() * Math.PI * 2,
       }));
@@ -86,33 +120,36 @@ export function PointerDust({ className }: { className?: string }) {
 
       /* A hand that moves fast pushes dust aside. Smoothed so a single jittery
          event does not blow the field apart. */
-      const travel =
-        Math.hypot(pointer.x - previousHand.x, pointer.y - previousHand.y) *
-        Math.max(width, height);
+      const travel = Math.hypot(pointer.x - previousHand.x, pointer.y - previousHand.y) * Math.max(width, height);
       previousHand.x = pointer.x;
       previousHand.y = pointer.y;
-      handSpeed += (Math.min(travel / Math.max(dt, 0.008) / 2600, 1) - handSpeed) * 0.14;
+      const speedTarget = pointerActive
+        ? Math.min(travel / Math.max(dt, 0.008) / 2600, 1)
+        : 0;
+      handSpeed += (speedTarget - handSpeed) * (1 - Math.exp(-8 * dt));
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, width, height);
       ctx.globalCompositeOperation = "lighter";
 
-      /* The gathering itself: a very soft violet pool the motes sit in. */
-      const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, 360);
-      halo.addColorStop(0, "rgba(122, 106, 255, 0.055)");
-      halo.addColorStop(0.5, "rgba(96, 84, 220, 0.022)");
-      halo.addColorStop(1, "rgba(96, 84, 220, 0)");
-      ctx.fillStyle = halo;
-      ctx.beginPath();
-      ctx.arc(cx, cy, 360, 0, Math.PI * 2);
-      ctx.fill();
+      if (pointerActive) {
+        /* The gathering itself: one soft violet pool follows the hand. */
+        const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, 360);
+        halo.addColorStop(0, "rgba(122, 106, 255, 0.055)");
+        halo.addColorStop(0.5, "rgba(96, 84, 220, 0.022)");
+        halo.addColorStop(1, "rgba(96, 84, 220, 0)");
+        ctx.fillStyle = halo;
+        ctx.beginPath();
+        ctx.arc(cx, cy, 360, 0, Math.PI * 2);
+        ctx.fill();
+      }
 
       for (const mote of motes) {
         const dx = cx - mote.x;
         const dy = cy - mote.y;
         const distance = Math.hypot(dx, dy);
 
-        if (distance < RADIUS && distance > 1) {
+        if (pointerActive && distance < RADIUS && distance > 1) {
           const force = (1 - distance / RADIUS) * FORCE;
           mote.vx += (dx / distance) * force * dt;
           mote.vy += (dy / distance) * force * dt;
@@ -126,8 +163,8 @@ export function PointerDust({ className }: { className?: string }) {
 
         mote.vx += Math.sin(elapsed * 0.5 + mote.phase) * 2.4 * dt;
         mote.vy += Math.cos(elapsed * 0.42 + mote.phase) * 2 * dt;
-        mote.vx *= 1 - Math.min(0.9, 1.6 * dt);
-        mote.vy *= 1 - Math.min(0.9, 1.6 * dt);
+        mote.vx *= Math.exp(-1.6 * dt);
+        mote.vy *= Math.exp(-1.6 * dt);
 
         mote.x += mote.vx * dt;
         mote.y += mote.vy * dt;
@@ -137,20 +174,19 @@ export function PointerDust({ className }: { className?: string }) {
         if (mote.y < -20) mote.y = height + 20;
         if (mote.y > height + 20) mote.y = -20;
 
-        const near = distance < RADIUS ? 1 - distance / RADIUS : 0;
-        const alpha = 0.09 + near * 0.34;
-        const glow = ctx.createRadialGradient(mote.x, mote.y, 0, mote.x, mote.y, mote.size * 7);
-        glow.addColorStop(
-          0,
-          mote.cool ? `rgba(69, 211, 232, ${alpha})` : `rgba(206, 190, 255, ${alpha})`,
+        const near = pointerActive && distance < RADIUS ? 1 - distance / RADIUS : 0;
+        ctx.globalAlpha = 0.09 + near * 0.34;
+        const radius = mote.size * 7;
+        ctx.drawImage(
+          mote.cool ? coolGlow : violetGlow,
+          mote.x - radius,
+          mote.y - radius,
+          radius * 2,
+          radius * 2,
         );
-        glow.addColorStop(1, "rgba(110, 92, 247, 0)");
-        ctx.fillStyle = glow;
-        ctx.beginPath();
-        ctx.arc(mote.x, mote.y, mote.size * 7, 0, Math.PI * 2);
-        ctx.fill();
       }
 
+      ctx.globalAlpha = 1;
       ctx.globalCompositeOperation = "source-over";
     };
 
@@ -172,14 +208,23 @@ export function PointerDust({ className }: { className?: string }) {
     };
 
     const onPointer = (event: PointerEvent) => {
+      if (event.pointerType === "touch") return;
       pointer.x = event.clientX / window.innerWidth;
       pointer.y = event.clientY / window.innerHeight;
+      pointerActive = true;
+    };
+    const onPointerLeave = () => {
+      pointer.x = 0.5;
+      pointer.y = 0.5;
+      pointerActive = false;
+      handSpeed = 0;
     };
     const onVisibility = () => (document.hidden ? stop() : start());
 
     seed();
     window.addEventListener("resize", seed);
-    window.addEventListener("pointermove", onPointer, { passive: true });
+    if (!coarsePointer) window.addEventListener("pointermove", onPointer, { passive: true });
+    window.addEventListener("pointerleave", onPointerLeave);
     document.addEventListener("visibilitychange", onVisibility);
     start();
 
@@ -187,6 +232,7 @@ export function PointerDust({ className }: { className?: string }) {
       stop();
       window.removeEventListener("resize", seed);
       window.removeEventListener("pointermove", onPointer);
+      window.removeEventListener("pointerleave", onPointerLeave);
       document.removeEventListener("visibilitychange", onVisibility);
     };
   }, [reduced]);

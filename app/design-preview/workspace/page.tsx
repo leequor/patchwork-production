@@ -21,8 +21,8 @@ export default function WorkspacePreviewPage() {
   }
 
   return (
-    <WorkspaceShell user={PREVIEW_USER}>
-      <MissionControl queue={PREVIEW_QUEUE} {...PREVIEW_DASHBOARD} />
+    <WorkspaceShell user={PREVIEW_USER} preview>
+      <MissionControl queue={PREVIEW_QUEUE} {...PREVIEW_DASHBOARD} preview />
     </WorkspaceShell>
   );
 }

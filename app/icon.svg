@@ -1,26 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none">
   <defs>
-    <clipPath id="b">
-      <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
+    <clipPath id="patchwork-p">
+      <path d="M4 21.5V3.4A1.4 1.4 0 0 1 5.4 2h7.4c5.5 0 8.6 2.9 8.6 7.6s-3.1 7.6-8.6 7.6H9v4.3z M9 6.5v6.4h3.8c2.5 0 3.8-.9 3.8-3.2s-1.3-3.2-3.8-3.2z" clip-rule="evenodd" />
     </clipPath>
-    <linearGradient id="lit" x1="3" y1="3" x2="15" y2="17" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#C2B4FF" />
-      <stop offset="1" stop-color="#8C79FF" />
+    <linearGradient id="patchwork-p-body" x1="4" y1="2" x2="20" y2="22" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8E7EFF" />
+      <stop offset="1" stop-color="#6E5CF7" />
     </linearGradient>
-    <linearGradient id="deep" x1="21" y1="21" x2="10" y2="8" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#241A66" />
-      <stop offset="1" stop-color="#4B3AD0" />
+    <linearGradient id="patchwork-patch" x1="12" y1="2" x2="20" y2="14" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D3C9FF" />
+      <stop offset="1" stop-color="#9B87FF" />
     </linearGradient>
   </defs>
-  <g clip-path="url(#b)">
-    <rect x="2.5" y="2.5" width="19" height="19" fill="url(#deep)" />
-    <path d="M2.5 2.5H21.5L2.5 21.5Z" fill="url(#lit)" />
-    <path d="M0.4 23.6 23.6 0.4" stroke="#09080F" stroke-width="1.6" />
+  <path d="M4 21.5V3.4A1.4 1.4 0 0 1 5.4 2h7.4c5.5 0 8.6 2.9 8.6 7.6s-3.1 7.6-8.6 7.6H9v4.3z M9 6.5v6.4h3.8c2.5 0 3.8-.9 3.8-3.2s-1.3-3.2-3.8-3.2z" fill="url(#patchwork-p-body)" fill-rule="evenodd" />
+  <g clip-path="url(#patchwork-p)">
+    <path d="M12.1 2h.7c5.5 0 8.6 2.9 8.6 7.6 0 1.8-.4 3.3-1.1 4.5L15 10.4l-2.9-3.6V2Z" fill="url(#patchwork-patch)" />
+    <path d="m13.7 3.6 4.8 7.4" stroke="#35277F" stroke-width="1.3" />
     <g fill="#F4F0FF">
-      <rect x="5.7" y="13.9" width="3.5" height="1.1" rx="0.55" transform="rotate(-45 7.45 14.45)" />
-      <rect x="8.9" y="10.7" width="3.5" height="1.1" rx="0.55" transform="rotate(-45 10.65 11.25)" />
-      <rect x="12.1" y="7.5" width="3.5" height="1.1" rx="0.55" transform="rotate(-45 13.85 8.05)" />
-      <rect x="15.3" y="4.3" width="3.5" height="1.1" rx="0.55" transform="rotate(-45 17.05 4.85)" />
+      <rect x="14.4" y="5.3" width="2.7" height="1.05" rx="0.52" transform="rotate(-33 15.75 5.825)" />
+      <rect x="16" y="7.9" width="2.7" height="1.05" rx="0.52" transform="rotate(-33 17.35 8.425)" />
     </g>
   </g>
 </svg>

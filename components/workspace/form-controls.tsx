@@ -1,6 +1,40 @@
 import type { ReactNode, SelectHTMLAttributes, TextareaHTMLAttributes } from "react";
+import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+
+type SelectControlProps = SelectHTMLAttributes<HTMLSelectElement> & {
+  children: ReactNode;
+  wrapperClassName?: string;
+};
+
+/** Native select behavior with the same inset field, size, and arrow everywhere. */
+export function SelectControl({
+  children,
+  className,
+  wrapperClassName,
+  ...props
+}: SelectControlProps) {
+  return (
+    <span className={cn("relative block", wrapperClassName)}>
+      <select
+        className={cn(
+          "field-inset h-11 w-full appearance-none rounded border border-hairline bg-raised pl-3 pr-9 font-sans text-[16px] text-ink",
+          "outline-none transition-[border-color,box-shadow] duration-150 ease-[var(--ease-out)] hover:border-hairline-strong focus-visible:border-accent-bright focus-visible:outline-none",
+          "disabled:cursor-not-allowed disabled:opacity-55",
+          className,
+        )}
+        {...props}
+      >
+        {children}
+      </select>
+      <ChevronDown
+        aria-hidden="true"
+        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-tertiary"
+      />
+    </span>
+  );
+}
 
 export function SelectField({
   id,
@@ -18,17 +52,9 @@ export function SelectField({
       <label htmlFor={id} className="font-sans text-[13px] font-semibold text-ink">
         {label}
       </label>
-      <select
-        id={id}
-        className={cn(
-          "field-inset h-10 w-full rounded-lg border border-hairline bg-raised px-2.5 font-sans text-[13px] text-ink",
-          "outline-none transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] hover:border-hairline-strong focus:border-accent focus-visible:outline-none",
-          className,
-        )}
-        {...props}
-      >
+      <SelectControl id={id} className={className} {...props}>
         {children}
-      </select>
+      </SelectControl>
     </div>
   );
 }
@@ -55,7 +81,7 @@ export function TextAreaField({
       <textarea
         id={id}
         className={cn(
-          "field-inset min-h-[96px] w-full rounded-lg border border-hairline bg-raised px-2.5 py-2 font-sans text-[15px] leading-6 text-ink",
+          "field-inset min-h-[96px] w-full rounded border border-hairline bg-raised px-3 py-2 font-sans text-[16px] leading-6 text-ink",
           "outline-none transition-[border-color,box-shadow] duration-200 ease-[cubic-bezier(0.23,1,0.32,1)] placeholder:text-ink-secondary/60 hover:border-hairline-strong focus:border-accent focus-visible:outline-none",
           className,
         )}

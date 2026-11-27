@@ -3,29 +3,11 @@ import Link from "next/link";
 import { APP_NAME } from "@/lib/config";
 import { cn } from "@/lib/utils";
 
-/**
- * The mark: two pieces of cloth, sewn into one square.
- *
- * A repair shop called Patchwork. The previous mark was a device with its corner
- * stuck back on, and at 16px the corner and the stitches both disappeared.
- *
- * This is the idea with nothing left to lose: one square, made of two pieces of
- * equal size, a seam between them, and thread pulled along the seam. Four
- * decisions, all of them load-bearing at small sizes:
- *
- * 1. **Equal pieces.** A symmetric split is the one arrangement that survives
- *    rasterisation — an asymmetric corner patch reads as a folded page.
- * 2. **A real value gap.** Bright lavender against deep indigo, not two tints of
- *    the same colour. At 16px the split has to survive as two tones.
- * 3. **The seam is a stroke**, in the page's ground colour, so the two pieces
- *    read as cloth laid edge to edge rather than one shape with a line on it.
- * 4. **Thread on the dark half only.** Pale dashes on deep indigo still read at
- *    16px; pale dashes on pale lavender vanish. This is the detail that says
- *    "sewn", and it is placed where it can be seen.
- *
- * Drawn on a 24 grid; square (2.5 → 21.5), radius 5, seam on the true diagonal.
- */
+/** A bold P with a sewn-in lavender panel. */
 export function PatchMark({ className }: { className?: string }) {
+  const markShape =
+    "M4 21.5V3.4A1.4 1.4 0 0 1 5.4 2h7.4c5.5 0 8.6 2.9 8.6 7.6s-3.1 7.6-8.6 7.6H9v4.3z M9 6.5v6.4h3.8c2.5 0 3.8-.9 3.8-3.2s-1.3-3.2-3.8-3.2z";
+
   return (
     <svg
       viewBox="0 0 24 24"
@@ -34,45 +16,30 @@ export function PatchMark({ className }: { className?: string }) {
       fill="none"
     >
       <defs>
-        <clipPath id="patchwork-block">
-          <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
+        <clipPath id="patchwork-p">
+          <path d={markShape} clipRule="evenodd" />
         </clipPath>
-        <linearGradient
-          id="patchwork-lit"
-          x1="3"
-          y1="3"
-          x2="15"
-          y2="17"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#C2B4FF" />
-          <stop offset="1" stopColor="#8C79FF" />
+        <linearGradient id="patchwork-p-body" x1="4" y1="2" x2="20" y2="22" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#8E7EFF" />
+          <stop offset="1" stopColor="#6E5CF7" />
         </linearGradient>
-        <linearGradient
-          id="patchwork-deep"
-          x1="21"
-          y1="21"
-          x2="10"
-          y2="8"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop stopColor="#241A66" />
-          <stop offset="1" stopColor="#4B3AD0" />
+        <linearGradient id="patchwork-patch" x1="12" y1="2" x2="20" y2="14" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#D3C9FF" />
+          <stop offset="1" stopColor="#9B87FF" />
         </linearGradient>
       </defs>
 
-      <g clipPath="url(#patchwork-block)">
-        <rect x="2.5" y="2.5" width="19" height="19" fill="url(#patchwork-deep)" />
-        <path d="M2.5 2.5H21.5L2.5 21.5Z" fill="url(#patchwork-lit)" />
+      <path d={markShape} fill="url(#patchwork-p-body)" fillRule="evenodd" />
 
-        <path d="M0.4 23.6 23.6 0.4" stroke="var(--canvas)" strokeWidth="1.6" />
-
-        {/* Thread, running along the far side of the seam. */}
+      <g clipPath="url(#patchwork-p)">
+        <path
+          d="M12.1 2h.7c5.5 0 8.6 2.9 8.6 7.6 0 1.8-.4 3.3-1.1 4.5L15 10.4l-2.9-3.6V2Z"
+          fill="url(#patchwork-patch)"
+        />
+        <path d="m13.7 3.6 4.8 7.4" stroke="#35277F" strokeWidth="1.3" />
         <g fill="#F4F0FF">
-          <rect x="5.7" y="13.9" width="3.5" height="1.1" rx="0.55" transform="rotate(-45 7.45 14.45)" />
-          <rect x="8.9" y="10.7" width="3.5" height="1.1" rx="0.55" transform="rotate(-45 10.65 11.25)" />
-          <rect x="12.1" y="7.5" width="3.5" height="1.1" rx="0.55" transform="rotate(-45 13.85 8.05)" />
-          <rect x="15.3" y="4.3" width="3.5" height="1.1" rx="0.55" transform="rotate(-45 17.05 4.85)" />
+          <rect x="14.4" y="5.3" width="2.7" height="1.05" rx="0.52" transform="rotate(-33 15.75 5.825)" />
+          <rect x="16" y="7.9" width="2.7" height="1.05" rx="0.52" transform="rotate(-33 17.35 8.425)" />
         </g>
       </g>
     </svg>
@@ -94,7 +61,10 @@ export function Logo({
         <PatchMark />
       </span>
       {!markOnly ? (
-        <span className="display text-[16px] tracking-[-0.02em] text-ink">{APP_NAME}</span>
+        <span className="display text-[16px] tracking-[-0.03em] text-ink">
+          <span>Patch</span>
+          <span className="text-accent-bright">work</span>
+        </span>
       ) : null}
     </>
   );

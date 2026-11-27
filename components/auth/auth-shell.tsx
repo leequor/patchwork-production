@@ -70,7 +70,7 @@ export function AuthShell({ children }: { children: ReactNode }) {
             <span aria-hidden="true" className="h-3 w-px bg-white/12" />
             <Link
               href="/status"
-              className="tap font-sans text-[13px] text-ink-tertiary transition-colors hover:text-ink"
+              className="tap font-sans text-[14px] text-ink-secondary transition-colors hover:text-ink"
             >
               System status
             </Link>

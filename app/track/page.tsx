@@ -131,6 +131,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
             className="pt-6 sm:pt-8"
             back={staff ? { href: "/", label: "Back to bench" } : undefined}
             action={{ href: staff ? "/" : "/login", label: staff ? "Open bench" : "Staff sign in" }}
+            showSignIn={false}
           />
 
           <div className="pt-16 sm:pt-[16vh] lg:pt-[18vh]">

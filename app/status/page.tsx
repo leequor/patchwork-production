@@ -62,13 +62,15 @@ export default function StatusPage() {
             {RUNBOOK.map((item, index) => (
               <li
                 key={item.title}
-                className="grid grid-cols-[minmax(0,26px)_minmax(0,220px)_minmax(0,1fr)] items-baseline gap-4 border-b border-hairline py-4"
+                className="grid grid-cols-[2rem_minmax(0,1fr)] items-baseline gap-x-3 gap-y-1 border-b border-hairline py-4 sm:grid-cols-[2rem_minmax(0,220px)_minmax(0,1fr)] sm:gap-4"
               >
-                <span className="figure text-[13px] text-ink-faint">
+                <span className="figure row-span-2 text-[13px] text-ink-faint sm:row-span-1">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <p className="font-sans text-[15px] font-medium text-ink">{item.title}</p>
-                <p className="font-sans text-[14px] leading-6 text-ink-secondary">{item.body}</p>
+                <p className="col-start-2 font-sans text-[14px] leading-6 text-ink-secondary sm:col-start-3">
+                  {item.body}
+                </p>
               </li>
             ))}
           </ol>

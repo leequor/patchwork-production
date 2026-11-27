@@ -179,19 +179,27 @@ printed because this page is used by staff, not customers.
 - 72 px instrument rail that widens to 248 px on hover or focus and floats over the page rather than
   pushing it. Icon-only at rest, every label still in the accessibility tree.
 - Top bar: 48 px, page name, the command palette trigger with its `⌘K` key, `New intake`, profile.
+- On a phone the section eyebrow drops away and search becomes an icon control to preserve room for
+  the page name and profile button.
+- Profile disclosure and command palette close on Escape and restore focus. The mobile drawer traps
+  keyboard focus, locks background scrolling while open, and returns focus to its trigger on close.
+- Native selects share a 44 px control, inset surface and chevron while retaining browser-native
+  options and keyboard behavior.
 - Mission control is two panes in one viewport: the queue (stats, live rows, keyboard up/down) and
   the bench (the scene, three readouts, the actions). Nothing scrolls except the two inner panes.
 - Everything else uses a shared page frame: title, description, actions, then panels.
 
 ## Motion
 
-- Motion is feedback, not performance. App screens have no entrance animation; only `.rise` on
-  public hero content, staggered once by 60–70 ms.
-- Durations: 130 ms for press and colour, 220 ms for surface changes, 420–480 ms for a panel
-  entering. Ease out with `cubic-bezier(0.22, 1, 0.36, 1)`.
+- Motion is feedback, not performance. Workspace pages do not animate on arrival; the public hero
+  uses `.rise` once, staggered by 60–70 ms.
+- Anchored overlays use a small opacity/transform entrance: 150 ms for the profile disclosure,
+  170 ms for search and 180 ms for the mobile drawer. Press and colour feedback stays near 130 ms;
+  ease out with `cubic-bezier(0.22, 1, 0.36, 1)`.
 - The scene is the one authored moment: springs for the pointer, damped easing for the explode.
 - Never `transition: all`; name the properties.
 - `prefers-reduced-motion` removes travel, parallax and drift while keeping opacity and colour.
+  Overlay entrances reduce to an opacity change, and the workspace drawer stays in place.
 
 ## The landing page
 
@@ -213,8 +221,11 @@ with tight tracking reads composed and lets the illustration be the loud thing.
 
 ### The repair tree
 
-`components/landing/repair-tree.tsx` renders a looping 8s bloom video at full bleed
-(`public/art/hero-sakura.mp4` — 1920×1080, audio stripped, 3 MB), with a still of the same tree
+`components/landing/repair-tree.tsx` renders a looping 7.5s bloom video at full bleed
+(`public/art/hero-sakura.mp4` — 1920×1080, 30 fps, 225 frames, audio stripped, 4.1 MB).
+A time-based, eased 500ms tail-to-head blend softens the source seam. Motion interpolation uses
+frames from both sides of the wrap, then trims a complete cycle so the encoder cannot drop the
+last two frames. The tree and petal composition are preserved. A still of the same tree
 (`public/art/sakura-tree.png`) under `prefers-reduced-motion`. The art is masked at the bottom so it
 dissolves into the next section instead of ending on a line.
 
@@ -264,7 +275,7 @@ answers a different question: where is the light (orbs), where is the surface
 | --- | --- | --- | --- |
 | Orbs | `ambient-field.tsx` | 4 blurred fields, parallax by depth | transform only |
 | Grid | `reactive-grid.tsx` | same grid, lit through a pointer mask, shifted 14px against the hand | one CSS variable pair per frame |
-| Dust | `pointer-dust.tsx` | ~110 motes, pulled within 300px, pushed away when the hand moves fast | one canvas, dots ≤ 18px |
+| Dust | `pointer-dust.tsx` | Up to 72 motes, pulled within 300px, pushed away when the hand moves fast | one canvas, two cached glow sprites |
 
 Things worth keeping:
 
@@ -285,21 +296,15 @@ Measured, not asserted: `scripts/measure-follow.mjs` parks the pointer on a fixe
 probe and compares mean luminance there with the pointer at the opposite corner.
 Current reading: **+39%** (25.5 → 35.5) at the probe.
 
-### The mark: two pieces, one seam
+### The mark: a sewn P
 
-`components/ui/logo.tsx` is a square made of two equal pieces of cloth, a seam in the page's ground
-colour, and thread along the seam. Four decisions, each load-bearing at 16px:
+`components/ui/logo.tsx` is a letter P with a lavender patch sewn into its bowl. The silhouette is
+the main read; two short thread marks remain secondary detail. The body and patch use adjacent brand
+violets, and the accent-colored `work` half of the wordmark carries that contrast into the name.
+The favicon repeats the same geometry in `app/icon.svg`.
 
-| Decision | Why |
-| --- | --- |
-| Equal pieces, true diagonal | An asymmetric corner patch reads as a folded page; a symmetric split survives rasterisation |
-| Bright lavender vs deep indigo | Two *values*, not two tints — the split has to hold at 16px |
-| Seam is a ground-coloured stroke | Keeps the silhouette solid while still separating the pieces |
-| Thread on the dark half only | Pale dashes on pale lavender vanish; on indigo they read |
-
-The previous mark (a device with its corner sewn back on) was rejected on rasterised pixels, not on
-the vector: at 16px the patch and the stitches both disappeared. Candidates were judged from an 8×
-nearest-neighbour blow-up of the real 16px raster (`shots/logo-candidates.html`), never from the SVG.
+Review the mark at the real 16 px favicon size and at the 22 px public-header size; the SVG view
+alone is not enough to judge whether the thread survives rasterisation.
 
 ### Reading a password
 

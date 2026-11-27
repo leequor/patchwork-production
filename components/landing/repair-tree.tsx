@@ -7,9 +7,11 @@ import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
 /**
  * The room.
  *
- * A looping 8-second render of a blossom tree — coral trunk, backlit pink
+ * A looping 7.5-second, 30 fps render of a blossom tree — coral trunk, backlit pink
  * canopy, petals drifting through the frame — used as the hero artwork at full
- * bleed. It is the reference's own footage, which is why it finally matches:
+ * bleed. An eased half-second tail-to-head blend and motion interpolation across
+ * the wrap preserve continuous motion through all 225 frames. It is the
+ * reference's own footage, which is why it finally matches:
  * canopy, crop and motion are already composed for a wide frame, and no amount
  * of procedural drawing gets there.
  *

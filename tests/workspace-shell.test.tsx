@@ -1,10 +1,15 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 
+const { push, currentPath } = vi.hoisted(() => ({
+  push: vi.fn(),
+  currentPath: { value: "/tickets" },
+}));
+
 vi.mock("next/navigation", () => ({
-  usePathname: () => "/tickets",
-  useRouter: () => ({ push: vi.fn() }),
+  usePathname: () => currentPath.value,
+  useRouter: () => ({ push }),
 }));
 
 vi.mock("@/app/actions/auth", () => ({
@@ -39,6 +44,33 @@ describe("WorkspaceShell", () => {
     expect(screen.getByRole("link", { name: "Tickets" })).toHaveAttribute("aria-current", "page");
   });
 
+  it("keeps local preview navigation on fixture routes and hides sign-out", () => {
+    currentPath.value = "/design-preview/tickets";
+
+    render(
+      <WorkspaceShell user={user} preview>
+        <p>Page body</p>
+      </WorkspaceShell>,
+    );
+
+    expect(screen.getAllByRole("link", { name: "Tickets" })[0]).toHaveAttribute(
+      "href",
+      "/design-preview/tickets",
+    );
+    expect(screen.getAllByRole("link", { name: "Tickets" })[0]).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getAllByRole("link", { name: "Patchwork home" })[0]).toHaveAttribute(
+      "href",
+      "/design-preview/workspace",
+    );
+    expect(screen.getAllByText(/sample data/i).length).toBeGreaterThan(0);
+    expect(screen.queryByRole("button", { name: "Log out" })).not.toBeInTheDocument();
+
+    currentPath.value = "/tickets";
+  });
+
   it("opens the command palette from the keyboard and closes it with escape", async () => {
     render(
       <WorkspaceShell user={user}>
@@ -53,6 +85,32 @@ describe("WorkspaceShell", () => {
     expect(screen.queryByRole("dialog", { name: "Search Patchwork" })).not.toBeInTheDocument();
   });
 
+  it("keeps palette focus in the search and restores it on close", async () => {
+    render(
+      <WorkspaceShell user={user}>
+        <p>Page body</p>
+      </WorkspaceShell>,
+    );
+
+    const trigger = screen.getByRole("button", { name: /Search Patchwork/ });
+    trigger.focus();
+    fireEvent.keyDown(window, { key: "k", ctrlKey: true });
+
+    const input = await screen.findByRole("combobox", { name: "Search Patchwork" });
+    await waitFor(() => expect(input).toHaveFocus());
+    expect(input).toHaveAttribute("aria-activedescendant", expect.any(String));
+
+    fireEvent.keyDown(input, { key: "ArrowDown" });
+    const options = screen.getAllByRole("option");
+    expect(options[1]).toHaveAttribute("aria-selected", "true");
+    expect(input).toHaveAttribute("aria-activedescendant", options[1].id);
+
+    fireEvent.keyDown(input, { key: "Tab" });
+    expect(input).toHaveFocus();
+    fireEvent.keyDown(input, { key: "Escape" });
+    await waitFor(() => expect(trigger).toHaveFocus());
+  });
+
   it("opens and closes mobile navigation", async () => {
     const browser = userEvent.setup();
     render(
@@ -61,11 +119,45 @@ describe("WorkspaceShell", () => {
       </WorkspaceShell>,
     );
 
-    await browser.click(screen.getByRole("button", { name: "Open navigation" }));
-    expect(screen.getByRole("button", { name: "Close navigation overlay" })).toBeInTheDocument();
-    await browser.click(screen.getByRole("button", { name: "Close navigation overlay" }));
-    expect(
-      screen.queryByRole("button", { name: "Close navigation overlay" }),
-    ).not.toBeInTheDocument();
+    const trigger = screen.getByRole("button", { name: "Open navigation" });
+    await browser.click(trigger);
+    const drawer = screen.getByRole("dialog", { name: "Workspace navigation" });
+    const close = screen.getByRole("button", { name: "Close navigation" });
+    expect(drawer).toBeInTheDocument();
+    expect(close).toHaveFocus();
+    expect(document.body.style.overflow).toBe("hidden");
+    await browser.keyboard("{Shift>}{Tab}{/Shift}");
+    expect(within(drawer).getByRole("button", { name: "Log out" })).toHaveFocus();
+    await browser.keyboard("{Tab}");
+    expect(close).toHaveFocus();
+    await browser.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(screen.queryByRole("dialog", { name: "Workspace navigation" })).not.toBeInTheDocument();
+      expect(trigger).toHaveFocus();
+      expect(document.body.style.overflow).toBe("");
+    });
+  });
+
+  it("closes the profile popover with Escape and returns focus", async () => {
+    const browser = userEvent.setup();
+    render(
+      <WorkspaceShell user={user}>
+        <p>Page body</p>
+      </WorkspaceShell>,
+    );
+
+    const trigger = screen.getByRole("button", { name: "Open profile options" });
+    await browser.click(trigger);
+    const menu = document.getElementById("profile-menu");
+    expect(menu).not.toBeNull();
+    expect(within(menu as HTMLElement).getByRole("link", { name: "Public tracker" })).toHaveAttribute(
+      "href",
+      "/track",
+    );
+    await browser.keyboard("{Escape}");
+    await waitFor(() => {
+      expect(document.getElementById("profile-menu")).toBeNull();
+      expect(screen.getByRole("button", { name: "Open profile options" })).toHaveFocus();
+    });
   });
 });

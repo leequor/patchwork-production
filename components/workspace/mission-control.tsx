@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { DeviceStageMount } from "@/components/three/device-stage-mount";
 import { formForCategory } from "@/lib/device-form";
+import { previewHref } from "@/lib/preview/navigation";
 import { RelativeTime } from "@/components/ui/relative-time";
 import {
   PRIORITY_META,
@@ -135,13 +136,16 @@ export function MissionControl({
   readyCount,
   revenueMtd,
   lowStockCount,
+  preview = false,
 }: {
   queue: TicketRow[];
   openCount: number;
   readyCount: number;
   revenueMtd: number;
   lowStockCount: number;
+  preview?: boolean;
 }) {
+  const route = (href: string) => (preview ? previewHref(href) : href);
   const [selectedId, setSelectedId] = useState<string | null>(queue[0]?.id ?? null);
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
   const [mobileView, setMobileView] = useState<"queue" | "bench">("queue");
@@ -188,7 +192,7 @@ export function MissionControl({
             No devices are waiting. Take the first intake and it lands in the live queue immediately.
           </p>
           <Link
-            href="/tickets/new"
+            href={route("/tickets/new")}
             className="primary inline-flex h-10 items-center gap-2 rounded-sm px-4 text-[13px] font-semibold transition hover:brightness-105"
           >
             New intake
@@ -250,7 +254,7 @@ export function MissionControl({
               <span className="mono-id text-[11px]">{queue.length} open</span>
             </div>
             <Link
-              href="/tickets"
+              href={route("/tickets")}
               className="text-[11px] text-ink-tertiary transition-colors hover:text-ink"
             >
               All tickets
@@ -292,7 +296,7 @@ export function MissionControl({
           <div className="flex items-center justify-between gap-3 border-t border-hairline px-4 py-2.5 font-mono text-[10px] text-ink-tertiary">
             <span>↑ ↓ move · click to stage</span>
             {lowStockCount > 0 ? (
-              <Link href="/inventory" className="text-warn transition-colors hover:text-warn-ink">
+              <Link href={route("/inventory")} className="text-warn transition-colors hover:text-warn-ink">
                 {lowStockCount} low stock
               </Link>
             ) : (
@@ -346,7 +350,7 @@ export function MissionControl({
               </div>
 
               <Link
-                href={`/tickets/${selected.id}`}
+                href={route(`/tickets/${selected.id}`)}
                 className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-sm bg-raised ring-1 ring-inset ring-white/[0.08] px-2.5 text-[12px] font-medium text-ink transition-colors hover:ring-white/[0.16] hover:bg-overlay"
               >
                 Open ticket
@@ -414,21 +418,21 @@ export function MissionControl({
 
             <div className="relative z-10 flex flex-wrap items-center gap-2 border-t border-hairline bg-panel px-4 py-3">
               <Link
-                href={`/tickets/${selected.id}`}
+                href={route(`/tickets/${selected.id}`)}
                 className="primary inline-flex h-8 items-center gap-2 rounded-sm px-3 text-[12px] font-semibold transition duration-150 hover:brightness-105 active:translate-y-px"
               >
                 <Wrench className="h-3.5 w-3.5" aria-hidden="true" />
                 Update status
               </Link>
               <Link
-                href={`/tickets/${selected.id}`}
+                href={route(`/tickets/${selected.id}`)}
                 className="inline-flex h-8 items-center gap-2 rounded-sm bg-raised ring-1 ring-inset ring-white/[0.08] px-3 text-[12px] font-medium text-ink transition-colors hover:ring-white/[0.16] hover:bg-overlay"
               >
                 <Boxes className="h-3.5 w-3.5" aria-hidden="true" />
                 Add part
               </Link>
               <Link
-                href={`/tickets/${selected.id}`}
+                href={route(`/tickets/${selected.id}`)}
                 className="inline-flex h-8 items-center gap-2 rounded-sm bg-raised ring-1 ring-inset ring-white/[0.08] px-3 text-[12px] font-medium text-ink transition-colors hover:ring-white/[0.16] hover:bg-overlay"
               >
                 <Receipt className="h-3.5 w-3.5" aria-hidden="true" />

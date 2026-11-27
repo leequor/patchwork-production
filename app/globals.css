@@ -263,6 +263,69 @@
       0 0 0 3px rgba(110, 92, 247, 0.16);
   }
 
+  .profile-popover {
+    transform-origin: top right;
+    animation: overlay-enter 150ms var(--ease-out) both;
+  }
+
+  .command-palette {
+    transform-origin: top center;
+    animation: overlay-enter 170ms var(--ease-out) both;
+  }
+
+  .mobile-nav-panel {
+    animation: drawer-enter 180ms var(--ease-out) both;
+  }
+
+  .mobile-nav-scrim {
+    animation: scrim-enter 140ms ease-out both;
+  }
+
+  @keyframes overlay-enter {
+    from {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.985);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @keyframes drawer-enter {
+    from {
+      opacity: 0.8;
+      transform: translateX(-8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  @keyframes scrim-enter {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .profile-popover,
+    .command-palette {
+      animation: scrim-enter 100ms ease-out both;
+    }
+
+    .mobile-nav-panel {
+      animation: scrim-enter 100ms ease-out both;
+    }
+  }
+
   /* Inline text links are 18px tall at 14px type. WCAG 2.2 asks for 24px, and a
      phone thumb asks for more. Padding, not size, so the rhythm is unchanged. */
   .tap {

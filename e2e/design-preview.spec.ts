@@ -40,6 +40,11 @@ test("workspace sections and sample details stay in the local preview without si
 test("every sidebar destination collapses on mouse leave after clicking", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/design-preview/tickets");
+  // Hover is not replayed while React hydrates. Confirm the shell is interactive.
+  await page.getByRole("button", { name: /Search Patchwork/ }).click();
+  await expect(page.getByRole("dialog", { name: "Search Patchwork" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog", { name: "Search Patchwork" })).toBeHidden();
   const rail = page.getByRole("complementary", { name: "Workspace" });
   const expanded = () => rail.evaluate(element => element.contains(document.elementFromPoint(140, 100)));
 
@@ -65,6 +70,10 @@ test("every sidebar destination collapses on mouse leave after clicking", async 
 test("sidebar preserves keyboard focus and cancels closing when the pointer returns", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/design-preview/tickets");
+  await page.getByRole("button", { name: /Search Patchwork/ }).click();
+  await expect(page.getByRole("dialog", { name: "Search Patchwork" })).toBeVisible();
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("dialog", { name: "Search Patchwork" })).toBeHidden();
   const rail = page.getByRole("complementary", { name: "Workspace" });
   const expanded = () => rail.evaluate(element => element.contains(document.elementFromPoint(140, 100)));
   await rail.hover({ position: { x: 28, y: 240 } });

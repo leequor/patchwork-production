@@ -22,7 +22,7 @@ for (const path of ["/login", "/register", "/forgot-password", "/status"]) {
 test("no critical accessibility violations on the landing page", async ({ page }) => {
   await page.goto("/login");
   await page.getByLabel("Email").fill(demoUsers.user);
-  await page.getByLabel("Password").fill(demoPassword);
+  await page.getByLabel("Password", { exact: true }).fill(demoPassword);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL("/");
 

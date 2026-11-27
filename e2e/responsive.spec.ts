@@ -26,7 +26,7 @@ test("the landing page has no horizontal scroll at mobile width", async ({ page 
   await page.setViewportSize({ width: 360, height: 900 });
   await page.goto("/login");
   await page.getByLabel("Email").fill(demoUsers.user);
-  await page.getByLabel("Password").fill(demoPassword);
+  await page.getByLabel("Password", { exact: true }).fill(demoPassword);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page).toHaveURL("/", { timeout: 15000 });
 
@@ -36,5 +36,6 @@ test("the landing page has no horizontal scroll at mobile width", async ({ page 
   }));
 
   expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.clientWidth + 1);
-  await expect(page.getByRole("button", { name: "Log out" })).toBeVisible();
+  await page.getByRole("button", { name: "Open profile options" }).click();
+  await expect(page.getByRole("button", { name: "Log out", exact: true })).toBeVisible();
 });

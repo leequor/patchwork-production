@@ -13,13 +13,13 @@ test.describe("account access", () => {
     await page.goto("/");
 
     await expect(page).toHaveURL(/\/login$/);
-    await expect(page.getByRole("heading", { name: "Sign in to Patchwork" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Sign in", exact: true })).toBeVisible();
   });
 
   test("the public registration page is invite-only", async ({ page }) => {
     await page.goto("/register");
 
-    await expect(page.getByRole("heading", { name: "Staff accounts are invite-only" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Invite-only staff access" })).toBeVisible();
     await expect(page.getByRole("button", { name: "Create account" })).toHaveCount(0);
     await expect(page.getByRole("link", { name: "Back to sign in" })).toBeVisible();
   });
@@ -27,19 +27,19 @@ test.describe("account access", () => {
   test("a wrong password stays on the login page", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("Email").fill(demoUsers.user);
-    await page.getByLabel("Password").fill("not-the-password");
+    await page.getByLabel("Password", { exact: true }).fill("not-the-password");
     await page.getByRole("button", { name: "Sign in" }).click();
 
     await expect(page.getByText("Wrong email or password.")).toBeVisible();
     await expect(page).toHaveURL(/\/login$/);
     await expect(page.getByLabel("Email")).toHaveValue(demoUsers.user);
-    await expect(page.getByLabel("Password")).toHaveValue("");
+    await expect(page.getByLabel("Password", { exact: true })).toHaveValue("");
   });
 
   test("a demo user can log in and log out", async ({ page }) => {
     await page.goto("/login");
     await page.getByLabel("Email").fill(demoUsers.user);
-    await page.getByLabel("Password").fill(demoPassword);
+    await page.getByLabel("Password", { exact: true }).fill(demoPassword);
     await page.getByRole("button", { name: "Sign in" }).click();
 
     await expect(page).toHaveURL("/", { timeout: 15000 });
@@ -89,12 +89,12 @@ test.describe("account access", () => {
 
     await page.goto("/login");
     await page.getByLabel("Email").fill(email);
-    await page.getByLabel("Password").fill(oldPassword);
+    await page.getByLabel("Password", { exact: true }).fill(oldPassword);
     await page.getByRole("button", { name: "Sign in" }).click();
     await expect(page.getByText("Wrong email or password.")).toBeVisible();
 
     await page.getByLabel("Email").fill(email);
-    await page.getByLabel("Password").fill(newPassword);
+    await page.getByLabel("Password", { exact: true }).fill(newPassword);
     await page.getByRole("button", { name: "Sign in" }).click();
     await expect(page).toHaveURL("/", { timeout: 15000 });
     await expect(page.getByText(email).first()).toBeVisible();

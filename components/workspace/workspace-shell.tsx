@@ -99,6 +99,7 @@ export function WorkspaceShell({
   const mobileDialogRef = useRef<HTMLDivElement>(null);
   const mobileCloseRef = useRef<HTMLButtonElement>(null);
   const railTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const railPointerFocus = useRef(false);
 
   const displayName = preview ? "Local preview" : user.fullName || user.email;
   const avatar = initials(displayName) || "PW";
@@ -338,17 +339,31 @@ export function WorkspaceShell({
     <div className="min-h-[100dvh]">
       <aside
         aria-label="Workspace"
+        onPointerDownCapture={() => {
+          railPointerFocus.current = true;
+        }}
+        onKeyDownCapture={() => {
+          railPointerFocus.current = false;
+        }}
         onPointerEnter={(event) => {
           if (event.pointerType === "mouse") openRail();
         }}
         onPointerLeave={(event) => {
-          if (event.pointerType === "mouse" && !event.currentTarget.contains(document.activeElement)) {
+          // A mouse click's retained focus must not pin the rail open. Keep it
+          // expanded only when someone is navigating its controls by keyboard.
+          if (
+            event.pointerType === "mouse" &&
+            (railPointerFocus.current || !event.currentTarget.contains(document.activeElement))
+          ) {
             closeRail();
           }
         }}
         onFocusCapture={openRail}
         onBlurCapture={(event) => {
-          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) closeRail();
+          if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            railPointerFocus.current = false;
+            closeRail();
+          }
         }}
         className={cn(
           "fixed inset-y-0 left-0 z-50 isolate hidden w-[248px] overflow-hidden border-r border-hairline bg-canvas/90 backdrop-blur-2xl transition-[clip-path,box-shadow] duration-200 ease-[var(--ease-out)] lg:block",

@@ -71,6 +71,71 @@ describe("WorkspaceShell", () => {
     currentPath.value = "/tickets";
   });
 
+  it.each([
+    ["link", "Mission control"],
+    ["link", "Tickets"],
+    ["link", "Customers"],
+    ["link", "Inventory"],
+    ["link", "Invoices"],
+    ["link", "Team"],
+    ["link", "New intake"],
+    ["link", "Public tracker"],
+    ["link", "Patchwork home"],
+    ["button", "Log out"],
+  ])("collapses after a mouse click on %s %s and moving away without another click", async (role, name) => {
+    const browser = userEvent.setup();
+    render(<WorkspaceShell user={user}><button type="button">Outside the sidebar</button></WorkspaceShell>);
+    const rail = screen.getByRole("complementary", { name: "Workspace" });
+    const collapsed = rail.style.clipPath;
+    const control = within(rail).getByRole(role, { name });
+    control.addEventListener("click", event => event.preventDefault());
+
+    await browser.click(control);
+    expect(control).toHaveFocus();
+    expect(rail.style.clipPath).not.toBe(collapsed);
+    await browser.hover(screen.getByRole("button", { name: "Outside the sidebar" }));
+
+    await waitFor(() => expect(rail.style.clipPath).toBe(collapsed));
+    expect(control).toHaveFocus();
+  });
+
+  it("keeps keyboard navigation expanded after switching from a mouse click to Tab", async () => {
+    const browser = userEvent.setup();
+    render(<WorkspaceShell user={user}><button type="button">Outside the sidebar</button></WorkspaceShell>);
+    const rail = screen.getByRole("complementary", { name: "Workspace" });
+    const collapsed = rail.style.clipPath;
+    const tickets = within(rail).getByRole("link", { name: "Tickets" });
+    tickets.addEventListener("click", event => event.preventDefault());
+    await browser.click(tickets);
+    await browser.tab();
+    expect(within(rail).getByRole("link", { name: "Customers" })).toHaveFocus();
+    const expanded = rail.style.clipPath;
+    const outside = screen.getByRole("button", { name: "Outside the sidebar" });
+    await browser.hover(outside);
+    await new Promise(resolve => setTimeout(resolve, 400));
+    expect(rail.style.clipPath).toBe(expanded);
+    outside.focus();
+    await waitFor(() => expect(rail.style.clipPath).toBe(collapsed));
+  });
+
+  it("cancels a pending close when the pointer returns to the sidebar", async () => {
+    const browser = userEvent.setup();
+    render(<WorkspaceShell user={user}><button type="button">Outside the sidebar</button></WorkspaceShell>);
+    const rail = screen.getByRole("complementary", { name: "Workspace" });
+    const collapsed = rail.style.clipPath;
+    const tickets = within(rail).getByRole("link", { name: "Tickets" });
+    tickets.addEventListener("click", event => event.preventDefault());
+    await browser.click(tickets);
+    const expanded = rail.style.clipPath;
+    const outside = screen.getByRole("button", { name: "Outside the sidebar" });
+    await browser.hover(outside);
+    await browser.hover(rail);
+    await new Promise(resolve => setTimeout(resolve, 400));
+    expect(rail.style.clipPath).toBe(expanded);
+    await browser.hover(outside);
+    await waitFor(() => expect(rail.style.clipPath).toBe(collapsed));
+  });
+
   it("opens the command palette from the keyboard and closes it with escape", async () => {
     render(
       <WorkspaceShell user={user}>

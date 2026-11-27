@@ -36,3 +36,50 @@ test("workspace sections and sample details stay in the local preview without si
     await expect(page.getByText(/fixture data · preview only/i)).toBeVisible();
   }
 });
+
+test("every sidebar destination collapses on mouse leave after clicking", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/design-preview/tickets");
+  const rail = page.getByRole("complementary", { name: "Workspace" });
+  const expanded = () => rail.evaluate(element => element.contains(document.elementFromPoint(140, 100)));
+
+  for (const [label, path] of [
+    ["Tickets", "/design-preview/tickets"],
+    ["Customers", "/design-preview/customers"],
+    ["Inventory", "/design-preview/inventory"],
+    ["Invoices", "/design-preview/invoices"],
+    ["Team", "/design-preview/team"],
+    ["New intake", "/design-preview/tickets/new"],
+    ["Mission control", "/design-preview/workspace"],
+    ["Patchwork home", "/design-preview/workspace"],
+  ]) {
+    await rail.hover({ position: { x: 28, y: 240 } });
+    await expect.poll(expanded).toBe(true);
+    await rail.getByRole("link", { name: label, exact: true }).click();
+    await page.waitForURL(`**${path}`);
+    await page.mouse.move(650, 150);
+    await expect.poll(expanded, { message: `${label} must collapse without another click` }).toBe(false);
+  }
+});
+
+test("sidebar preserves keyboard focus and cancels closing when the pointer returns", async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/design-preview/tickets");
+  const rail = page.getByRole("complementary", { name: "Workspace" });
+  const expanded = () => rail.evaluate(element => element.contains(document.elementFromPoint(140, 100)));
+  await rail.hover({ position: { x: 28, y: 240 } });
+  await rail.getByRole("link", { name: "Tickets", exact: true }).click();
+  await page.mouse.move(650, 150);
+  await rail.hover({ position: { x: 28, y: 240 } });
+  await page.waitForTimeout(550);
+  await expect.poll(expanded).toBe(true);
+
+  await rail.getByRole("link", { name: "Tickets", exact: true }).focus();
+  await page.keyboard.press("Tab");
+  await expect(rail.getByRole("link", { name: "Customers", exact: true })).toBeFocused();
+  await page.mouse.move(650, 150);
+  await page.waitForTimeout(550);
+  await expect.poll(expanded).toBe(true);
+  await page.getByRole("button", { name: /Search Patchwork/ }).focus();
+  await expect.poll(expanded).toBe(false);
+});

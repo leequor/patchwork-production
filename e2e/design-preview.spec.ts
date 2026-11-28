@@ -65,7 +65,8 @@ test("every sidebar destination collapses on mouse leave after clicking", async 
     if (label === "Mission control") {
       // This route mounts a new shell and loads the stage after the URL changes.
       // Exercise its rail, not the outgoing intake shell or a partially mounted page.
-      await expect(page.getByRole("img", { name: /^bench ·/ })).toBeVisible();
+      // First paint of the lazy 3D chunk took over 6 s on the hosted software renderer.
+      await expect(page.getByRole("img", { name: /^bench ·/ })).toBeVisible({ timeout: 15_000 });
     }
     await page.mouse.move(650, 150);
     await expect.poll(expanded, { message: `${label} must collapse without another click` }).toBe(false);

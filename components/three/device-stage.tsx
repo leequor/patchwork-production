@@ -364,9 +364,10 @@ export default function DeviceStage({
         antialias: quality === "high",
         alpha: true,
         powerPreference: "high-performance",
+        failIfMajorPerformanceCaveat: true,
       });
     } catch {
-      // The stage is optional; a machine without WebGL must still open the ticket.
+      // Prefer the static view when WebGL is absent or the driver reports a major slowdown.
       return;
     }
     renderer.setClearAlpha(0);

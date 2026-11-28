@@ -62,6 +62,11 @@ test("every sidebar destination collapses on mouse leave after clicking", async 
     await expect.poll(expanded).toBe(true);
     await rail.getByRole("link", { name: label, exact: true }).click();
     await page.waitForURL(`**${path}`);
+    if (label === "Mission control") {
+      // This route mounts a new shell and loads the stage after the URL changes.
+      // Exercise its rail, not the outgoing intake shell or a partially mounted page.
+      await expect(page.getByRole("img", { name: /^bench ·/ })).toBeVisible();
+    }
     await page.mouse.move(650, 150);
     await expect.poll(expanded, { message: `${label} must collapse without another click` }).toBe(false);
   }

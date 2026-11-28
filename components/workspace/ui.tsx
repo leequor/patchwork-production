@@ -71,9 +71,9 @@ export function PageHeader({
   actions?: ReactNode;
 }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3">
+    <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-3 pb-2 sm:pb-4">
       <div className="min-w-0">
-        <h1 className="display text-[30px] text-ink sm:text-[34px]">{title}</h1>
+        <h1 className="display-tight break-words text-[clamp(30px,3.2vw,46px)] text-ink">{title}</h1>
         {description ? (
           <p className="mt-1.5 max-w-[62ch] font-sans text-[15px] leading-6 text-ink-secondary">
             {description}
@@ -110,7 +110,7 @@ export function EmptyState({
   action?: ReactNode;
 }) {
   return (
-    <div className="rounded-sm border border-dashed border-white/[0.12] bg-canvas/50 px-6 py-10">
+    <div className="rounded-md border-l-2 border-accent-bright/50 bg-raised/60 px-5 py-7 sm:px-7 sm:py-9">
       <p className="font-sans text-[15px] font-semibold text-ink">{title}</p>
       <p className="mt-1.5 max-w-[52ch] font-sans text-[14px] leading-6 text-ink-secondary">{body}</p>
       {action ? <div className="mt-4">{action}</div> : null}

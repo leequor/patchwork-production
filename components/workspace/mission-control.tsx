@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight, Boxes, Receipt, Wrench } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
@@ -16,47 +15,15 @@ import {
   formatMoney,
 } from "@/lib/repair/format";
 import type { TicketRow } from "@/lib/repair/types";
-import { usePrefersReducedMotion } from "@/lib/use-reduced-motion";
-import { cn, initials } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
 const PAGE_SIZE = 12;
 
 function Stat({ label, value, tone }: { label: string; value: string; tone?: string }) {
   return (
-    <div className="px-3.5 py-3">
-      <p className={cn("figure text-[18px] font-semibold leading-none text-ink", tone)}>{value}</p>
-      <p className="mt-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-ink-faint">
-        {label}
-      </p>
-    </div>
-  );
-}
-
-function FloatPill({
-  label,
-  value,
-  mark,
-  className,
-}: {
-  label: string;
-  value: string;
-  mark: React.ReactNode;
-  className?: string;
-}) {
-  return (
-    <div
-      className={cn(
-        "absolute hidden items-center gap-2.5 rounded-sm bg-panel/85 ring-1 ring-inset ring-white/[0.06] py-1.5 pl-1.5 pr-3.5 lg:flex",
-        className,
-      )}
-    >
-      <span className="grid h-7 w-7 shrink-0 place-items-center rounded-sm bg-raised ring-1 ring-inset ring-white/[0.07]">
-        {mark}
-      </span>
-      <span className="flex flex-col leading-tight">
-        <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-ink-faint">{label}</span>
-        <span className="mt-0.5 text-[12px] font-medium text-ink">{value}</span>
-      </span>
+    <div className="min-w-0 border-l border-hairline-strong pl-3 sm:pl-5">
+      <dt className="text-xs text-ink-secondary">{label}</dt>
+      <dd className={cn("figure mt-1 text-[clamp(18px,2vw,28px)] leading-none text-ink", tone)}>{value}</dd>
     </div>
   );
 }
@@ -81,10 +48,11 @@ function QueueRow({
       type="button"
       role="option"
       aria-selected={active}
+      tabIndex={active ? 0 : -1}
       onClick={onSelect}
       className={cn(
-        "group relative flex w-full items-start gap-3 border-b border-hairline/60 px-4 py-2.5 text-left transition-colors duration-150",
-        active ? "bg-raised" : "hover:bg-raised/50",
+        "group relative flex w-full items-start gap-3 border-b border-hairline/60 px-4 py-3 text-left transition-colors duration-150 focus-visible:-outline-offset-2",
+        active ? "bg-overlay" : "hover:bg-raised/50",
       )}
     >
       {active ? (
@@ -98,7 +66,7 @@ function QueueRow({
 
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-2">
-          <span className="truncate text-[13px] font-semibold text-ink">
+          <span className="truncate text-sm font-semibold text-ink">
             {ticket.customer.full_name}
           </span>
           <RelativeTime
@@ -112,7 +80,7 @@ function QueueRow({
           <span aria-hidden="true" className="text-ink-faint">
             ·
           </span>
-          <span className="truncate text-[11px] text-ink-tertiary">
+          <span className="truncate text-xs text-ink-secondary">
             {ticket.device.brand} {ticket.device.model}
           </span>
         </span>
@@ -151,7 +119,6 @@ export function MissionControl({
   const [mobileView, setMobileView] = useState<"queue" | "bench">("queue");
   const sentinelRef = useRef<HTMLDivElement>(null);
   const rowRefs = useRef<Array<HTMLButtonElement | null>>([]);
-  const reduced = usePrefersReducedMotion();
 
   const visible = useMemo(() => queue.slice(0, visibleCount), [queue, visibleCount]);
   const selected = queue.find((ticket) => ticket.id === selectedId) ?? queue[0] ?? null;
@@ -182,10 +149,21 @@ export function MissionControl({
     rowRefs.current[next]?.focus();
   };
 
+  const overview = (
+    <header className="mb-3 flex shrink-0 flex-wrap items-end justify-between gap-x-8 gap-y-3 px-1 py-2 sm:mb-4 sm:py-4">
+      <h1 className="display-tight text-[clamp(26px,3.2vw,44px)] text-ink">Mission control</h1>
+      <dl aria-label="Shop overview" className="grid w-full grid-cols-3 sm:w-auto sm:min-w-[310px]">
+        <Stat label="Open" value={String(openCount)} />
+        <Stat label="Ready" value={String(readyCount)} tone="text-positive" />
+        <Stat label="MTD" value={formatCompactMoney(revenueMtd)} />
+      </dl>
+    </header>
+  );
+
   if (queue.length === 0) {
     return (
       <section className="flex h-full min-h-0 flex-col">
-        <h1 className="sr-only">Mission control</h1>
+        {overview}
         <div className="flex flex-1 flex-col items-center justify-center gap-4 rounded-2xl bg-panel/40 ring-1 ring-inset ring-white/[0.06] p-8 text-center">
           <h2 className="display text-[28px] text-ink">The bench is clear</h2>
           <p className="max-w-[46ch] text-[13px] leading-6 text-ink-secondary">
@@ -204,7 +182,7 @@ export function MissionControl({
 
   return (
     <section className="flex h-full min-h-0 flex-col">
-      <h1 className="sr-only">Mission control</h1>
+      {overview}
 
       <div className="mb-3 flex gap-1 rounded-sm bg-panel ring-1 ring-inset ring-white/[0.06] p-1 lg:hidden">
         {(["queue", "bench"] as const).map((view) => (
@@ -214,7 +192,7 @@ export function MissionControl({
             aria-pressed={mobileView === view}
             onClick={() => setMobileView(view)}
             className={cn(
-              "h-7 flex-1 rounded-sm text-[12px] font-medium capitalize transition-colors",
+               "h-10 flex-1 rounded-sm text-sm font-medium capitalize transition-colors",
               mobileView === view ? "bg-raised text-ink" : "text-ink-tertiary",
             )}
           >
@@ -223,39 +201,26 @@ export function MissionControl({
         ))}
       </div>
 
-      <div className="flex min-h-0 flex-1 overflow-hidden rounded-lg bg-panel ring-1 ring-inset ring-white/[0.05]">
+      <div className="flex min-h-0 flex-1 gap-3 lg:gap-4">
         {/* The queue */}
-        <motion.aside
-          initial={reduced ? false : { opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 260, damping: 30, delay: 0.04 }}
+        <aside
           className={cn(
-            "min-w-0 flex-col border-hairline bg-canvas/50 lg:flex lg:w-[34%] lg:min-w-[312px] lg:max-w-[420px] lg:border-r",
+            "min-w-0 flex-col overflow-hidden rounded-md bg-panel lg:flex lg:w-[33%] lg:min-w-[290px] lg:max-w-[420px]",
             mobileView === "queue" ? "flex w-full" : "hidden",
           )}
         >
-          <div className="grid grid-cols-3 gap-px">
-            <Stat label="Open" value={String(openCount)} />
-            <Stat label="Ready" value={String(readyCount)} tone="text-positive" />
-            <Stat label="MTD" value={formatCompactMoney(revenueMtd)} />
-          </div>
-          <div
-            aria-hidden="true"
-            className="h-px bg-[linear-gradient(to_right,rgba(241,239,250,0.10),rgba(241,239,250,0.05)_60%,transparent)]"
-          />
-
-          <div className="flex items-center justify-between gap-3 border-b border-hairline px-4 py-2.5">
+          <div className="flex items-center justify-between gap-3 border-b border-hairline bg-raised px-4 py-3">
             <div className="flex items-center gap-2">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-positive opacity-60 motion-reduce:animate-none" />
                 <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-positive" />
               </span>
-              <h2 className="text-[12px] font-semibold text-ink">Live queue</h2>
-              <span className="mono-id text-[11px]">{queue.length} open</span>
+              <h2 className="text-base font-semibold text-ink">Live queue</h2>
+              <span className="mono-id">{queue.length}</span>
             </div>
             <Link
               href={route("/tickets")}
-              className="text-[11px] text-ink-tertiary transition-colors hover:text-ink"
+              className="tap text-xs text-ink-secondary transition-colors hover:text-ink"
             >
               All tickets
             </Link>
@@ -274,7 +239,7 @@ export function MissionControl({
                 move(-1);
               }
             }}
-            className="fade-y min-h-0 flex-1 overflow-y-auto overscroll-contain"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain"
           >
             {visible.map((ticket, index) => (
               <QueueRow
@@ -294,7 +259,7 @@ export function MissionControl({
           </div>
 
           <div className="flex items-center justify-between gap-3 border-t border-hairline px-4 py-2.5 font-mono text-[10px] text-ink-tertiary">
-            <span>↑ ↓ move · click to stage</span>
+            <span className="hidden lg:inline">↑ ↓ select a repair</span><span className="lg:hidden">Select a repair</span>
             {lowStockCount > 0 ? (
               <Link href={route("/inventory")} className="text-warn transition-colors hover:text-warn-ink">
                 {lowStockCount} low stock
@@ -303,29 +268,17 @@ export function MissionControl({
               <span className="text-ink-faint">stock ok</span>
             )}
           </div>
-        </motion.aside>
+        </aside>
 
         {/* The bench */}
         {selected ? (
-          <motion.div
-            initial={reduced ? false : { opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ type: "spring", stiffness: 260, damping: 30, delay: 0.1 }}
+          <div
             className={cn(
-              "relative min-w-0 flex-1 flex-col lg:flex",
+              "relative min-w-0 flex-1 flex-col overflow-y-auto rounded-md bg-panel lg:flex",
               mobileView === "bench" ? "flex" : "hidden",
             )}
           >
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.div
-                key={selected.id}
-                initial={reduced ? false : { opacity: 0, y: 18 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={reduced ? undefined : { opacity: 0, y: 18 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                className="flex min-h-0 flex-1 flex-col"
-              >
-            <header className="flex flex-wrap items-start justify-between gap-3 px-5 pb-1 pt-5">
+            <header className="flex flex-wrap items-start justify-between gap-3 px-4 pb-4 pt-5 sm:px-6">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="mono-id text-[11px] text-accent-bright">
@@ -338,13 +291,13 @@ export function MissionControl({
                     {TICKET_STATUS_META[selected.status].label}
                   </span>
                 </div>
-                <h2 className="display-tight mt-1 truncate text-[21px] text-ink sm:text-[24px]">
-                  {selected.customer.full_name}
-                </h2>
-                <p className="mt-0.5 truncate text-[12px] text-ink-tertiary">
+                <h2 className="display-tight mt-2 break-words text-[clamp(22px,2.8vw,38px)] text-ink">
                   {selected.device.brand} {selected.device.model}
+                </h2>
+                <p className="mt-1 break-words text-sm text-ink-secondary">
+                  {selected.customer.full_name}
                 </p>
-                <p className="mt-2 line-clamp-2 max-w-[62ch] text-[12px] leading-5 text-ink-secondary">
+                <p className="mt-2 line-clamp-2 max-w-[62ch] text-sm leading-5 text-ink-secondary">
                   {selected.issue}
                 </p>
               </div>
@@ -358,63 +311,32 @@ export function MissionControl({
               </Link>
             </header>
 
-            <div className="flex flex-wrap gap-2 px-5 pt-3 lg:hidden">
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#0b0916]/72 px-2.5 py-1 text-[11px] text-ink-secondary ring-1 ring-inset ring-white/[0.07] backdrop-blur-md">
-                <span className={cn("h-1.5 w-1.5 rounded-full", TICKET_STATUS_META[selected.status].dot)} />
-                {TICKET_STATUS_META[selected.status].label}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#0b0916]/72 px-2.5 py-1 text-[11px] text-ink-secondary ring-1 ring-inset ring-white/[0.07] backdrop-blur-md">
-                {selected.assignee?.full_name ?? "Unassigned"}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#0b0916]/72 px-2.5 py-1 text-[11px] text-ink-secondary ring-1 ring-inset ring-white/[0.07] backdrop-blur-md">
-                <span className={cn("h-1.5 w-1.5 rounded-full", PRIORITY_META[selected.priority].dot)} />
-                {PRIORITY_META[selected.priority].label}
-              </span>
-              <span className="inline-flex items-center gap-2 rounded-full bg-[#0b0916]/72 px-2.5 py-1 font-mono text-[11px] text-ink-secondary ring-1 ring-inset ring-white/[0.07] backdrop-blur-md">
-                {selected.estimate_cents > 0 ? formatMoney(selected.estimate_cents) : "No estimate"}
-              </span>
-            </div>
-
-            <div className="hairline-glow relative min-h-0 flex-1 overflow-hidden">
+            <div className="plate-ground relative min-h-[155px] flex-1 overflow-hidden sm:min-h-[200px]">
               <div className="iris" />
-              <DeviceStageMount
-                status={selected.status}
-                form={formForCategory(selected.device.category)}
-                className="h-full px-4 py-6"
-                caption={`bench · ${TICKET_STATUS_META[selected.status].label}`}
-              />
-
-              <FloatPill
-                className="right-5 top-5"
-                label="Assigned"
-                value={selected.assignee?.full_name ?? "Unassigned"}
-                mark={
-                  <span className="text-[8px] font-semibold uppercase text-ink-tertiary">
-                    {initials(selected.assignee?.full_name ?? "PW")}
-                  </span>
-                }
-              />
-              <FloatPill
-                className="bottom-16 left-6"
-                label="Priority"
-                value={PRIORITY_META[selected.priority].label}
-                mark={
-                  <span
-                    className={cn("h-1.5 w-1.5 rounded-full", PRIORITY_META[selected.priority].dot)}
-                  />
-                }
-              />
-              <FloatPill
-                className="bottom-20 right-6"
-                label="Estimate"
-                value={
-                  selected.estimate_cents > 0
-                    ? formatMoney(selected.estimate_cents)
-                    : "No estimate"
-                }
-                mark={<span className="text-[10px] font-semibold text-accent-bright">$</span>}
-              />
+              <div className="absolute inset-0">
+                <DeviceStageMount
+                  status={selected.status}
+                  form={formForCategory(selected.device.category)}
+                  className="h-full px-2 pb-5 pt-2"
+                  caption={`bench · ${TICKET_STATUS_META[selected.status].label}`}
+                />
+              </div>
             </div>
+
+            <dl className="grid grid-cols-[1.2fr_.8fr_1fr] gap-3 bg-raised px-4 py-3 text-sm sm:px-6">
+              <div>
+                <dt className="text-xs text-ink-tertiary">Assigned</dt>
+                <dd className="mt-1 break-words">{selected.assignee?.full_name ?? "Unassigned"}</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-ink-tertiary">Priority</dt>
+                <dd className={cn("mt-1", PRIORITY_META[selected.priority].tone)}>{PRIORITY_META[selected.priority].label}</dd>
+              </div>
+              <div>
+                <dt className="text-xs text-ink-tertiary">Estimate</dt>
+                <dd className="mt-1 break-words tabular-nums">{selected.estimate_cents > 0 ? formatMoney(selected.estimate_cents) : "No estimate"}</dd>
+              </div>
+            </dl>
 
             <div className="relative z-10 flex flex-wrap items-center gap-2 border-t border-hairline bg-panel px-4 py-3">
               <Link
@@ -438,13 +360,8 @@ export function MissionControl({
                 <Receipt className="h-3.5 w-3.5" aria-hidden="true" />
                 Create invoice
               </Link>
-              <span className="ml-auto hidden font-mono text-[10px] uppercase tracking-[0.14em] text-ink-faint xl:block">
-                staged · newest first
-              </span>
             </div>
-            </motion.div>
-            </AnimatePresence>
-          </motion.div>
+          </div>
         ) : null}
       </div>
     </section>

@@ -2,8 +2,10 @@
 
 import * as THREE from "three";
 import { useEffect, useRef } from "react";
+import { Box, Laptop, Smartphone, Tablet } from "lucide-react";
 
 import type { TicketStatus } from "@/lib/repair/types";
+import { TICKET_STATUS_META } from "@/lib/repair/format";
 import { FORM_SPECS, type DeviceForm } from "@/lib/device-form";
 import { cn } from "@/lib/utils";
 
@@ -342,6 +344,7 @@ export default function DeviceStage({
 }: DeviceStageProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const statusRef = useRef<TicketStatus>(status);
+  const DeviceIcon = { handheld: Smartphone, tablet: Tablet, clamshell: Laptop, box: Box }[form];
 
   useEffect(() => {
     statusRef.current = status;
@@ -355,11 +358,17 @@ export default function DeviceStage({
       typeof window !== "undefined" &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: quality === "high",
-      alpha: true,
-      powerPreference: "high-performance",
-    });
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: quality === "high",
+        alpha: true,
+        powerPreference: "high-performance",
+      });
+    } catch {
+      // The stage is optional; a machine without WebGL must still open the ticket.
+      return;
+    }
     renderer.setClearAlpha(0);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, quality === "high" ? 2 : 1.5));
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -1072,8 +1081,13 @@ export default function DeviceStage({
       ref={hostRef}
       role="img"
       aria-label={label}
-      className={cn("relative h-full w-full", className)}
+      className={cn("device-render relative h-full w-full", className)}
       style={{ touchAction: "pan-y" }}
-    />
+    >
+      <div aria-hidden="true" className="device-fallback absolute inset-0 flex flex-col items-center justify-center gap-3 text-center text-ink-secondary">
+        <DeviceIcon size={46} strokeWidth={1} />
+        <span className="text-sm">{TICKET_STATUS_META[status].description}</span>
+      </div>
+    </div>
   );
 }

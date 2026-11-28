@@ -152,9 +152,8 @@ has to choose a form before the scene is ever fetched.
 ### Public tracker — `/track`
 
 - Header: mark, `System status`, one quiet `Staff sign in` control.
-- Hero: heading, one paragraph, the code docket, and the bench scene. Two columns from `lg`.
-- No ticket yet: the stage sits in Intake under a `Bench view · nothing open` caption, and the
-  stages are explained as a ruled definition list (mark, word, one line).
+- Hero: Sakura footage, one question, and a pale customer-copy docket with a visible field label. The form sits beside the headline from `lg` and below it on smaller screens.
+- Before lookup, three service-manual drawings explain intake, repair and handover. A lookup uses a compact header so its result or error follows immediately; it does not load the film.
 - Ticket found: the stage moves to the ticket's real stage, and the page shows the five-stage rail,
   the issue, and the customer-visible timeline only.
 - Never shows address, payment details, internal notes, or staff-only fields.
@@ -168,11 +167,10 @@ printed because this page is used by staff, not customers.
 
 `components/auth/auth-shell.tsx`, `auth-card.tsx`, `shift-board.tsx`.
 
-- Left plate: mark, the bench scene opened (it is the brand image here, not a status), the promise,
-  and two quiet links. Right column: the form, then the live counter board as the docket's stub.
+- Left plate: the Sakura garden, shop mark and links to tracking and system status. The dark form has the matching staff-copy counterfoil; the live counter board follows it.
 - The counter board reads `/api/health` and `/api/health/supabase` on load and prints a word plus a
   figure. Nothing on it is invented; a failed check says so.
-- Below `lg` the plate stacks above the form.
+- Below `md` the garden becomes a short masthead above the form.
 
 ### Workspace
 
@@ -185,14 +183,12 @@ printed because this page is used by staff, not customers.
   keyboard focus, locks background scrolling while open, and returns focus to its trigger on close.
 - Native selects share a 44 px control, inset surface and chevron while retaining browser-native
   options and keyboard behavior.
-- Mission control is two panes in one viewport: the queue (stats, live rows, keyboard up/down) and
-  the bench (the scene, three readouts, the actions). Nothing scrolls except the two inner panes.
+- Mission control opens with the shop totals. The keyboard-navigable queue sits beside the staged device; assignment, priority and estimate sit together beneath it. The stage falls back to a device symbol and status description if WebGL is unavailable. On phones the queue and bench share the space using a view switch.
 - Everything else uses a shared page frame: title, description, actions, then panels.
 
 ## Motion
 
-- Motion is feedback, not performance. Workspace pages do not animate on arrival; the public hero
-  uses `.rise` once, staggered by 60–70 ms.
+- Workspace pages enter with a 4 px CSS translation and stay fully opaque; reduced motion skips the translation. The public hero uses `.rise` once.
 - Anchored overlays use a small opacity/transform entrance: 150 ms for the profile disclosure,
   170 ms for search and 180 ms for the mobile drawer. Press and colour feedback stays near 130 ms;
   ease out with `cubic-bezier(0.22, 1, 0.36, 1)`.
@@ -203,17 +199,15 @@ printed because this page is used by staff, not customers.
 
 ## The landing page
 
-The public page has one composition, and everything else defers to it: type on the left, art on
-the right, nothing in a card unless it is a control.
+The tree fills the backdrop. Type anchors its lower left; a working claim check anchors the lower right.
 
 | Piece | Rule |
 | --- | --- |
 | Nav | Borderless, floating over the art. Mark left, three links centre, one near-white pill right. |
-| Eyebrow | `.eyebrow` — mono, 0.2em tracking, a 32px dash, `--ink-tertiary`. One per section. |
-| Headline | `.display-hero` — **weight 400**, −0.032em, 0.94 leading, `clamp(44px, 6.6vw, 92px)`. |
-| Body | 17px / 1.6 in `--ink-secondary`, max 44ch. Never on top of artwork. |
-| Facts | Three columns, mono numerals, a hairline above that spans the container. |
-| Sections | One oversized `h2`, a right-hand note, then a single bordered grid split by hairlines. |
+| Headline | `.display-hero` — weight 400, −0.032em, 0.94 leading, up to 104 px before lookup. |
+| Body | 17 px, max 37ch, on a dark scrim. |
+| Docket | Pale lavender paper, dark ink, perforated counterfoil, code field and one submit button. |
+| Stages | One heading and three isometric drawings, each paired with its explanation and status words. |
 | Footer | Large wordmark, one blurb, three link columns, a quiet bottom bar. |
 
 The weight is the whole trick. At 90px a 600 face shouts and crowds the artwork; regular weight
@@ -226,7 +220,7 @@ with tight tracking reads composed and lets the illustration be the loud thing.
 A time-based, eased 500ms tail-to-head blend softens the source seam. Motion interpolation uses
 frames from both sides of the wrap, then trims a complete cycle so the encoder cannot drop the
 last two frames. The tree and petal composition are preserved. A still of the same tree
-(`public/art/sakura-tree.png`) under `prefers-reduced-motion`. The art is masked at the bottom so it
+(`public/art/sakura-still.webp`, also the video poster) replaces the film under `prefers-reduced-motion`. Otherwise the film can be paused and resumed. The art is masked at the bottom so it
 dissolves into the next section instead of ending on a line.
 
 Three attempts, and what each one taught:

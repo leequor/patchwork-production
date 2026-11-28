@@ -13,7 +13,7 @@ export function AuthCard({
 }) {
   return (
     <div className="w-full">
-      <h2 className="rise display text-[26px] text-ink" style={{ animationDelay: "120ms" }}>
+      <h2 className="display-tight text-[clamp(27px,3vw,38px)] text-ink">
         {title}
       </h2>
       <p
@@ -28,7 +28,7 @@ export function AuthCard({
       </div>
 
       {footer ? (
-        <div className="mt-7 rounded-sm bg-overlay px-3.5 py-3 font-sans text-[13px] leading-5 text-ink-secondary">
+        <div className="mt-6 border-t border-dashed border-hairline-strong pt-4 text-[13px] leading-5 text-ink-secondary">
           {footer}
         </div>
       ) : null}

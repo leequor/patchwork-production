@@ -151,6 +151,53 @@
 }
 
 @layer utilities {
+  /* The two copies of the shop docket: a light claim check for the customer,
+     a matching perforated counterfoil on the dark staff form. */
+  .claim-check,
+  .claim-stub {
+    background: #e4def0;
+    color: #292334;
+  }
+
+  .claim-check {
+    border-radius: 6px;
+    color-scheme: light;
+  }
+
+  .claim-stub {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: .7rem 1.25rem;
+    border-radius: 6px 6px 0 0;
+    border-bottom: 1px dashed #a398af;
+    font: 500 .75rem/1.5 var(--font-mono), monospace;
+  }
+
+  .claim-stub > :first-child {
+    font: 650 1rem/1 var(--font-sans), sans-serif;
+    letter-spacing: -.04em;
+  }
+
+  .claim-code {
+    border: 1px solid #8c8198;
+    color: #292334;
+    background: #f7f4fa;
+    caret-color: #47317e;
+  }
+
+  .claim-code::placeholder { color: #706579; }
+  .claim-check :focus-visible { outline-color: #4e377c; }
+
+  .plate-ground {
+    background-color: var(--panel);
+    background-image: radial-gradient(circle, #40384e .8px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  .device-render:has(> canvas) > .device-fallback { display: none; }
+
   .text-balance {
     text-wrap: balance;
   }
@@ -466,9 +513,16 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  .workspace-arrival { animation: workspace-arrival 180ms var(--ease-out); }
+
   .rise {
     animation: rise 560ms var(--ease-out) both;
   }
+}
+
+@keyframes workspace-arrival {
+  from { transform: translateY(4px); }
+  to { transform: translateY(0); }
 }
 
 @keyframes rise {

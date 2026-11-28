@@ -29,32 +29,31 @@ export default function StatusPage() {
         <SiteHeader className="pt-6 sm:pt-8" back={{ href: "/track", label: "Back" }}
           action={{ href: "/", label: "Back to desk" }} />
 
-        <section className="pt-14 sm:pt-20">
-          <h1 className="rise display max-w-[18ch] text-[clamp(40px,6vw,72px)] text-ink">
-            Is the shop open?
-          </h1>
-          <p
-            className="rise mt-5 max-w-[54ch] font-sans text-[17px] leading-[1.55] text-ink-secondary"
-            style={{ animationDelay: "70ms" }}
-          >
-            Two checks, run on demand and never cached: the app itself, and the records service
-            behind it.
-          </p>
-        </section>
-
-        <section
-          aria-label="Health checks"
-          className="rise mt-10 rounded-md bg-panel p-5 sm:p-7"
-          style={{ animationDelay: "130ms" }}
-        >
-          <div className="mb-5 flex flex-wrap items-center justify-between gap-2 border-b border-hairline pb-3">
-            <h2 className="font-sans text-[13px] font-medium text-ink">Live checks</h2>
-            <p className="font-mono text-2xs uppercase tracking-[0.16em] text-ink-faint">
-              Never cached
+        <div className="grid items-center gap-8 pt-14 sm:pt-20 lg:grid-cols-[.85fr_1.15fr] lg:gap-12">
+          <section>
+            <h1 className="rise display max-w-[18ch] text-[clamp(40px,6vw,72px)] text-ink">
+              System status
+            </h1>
+            <p
+              className="rise mt-5 max-w-[54ch] font-sans text-[17px] leading-[1.55] text-ink-secondary"
+              style={{ animationDelay: "70ms" }}
+            >
+              Check whether the desk is online and the shop can reach your repair record.
             </p>
-          </div>
-          <StatusPanel />
-        </section>
+          </section>
+
+          <section
+            aria-label="Health checks"
+            className="rise overflow-hidden rounded-md bg-panel"
+            style={{ animationDelay: "130ms" }}
+          >
+            <div className="claim-stub">
+              <h2>Live checks</h2>
+              <span>Service record</span>
+            </div>
+            <div className="p-4 sm:p-5"><StatusPanel /></div>
+          </section>
+        </div>
 
         <section className="mt-12">
           <h2 className="rise display-tight text-[24px] text-ink">If a check fails</h2>
@@ -77,7 +76,7 @@ export default function StatusPage() {
         </section>
 
         <p className="mt-6 font-sans text-[13px] text-ink-tertiary">
-          Work top to bottom. Health checks run on demand and are never cached.
+          Reload this page to run both checks again.
         </p>
 
         <SiteFooter className="mt-12" />

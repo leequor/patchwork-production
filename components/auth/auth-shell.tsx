@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import type { ReactNode } from "react";
 
 import { ShiftBoard } from "@/components/auth/shift-board";
@@ -20,9 +21,12 @@ import { Logo } from "@/components/ui/logo";
  */
 export function AuthShell({ children }: { children: ReactNode }) {
   return (
-    <main className="grid min-h-[100dvh] lg:grid-cols-[minmax(0,1fr)_minmax(392px,432px)]">
-      <section className="relative isolate flex min-h-[66svh] flex-col overflow-hidden px-5 pb-8 pt-6 sm:px-8 lg:min-h-0 lg:px-12 lg:pb-10 lg:pt-9">
-        <RepairTree className="absolute inset-0 -z-20 [filter:brightness(1.14)_saturate(1.05)]" />
+    <main className="grid min-h-[100dvh] content-start bg-canvas md:grid-cols-[minmax(0,1.4fr)_minmax(360px,1fr)] md:content-stretch">
+      <section className="relative isolate flex flex-col overflow-hidden px-5 pb-6 pt-5 sm:px-8 md:justify-between md:pb-10 md:pt-8 lg:px-12 xl:px-16 xl:pb-14">
+        <RepairTree
+          className="absolute inset-0 -z-20 [filter:brightness(1.14)_saturate(1.05)]"
+          controlPosition="bottom-5 right-5 sm:right-8 md:bottom-9 lg:right-12 xl:bottom-12 xl:right-16"
+        />
         <ReactiveGrid className="pointer-events-none absolute inset-0 -z-10" />
 
         {/* Ground, not a blanket. The old plate was three full-width gradients,
@@ -42,43 +46,39 @@ export function AuthShell({ children }: { children: ReactNode }) {
           className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[38%] bg-[linear-gradient(to_top,rgba(9,8,15,0.88)_0%,rgba(9,8,15,0.42)_34%,transparent_78%)]"
         />
 
-        <div className="relative z-10">
+        <div className="relative z-10 flex items-center justify-between gap-4">
           <Logo />
+          <Link href="/status" className="tap inline-flex min-h-10 items-center gap-1.5 text-sm text-ink-secondary hover:text-ink">
+            System status <ArrowUpRight size={14} aria-hidden="true" />
+          </Link>
         </div>
 
-        <div className="relative z-10 mt-auto pt-16">
-          <h1 className="rise display max-w-[15ch] text-[clamp(38px,4.6vw,64px)] text-ink">
+        <div className="relative z-10 mt-auto pt-9 sm:pt-16 md:pt-32">
+          <h1 className="rise display-hero max-w-[12ch] text-[clamp(40px,5.3vw,82px)] text-ink">
             Every repair, accounted for.
           </h1>
           <p
-            className="rise mt-4 max-w-[36ch] font-sans text-[16px] leading-[1.6] text-ink-secondary"
+            className="rise mt-3 max-w-[36ch] text-[15px] leading-relaxed text-ink-secondary md:mt-5 md:text-[17px]"
             style={{ animationDelay: "80ms" }}
           >
             One desk for the intake, the parts, the bench and the till.
           </p>
 
           <div
-            className="rise mt-7 flex flex-wrap items-center gap-x-6 gap-y-2"
+            className="rise mt-3 flex items-center md:mt-6"
             style={{ animationDelay: "140ms" }}
           >
             <Link
               href="/track"
-              className="tap font-sans text-[13px] font-medium text-ink transition-colors hover:text-accent-bright"
+              className="tap group inline-flex min-h-11 items-center gap-2 text-sm font-medium text-ink underline decoration-accent-bright/70 underline-offset-[6px] hover:decoration-ink"
             >
-              Track a repair
-            </Link>
-            <span aria-hidden="true" className="h-3 w-px bg-white/12" />
-            <Link
-              href="/status"
-              className="tap font-sans text-[14px] text-ink-secondary transition-colors hover:text-ink"
-            >
-              System status
+              Track a repair <ArrowUpRight aria-hidden="true" size={16} />
             </Link>
           </div>
         </div>
       </section>
 
-      <section className="relative flex flex-col bg-panel">
+      <section className="relative flex min-w-0 flex-col bg-canvas">
         {/* The seam is a fade, not a border: one line the eye can follow from
             the top of the page to the bottom of it. */}
         <div
@@ -86,12 +86,15 @@ export function AuthShell({ children }: { children: ReactNode }) {
           className="absolute inset-x-0 top-0 h-px bg-[linear-gradient(to_right,rgba(241,239,250,0.14),rgba(241,239,250,0.04)_60%,transparent)] lg:inset-y-0 lg:left-0 lg:right-auto lg:h-auto lg:w-px lg:bg-[linear-gradient(to_bottom,rgba(241,239,250,0.14),rgba(241,239,250,0.05)_55%,transparent)]"
         />
 
-        <div className="flex flex-1 items-center justify-center px-5 py-9 sm:px-9 sm:py-12">
-          <div className="w-full max-w-[352px]">
-            <div className="rise" style={{ animationDelay: "90ms" }}>
-              {children}
+        <div className="flex flex-1 items-center justify-center px-4 py-5 sm:px-6 md:py-12 lg:px-10">
+          <div className="w-full max-w-[420px]">
+            <div className="rise overflow-hidden rounded-md bg-panel" style={{ animationDelay: "90ms" }}>
+              <div className="claim-stub"><span>Repair desk</span><span>Staff copy</span></div>
+              <div className="px-5 py-6 sm:px-7 sm:py-8">
+                {children}
+              </div>
             </div>
-            <div className="rise mt-8" style={{ animationDelay: "150ms" }}>
+            <div className="rise mt-4" style={{ animationDelay: "150ms" }}>
               <ShiftBoard />
             </div>
           </div>

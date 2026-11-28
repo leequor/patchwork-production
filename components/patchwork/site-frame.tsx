@@ -114,12 +114,10 @@ export function SiteFooter({ className }: { className?: string }) {
     <footer className={cn("mt-16 border-t border-hairline/70 pt-10 sm:mt-20", className)}>
       <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-[1.6fr_repeat(3,minmax(0,1fr))] lg:gap-12">
         <div>
-          <p className="display text-[28px] text-ink">{APP_NAME}</p>
+          <p className="display-hero text-[clamp(40px,5vw,68px)] text-ink">{APP_NAME}</p>
           <p className="mt-3 max-w-[34ch] font-sans text-[14px] leading-6 text-ink-tertiary">
-            Repair operations for devices that matter. Every ticket tracked from the intake counter
-            to the moment it goes home.
+            One repair record, from the intake counter to the moment your device goes home.
           </p>
-          <p className="eyebrow mt-6">Open Mon–Sat</p>
         </div>
 
         {FOOTER_COLUMNS.map((column) => (

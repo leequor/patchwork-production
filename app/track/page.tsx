@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight } from "lucide-react";
 
+import { RepairPlate } from "@/components/landing/repair-plate";
 import { RepairTree } from "@/components/landing/repair-tree";
 import { ReactiveGrid } from "@/components/patchwork/reactive-grid";
 import { SiteFooter, SiteHeader } from "@/components/patchwork/site-frame";
@@ -29,32 +30,25 @@ type SearchParams = Promise<{ code?: string; error?: string }>;
 const RAIL: TicketStatus[] = ["intake", "diagnosing", "waiting_parts", "in_repair", "ready"];
 
 /** Three phases, because six stages is what the bench uses and three is what a customer needs. */
-const PHASES: Array<{ number: string; title: string; body: string; stages: TicketStatus[] }> = [
+const PHASES: Array<{ plate: "intake" | "bench" | "pickup"; title: string; body: string; stages: TicketStatus[] }> = [
   {
-    number: "01",
+    plate: "intake",
     title: "Intake & diagnosis",
     body: "The device is booked in, tagged, and opened up. We find the fault and quote the fix before anything is ordered.",
     stages: ["intake", "diagnosing"],
   },
   {
-    number: "02",
+    plate: "bench",
     title: "On the bench",
     body: "Parts arrive, the work happens, and the board moves. If a part is delayed you see waiting on parts, not silence.",
     stages: ["waiting_parts", "in_repair"],
   },
   {
-    number: "03",
+    plate: "pickup",
     title: "Ready & home",
     body: "Tested, cleaned, and waiting at the counter. The code keeps working after pickup, so the record stays with you.",
     stages: ["ready", "picked_up"],
   },
-];
-
-/** Honest numbers: what the product promises, not invented traction. */
-const FACTS = [
-  { value: "Ten", unit: "characters", note: "on your intake receipt" },
-  { value: "Six", unit: "stages", note: "updated from the bench" },
-  { value: "Zero", unit: "accounts", note: "no email, no phone" },
 ];
 
 function railIndex(status: TicketStatus) {
@@ -87,6 +81,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
   const current = ticket ? railIndex(ticket.status) : -1;
   const closed = ticket ? ["picked_up", "cancelled"].includes(ticket.status) : false;
   const stage = ticket?.status ?? "intake";
+  const showResult = hasQuery || Boolean(params.error) || recordsDown;
 
   return (
     <main className="relative min-h-[100dvh] overflow-x-clip">
@@ -94,15 +89,15 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
           and the trunk rooting at the floor, exactly the way a full-bleed
           artwork works. Everything else is scrim and quiet, so the light can be
           the loud thing. */}
-      <section className="relative flex min-h-[100svh] flex-col pb-6 sm:pb-8">
-        <div
-          className="pointer-events-none absolute inset-x-0 top-0 -bottom-[9rem] opacity-90 [mask-image:linear-gradient(to_bottom,#000_0%,#000_76%,transparent_92%)]"
-          aria-hidden="true"
-        >
-          <RepairTree className="h-full w-full" />
-        </div>
+      <section className={cn("relative isolate flex flex-col", showResult ? "pb-8" : "min-h-[min(91svh,920px)] pb-10 sm:pb-14")}>
+        {!showResult && (
+          <RepairTree
+            className="pointer-events-none absolute inset-0 -z-20 [mask-image:linear-gradient(to_bottom,#000_65%,transparent)]"
+            controlPosition="right-5 top-24 sm:right-[max(2rem,calc((100%-1116px)/2))]"
+          />
+        )}
 
-        <ReactiveGrid className="pointer-events-none absolute inset-x-0 top-0 bottom-[-9rem]" />
+        <ReactiveGrid className="pointer-events-none absolute inset-0 -z-10" />
 
         {/* Two scrims, not one: the floor keeps the facts legible, the wall keeps
             the headline legible. Both stay weak enough that canopy and petals
@@ -117,7 +112,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
         />
 
         <div
-          className="pointer-events-none absolute inset-x-0 top-[20%] h-[54%] bg-[linear-gradient(to_bottom,transparent,rgba(9,8,15,0.72)_42%,rgba(9,8,15,0.95)_78%,#09080f)] sm:hidden"
+          className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_bottom,transparent_15%,rgba(9,8,15,.7)_58%,#09080f)] sm:hidden"
           aria-hidden="true"
         />
 
@@ -134,87 +129,52 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
             showSignIn={false}
           />
 
-          <div className="pt-16 sm:pt-[16vh] lg:pt-[18vh]">
-            <p className="eyebrow rise">
-              <span className="sm:hidden">Repair operations</span>
-              <span className="hidden sm:inline">Repair operations · live from the bench</span>
-            </p>
-
-            <h1 className="rise display-hero mt-6 max-w-[13ch] text-[clamp(44px,6.2vw,84px)] text-ink">
-              Where is my repair?
-            </h1>
-
-            <p
-              className="rise mt-6 max-w-[32ch] font-sans text-[17px] leading-[1.6] text-ink-secondary sm:max-w-[44ch]"
-              style={{ animationDelay: "70ms" }}
-            >
-              Ten characters from your intake receipt, and you can watch the bench work — no
-              account, no email, no phone number.
-            </p>
+          <div className={cn("relative mt-auto grid items-end gap-7 lg:grid-cols-[minmax(0,1fr)_minmax(340px,.8fr)] lg:gap-16", showResult ? "pt-10" : "pt-[18svh] sm:pt-[24svh]")}>
+            <div>
+              <h1 className={cn("rise display-hero max-w-[12ch] text-ink", showResult ? "text-[clamp(36px,4.5vw,62px)]" : "text-[clamp(54px,7.4vw,104px)]")}>
+                Where is my repair?
+              </h1>
+              <p className="rise mt-5 max-w-[37ch] text-[17px] leading-relaxed text-ink-secondary" style={{ animationDelay: "70ms" }}>
+                Follow your device from the intake counter to pickup. All you need is the code on your receipt.
+              </p>
+            </div>
 
             {/* The docket: one field, one action, the help the customer needs. */}
             <form
               method="get"
               action="/track"
-              className="rise mt-9 max-w-[540px]"
+              className="claim-check rise w-full max-w-[500px] justify-self-start lg:justify-self-end"
               style={{ animationDelay: "130ms" }}
             >
-              <label htmlFor="code" className="sr-only">
-                Tracking code
-              </label>
-              <div className="flex items-center gap-2 rounded-full bg-[#0b0916]/72 p-1.5 pl-4 ring-1 ring-inset ring-white/[0.08] backdrop-blur-md transition-[box-shadow] duration-200 focus-within:ring-white/[0.22] sm:pl-5">
-                <input
-                  id="code"
-                  name="code"
-                  defaultValue={code}
-                  placeholder="TRACK10041"
-                  aria-describedby="tracking-code-help"
-                  autoComplete="off"
-                  spellCheck={false}
-                  required
-                  className="h-11 min-w-0 flex-1 bg-transparent font-mono text-[16px] uppercase tracking-[0.12em] text-ink outline-none placeholder:text-ink-faint sm:tracking-[0.2em]"
-                />
-                <button
-                  type="submit"
-                  className="primary group flex h-11 shrink-0 items-center gap-2 rounded-full px-5 font-sans text-[14px] font-semibold transition-[filter,transform] duration-150 active:translate-y-px"
-                >
-                  Check status
-                  <ArrowRight
-                    aria-hidden="true"
-                    className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5"
-                    strokeWidth={2.2}
+              <div className="claim-stub"><span>Patchwork</span><span>Customer copy</span></div>
+              <div className="px-4 pb-5 pt-4 sm:px-6 sm:pb-6">
+                <label htmlFor="code" className="block text-sm font-semibold">Tracking code</label>
+                <div className="mt-2 flex flex-wrap items-center gap-2">
+                  <input
+                    id="code"
+                    name="code"
+                    defaultValue={code}
+                    placeholder="TRACK10041"
+                    aria-describedby="tracking-code-help"
+                    autoComplete="off"
+                    autoCapitalize="characters"
+                    spellCheck={false}
+                    required
+                    className="claim-code h-12 min-w-[8.5rem] flex-1 rounded px-3 font-mono text-base uppercase tracking-[.06em]"
                   />
-                </button>
-              </div>
-              <p
-                id="tracking-code-help"
-                className="mt-3 max-w-[42ch] pl-5 font-sans text-[13px] leading-5 text-ink-secondary"
-              >
-                Printed on the receipt next to the PW- ticket number. It is not the ticket number
-                itself.
-              </p>
-            </form>
-
-            <div className="rise mt-auto pt-12">
-              <div aria-hidden="true" className="h-px w-full bg-[linear-gradient(to_right,rgba(241,239,250,0.16),rgba(241,239,250,0.07)_54%,transparent)]" />
-              <div className="max-w-[620px] pt-7">
-              <div className="grid grid-cols-3 gap-x-4 gap-y-6 sm:gap-x-6">
-              {FACTS.map((fact, index) => (
-                <div key={fact.unit} style={{ animationDelay: `${190 + index * 40}ms` }}>
-                  <p className="display-hero text-[clamp(24px,3.2vw,40px)] text-ink">
-                    {fact.value}
-                  </p>
-                  <p className="mt-2 font-mono text-2xs uppercase tracking-[0.18em] text-ink-tertiary">
-                    {fact.unit}
-                  </p>
-                  <p className="mt-1 font-sans text-[13px] leading-5 text-ink-tertiary">
-                    {fact.note}
-                  </p>
-                  </div>
-                ))}
+                  <button
+                    type="submit"
+                    className="group flex h-12 grow items-center justify-center gap-1.5 rounded bg-canvas px-3 text-sm font-semibold text-ink transition-colors hover:bg-overlay sm:grow-0"
+                  >
+                    Check status
+                    <ArrowRight aria-hidden="true" className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" strokeWidth={2.2} />
+                  </button>
                 </div>
+                <p id="tracking-code-help" className="mt-3 text-[13px] leading-5">
+                  Use the ten characters beside your PW- ticket number. No account needed.
+                </p>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </section>
@@ -223,9 +183,7 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
         {recordsDown ? (
           <div className="pb-2">
             <SystemAlert title="Records are unreachable">
-              We cannot check ticket status this minute — the desk&rsquo;s database is not
-              answering. Nothing was lost: your repair is on the bench and the record is safe. Try
-              again in a moment, or ask at the counter and we will read it from the desk screen.
+              The desk cannot check that code right now. Try again in a moment, or contact the shop with your ticket number.
             </SystemAlert>
           </div>
         ) : params.error || (hasQuery && !ticket) ? (
@@ -360,38 +318,31 @@ export default async function TrackPage({ searchParams }: { searchParams: Search
 
         {/* Three phases instead of six stages: what a customer actually needs. */}
         <section id="stages" className="relative pt-10 sm:pt-14">
-          {/* The hero ends on its darkest note; this hands the eye back into the
-              room instead of starting the next section at full glow. */}
-          <div
-            className="pointer-events-none absolute inset-x-0 -top-[8vh] h-[16vh] bg-[linear-gradient(to_bottom,transparent,rgba(9,8,15,0.85)_55%,transparent)] sm:-top-[10vh] sm:h-[20vh]"
-            aria-hidden="true"
-          />
           <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
             <div>
-              <p className="eyebrow">The bench, stage by stage</p>
-              <h2 className="display-hero mt-5 max-w-[18ch] text-[clamp(34px,5.2vw,74px)] text-ink">
+              <h2 className="display-hero max-w-[20ch] text-[clamp(36px,5vw,68px)] text-ink">
                 Intake. Diagnose. Repair.
               </h2>
             </div>
             {!hasQuery ? (
               <p className="mb-3 max-w-[26ch] font-sans text-[14px] leading-6 text-ink-tertiary">
-                Bookmark this page and come back when you want to look.
+                Six repair stages, from the first inspection to the handover.
               </p>
             ) : null}
           </div>
 
-          <div className="mt-10 grid overflow-hidden rounded-lg border border-white/[0.09] sm:grid-cols-3">
+          <div className="mt-8 grid gap-6 sm:grid-cols-3 sm:gap-5">
             {PHASES.map((phase) => (
               <div
-                key={phase.number}
-                className="border-b border-white/[0.07] bg-white/[0.015] p-6 last:border-b-0 sm:border-b-0 sm:border-r sm:p-7 sm:last:border-r-0"
+                key={phase.plate}
+                className="min-w-0"
               >
-                <p className="figure text-[12px] text-ink-faint">{phase.number}</p>
-                <h3 className="mt-3 font-sans text-[17px] font-medium text-ink">{phase.title}</h3>
+                <div className="plate-ground rounded-md text-ink-tertiary"><RepairPlate phase={phase.plate} /></div>
+                <h3 className="display-tight mt-5 text-[23px] text-ink">{phase.title}</h3>
                 <p className="mt-2.5 font-sans text-[14px] leading-6 text-ink-secondary">
                   {phase.body}
                 </p>
-                <ul className="mt-5 flex flex-wrap gap-1.5">
+                <ul className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
                   {phase.stages.map((status) => (
                     <li key={status}>
                       <StatusPill status={status} />
